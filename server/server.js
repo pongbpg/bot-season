@@ -19,14 +19,14 @@ const LINE_HEADER = {
 };
 var jsonParser = bodyParser.json();
 app.post('/api/linebot', jsonParser, (req, res) => {
-    const request = req.body.events[0];
-    const msg = request.message.text;
-    const userId = request.source.userId;
-    // const userRef = db.collection('admins').doc(userId);
-    let obj = {
-        replyToken: request.replyToken,
-        messages: []
-    };
+    // const request = req.body.events[0];
+    // const msg = request.message.text;
+    // const userId = request.source.userId;
+    // // const userRef = db.collection('admins').doc(userId);
+    // let obj = {
+    //     replyToken: request.replyToken,
+    //     messages: []
+    // };
     res.json(req.body)
 })
 
