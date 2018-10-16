@@ -20,7 +20,7 @@ admin.initializeApp({
     }),
     databaseURL: 'https://bot-orders.firebaseio.com'
 });
-
+var db = admin.firestore();
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     'Content-Type': 'application/json',
@@ -28,15 +28,113 @@ const LINE_HEADER = {
 };
 var jsonParser = bodyParser.json();
 app.post('/api/linebot', jsonParser, (req, res) => {
-    // const request = req.body.events[0];
-    // const msg = request.message.text;
-    // const userId = request.source.userId;
-    // // const userRef = db.collection('admins').doc(userId);
-    // let obj = {
-    //     replyToken: request.replyToken,
-    //     messages: []
-    // };
-    res.json(req.body)
+    const request = req.body.events[0];
+    const msg = request.message.text;
+    const userId = request.source.userId;
+    const userRef = db.collection('admins').doc(userId);
+    let obj = {
+        replyToken: request.replyToken,
+        messages: []
+    };
+    // if (request.message.type !== 'text' || request.source.type !== 'group') {
+    //}
+    if (msg.indexOf('@@admin=') > -1 && msg.split('=').length == 2) {
+        userRef.set({
+            userId,
+            name: msg.split('=')[1],
+            timestamp: admin.firestore.FieldValue.serverTimestamp()
+        })
+            .then(admin => {
+                obj.messages.push({
+                    type: 'text',
+                    text: `ลงทะเบียน ${msg.split('=')[1]} เป็น Admin เรียบร้อยค่ะ`
+                })
+                // obj.messages.push({
+                //     type: 'sticker',
+                //     packageId: '11538',
+                //     stickerId: '51626498'
+                // })
+                reply2(obj);
+            })
+    } else {
+        userRef.get()
+            .then(user => {
+                if (user.exists) {
+                    if (request.source.type == 'group') {
+                        if (msg.indexOf('@@ยกเลิก=') > -1 && msg.split('=').length == 2) {
+                            const orderId = msg.split('=')[1];
+                            const orderRef = db.collection('orders').doc(orderId);
+                            orderRef.get()
+                                .then(order => {
+                                    if (order.exists) {
+                                        if (order.data().cutoff) {
+                                            obj.messages.push({
+                                                type: 'text',
+                                                text: `ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ`
+                                            })
+                                            reply2(obj);
+                                        } else {
+                                            orderRef.delete()
+                                                .then(cancel => {
+                                                    obj.messages.push({
+                                                        type: 'text',
+                                                        text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
+                                                    })
+                                                    reply2(obj);
+                                                })
+                                        }
+                                    } else {
+                                        obj.messages.push({
+                                            type: 'text',
+                                            text: `ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ`
+                                        })
+                                    }
+                                    reply2(obj);
+                                })
+                        } else if (msg.indexOf('#') > -1) {
+                            const resultOrder = initMsgOrder(msg);
+                            if (resultOrder.success) {
+                                db.collection('counter').doc('orders').get()
+                                    .then(counts => {
+                                        const countsData = counts.data();
+                                        let no = 1;
+                                        if (countsData.date == yyyymmdd()) {
+                                            no = countsData.no + 1;
+                                        }
+                                        db.collection('counter').doc('orders').set({ date: yyyymmdd(), no })
+                                        const orderId = yyyymmdd() + '-' + fourDigit(no);
+                                        db.collection('orders').doc(orderId)
+                                            .set(Object.assign({ userId, admin: user.data().name, cutoff: false, timestamp: admin.firestore.FieldValue.serverTimestamp() }, resultOrder.data))
+                                            .then(order => {
+                                                obj.messages.push({
+                                                    type: 'text',
+                                                    text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                })
+                                                obj.messages.push({
+                                                    type: 'text',
+                                                    text: `@@ยกเลิก=${orderId}`
+                                                })
+                                                reply2(obj);
+                                            })
+                                    })
+
+                            } else {
+                                obj.messages.push({ type: `text`, text: resultOrder.text })
+                                reply2(obj);
+                            }
+                        }
+                    } else {
+                        obj.messages.push({
+                            type: 'text',
+                            text: `คุยในกลุ่มดีกว่านะคะ`
+                        })
+                        reply2(obj);
+                    }
+                } else {
+                    return;
+                }
+            })
+    }
 })
 
 app.use(express.static(publicPath));
