@@ -62,6 +62,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             .then(user => {
                 if (user.exists) {
                     if (request.source.type == 'group') {
+                        const groupId = request.source.groupId;
                         if (msg.indexOf('@@ยกเลิก=') > -1 && msg.split('=').length == 2) {
                             const orderId = msg.split('=')[1];
                             const orderRef = db.collection('orders').doc(orderId);
@@ -105,8 +106,9 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                         db.collection('counter').doc('orders').set({ date: yyyymmdd(), no })
                                         const orderId = yyyymmdd() + '-' + fourDigit(no);
                                         db.collection('orders').doc(orderId)
-                                            .set(Object.assign({ userId, admin: user.data().name, cutoff: false, timestamp: admin.firestore.FieldValue.serverTimestamp() }, resultOrder.data))
+                                            .set(Object.assign({ userId, groupId, admin: user.data().name, cutoff: false, timestamp: admin.firestore.FieldValue.serverTimestamp() }, resultOrder.data))
                                             .then(order => {
+                                                db.collection('groups').doc(groupId).set({})
                                                 obj.messages.push({
                                                     type: 'text',
                                                     text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
@@ -137,6 +139,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             })
     }
 })
+
 
 app.use(express.static(publicPath));
 app.get('*', (req, res) => {

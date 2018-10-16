@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-
+import MdAlarmOn from 'react-icons/lib/md/alarm-on';
+import moment from 'moment';
+moment.locale('th');
 export class ListPage extends React.Component {
     constructor(props) {
         super(props);
@@ -18,37 +20,43 @@ export class ListPage extends React.Component {
         return (
             <div className="columns">
                 <div className="column">
-                    <table className="table is-bordered is-striped is-fullwidth">
-                        <thead>
-                            <tr>
-                                <th>รหัสสั่งซื้อ</th>
-                                <th>ชื่อลูกค้า</th>
-                                <th>เพจ</th>
-                                <th>จำนวนเงิน</th>
-                                <th>แอดมิน</th>
-                                <th>เลขพัสดุ</th>
-                            </tr>
-                        </thead>
-                        <tbody>
-                            {
-                                this.state.orders.length === 0 ? (
-                                    <tr><td colSpan="6" className="has-text-centered">ไม่มีรายการสั่งซื้อ</td></tr>
-                                ) :
-                                    this.state.orders.map((order) => {
-                                        return <tr key={order.id}>
-                                            <td>{order.id}</td>
-                                            <td>{order.customer}</td>
-                                            <td>{order.page}</td>
-                                            <td>{order.price}</td>
-                                            <td>{order.admin}</td>
-                                            <td>
-                                                <input type="text" />
-                                            </td>
-                                        </tr>;
-                                    })
-                            }
-                        </tbody>
-                    </table>
+                    {
+                        this.state.orders.length === 0 ? (
+                            <nav className="level">
+                                <p className="level-item has-text-centered">
+                                    <button className="button is-info is-centered"><MdAlarmOn /> ตัดรอบ {moment(new Date()).format('ll')}</button>
+                                </p>
+                            </nav>
+                        ) : (
+                                <table className="table is-bordered is-striped is-fullwidth">
+                                    <thead>
+                                        <tr>
+                                            <th>รหัสสั่งซื้อ</th>
+                                            <th>ชื่อลูกค้า</th>
+                                            <th>เพจ</th>
+                                            <th>จำนวนเงิน</th>
+                                            <th>แอดมิน</th>
+                                            <th>เลขพัสดุ</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {this.state.orders.map((order) => {
+                                            return <tr key={order.id}>
+                                                <td>{order.id}</td>
+                                                <td>{order.customer}</td>
+                                                <td>{order.page}</td>
+                                                <td>{order.price}</td>
+                                                <td>{order.admin}</td>
+                                                <td>
+                                                    <input type="text" />
+                                                </td>
+                                            </tr>;
+                                        })
+                                        }
+                                    </tbody>
+                                </table>
+                            )
+                    }
                 </div>
             </div>
         )
