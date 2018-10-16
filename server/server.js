@@ -1,4 +1,5 @@
 const path = require('path');
+const request = require('request-promise');
 const express = require('express');
 const app = express();
 const publicPath = path.join(__dirname, '..', 'public');
