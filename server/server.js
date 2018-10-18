@@ -109,7 +109,14 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                         db.collection('counter').doc('orders').set({ date: yyyymmdd(), no, cutoff })
                                         const orderId = yyyymmdd() + '-' + fourDigit(no);
                                         db.collection('orders').doc(orderId)
-                                            .set(Object.assign({ userId, groupId, admin: user.data().name, cutoff: false, tracking: '', timestamp: admin.firestore.FieldValue.serverTimestamp() }, resultOrder.data))
+                                            .set(Object.assign({
+                                                userId, groupId,
+                                                admin: user.data().name,
+                                                cutoffDate: countsData.cutoffDate,
+                                                cutoff: false,
+                                                tracking: '',
+                                                timestamp: admin.firestore.FieldValue.serverTimestamp()
+                                            }, resultOrder.data))
                                             .then(order => {
                                                 db.collection('groups').doc(groupId).set({})
                                                 obj.messages.push({

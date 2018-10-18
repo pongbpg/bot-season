@@ -28,7 +28,9 @@ export const startSaveTracking = (orders) => {
     return (dispatch) => {
         let update = firestore.collection('orders');
         for (let x = 0; x < orders.length; x++) {
-            update.doc(orders[x].id).set({ tracking: orders[x].tracking }, { merge: true })
+            update.doc(orders[x].id).set({ 
+                tracking: orders[x].tracking
+            }, { merge: true })
         }
         // dispatch(startListOrders())
     }

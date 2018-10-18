@@ -14,17 +14,22 @@ export const startGetCutOff = () => {
 }
 export const startCutOff = () => {
     return (dispatch) => {
-        return firestore.collection('counter').doc('orders').set({ cutoff: true }, { merge: true })
+        return firestore.collection('counter').doc('orders').set({ cutoffDate: yyyymmdd(), cutoff: true }, { merge: true })
             .then(() => {
                 return firestore.collection('orders').where('cutoff', '==', false).get()
                     .then(querySnapshot => {
                         querySnapshot.forEach(function (doc) {
                             firestore.collection('orders').doc(doc.id).set({ ...doc.data(), cutoff: true })
                         })
-                        dispatch(startGetCutOff())
+                        dispatch(setCutOff(true))
                         // dispatch(startListOrders())
                     });
             })
 
     }
+}
+const yyyymmdd = () => {
+    function twoDigit(n) { return (n < 10 ? '0' : '') + n; }
+    var now = new Date();
+    return '' + now.getFullYear() + twoDigit(now.getMonth() + 1) + twoDigit(now.getDate());
 }

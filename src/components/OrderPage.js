@@ -78,7 +78,7 @@ export class OrderPage extends React.Component {
                                 })
                                 : (
                                     <tr>
-                                        <td colSpan="7" className="has-text-centered"><Link to="/cutoff">ปิดรอบก่อน</Link></td>
+                                        <td colSpan="7" className="has-text-centered"><Link to="/cutoff">ยังไม่ได้ปิดรอบ/บันทึกครบแล้ว</Link></td>
                                     </tr>
                                 )
                             }

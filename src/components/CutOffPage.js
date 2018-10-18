@@ -19,6 +19,7 @@ export class CutOffPage extends React.Component {
     }
     onCutOffClick = () => {
         this.props.startCutOff()
+        this.props.history.push('/orders')
     }
     render() {
         return (
