@@ -106,7 +106,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                         } else {
                                             if (cutoff == true) cutoff = false;
                                         }
-                                        db.collection('counter').doc('orders').set({ date: yyyymmdd(), no, cutoff })
+                                        db.collection('counter').doc('orders').set({ date: yyyymmdd(), no, cutoff }, { merge: true })
                                         const orderId = yyyymmdd() + '-' + fourDigit(no);
                                         db.collection('orders').doc(orderId)
                                             .set(Object.assign({
