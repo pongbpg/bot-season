@@ -14,7 +14,7 @@ export const startGetCutOff = () => {
 }
 export const startCutOff = () => {
     return (dispatch) => {
-        return firestore.collection('counter').doc('orders').set({ cutoffDate: yyyymmdd(), cutoff: true }, { merge: true })
+        return firestore.collection('counter').doc('orders').set({ cutoffDate: tomorrow(), cutoff: true }, { merge: true })
             .then(() => {
                 return firestore.collection('orders').where('cutoff', '==', false).get()
                     .then(querySnapshot => {
@@ -28,8 +28,9 @@ export const startCutOff = () => {
 
     }
 }
-const yyyymmdd = () => {
+const tomorrow = () => {
     function twoDigit(n) { return (n < 10 ? '0' : '') + n; }
     var now = new Date();
+    now.setDate(now.getDate() + 1);
     return '' + now.getFullYear() + twoDigit(now.getMonth() + 1) + twoDigit(now.getDate());
 }
