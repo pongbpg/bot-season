@@ -69,13 +69,13 @@ export class Header extends React.Component {
             </div>
           </div>
         </nav >
-        <section className="hero">
+        {/* <section className="hero">
           <div className="hero-body is-marginless is-bold">
             <div className="container">
               <h1 className="title">{this.state.title}</h1>
             </div>
           </div>
-        </section>
+        </section> */}
       </div >
     );
   }

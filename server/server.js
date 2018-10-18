@@ -106,12 +106,12 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                         db.collection('counter').doc('orders').set({ date: yyyymmdd(), no })
                                         const orderId = yyyymmdd() + '-' + fourDigit(no);
                                         db.collection('orders').doc(orderId)
-                                            .set(Object.assign({ userId, groupId, admin: user.data().name, cutoff: false, timestamp: admin.firestore.FieldValue.serverTimestamp() }, resultOrder.data))
+                                            .set(Object.assign({ userId, groupId, admin: user.data().name, cutoff: false, tracking: '', timestamp: admin.firestore.FieldValue.serverTimestamp() }, resultOrder.data))
                                             .then(order => {
                                                 db.collection('groups').doc(groupId).set({})
                                                 obj.messages.push({
                                                     type: 'text',
-                                                    text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                    text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
                                                 })
                                                 obj.messages.push({
                                                     type: 'text',
@@ -205,14 +205,15 @@ const initMsgOrder = (txt) => {
 }
 const formatOrder = (data) => {
     return `
-    ชื่อ: ${data.name} เบอร์โทร: ${data.tel}
-    ที่อยู่: ${data.addr}
-    สินค้า: ${data.product
+ชื่อ: ${data.name}
+เบอร์โทร: ${data.tel}
+ที่อยู่: ${data.addr}
+สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
-    ธนาคาร: ${data.bank} จำนวนเงิน: ${data.price ? formatMoney(data.price) : 'undefined'}
-    FB: ${data.fb}
-    Page: ${data.page}
+ธนาคาร: ${data.bank} จำนวนเงิน: ${data.price ? formatMoney(data.price) : 'undefined'}
+FB: ${data.fb}
+Page: ${data.page}
     `;
 }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
