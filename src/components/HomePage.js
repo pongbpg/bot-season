@@ -1,6 +1,5 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import ListOrders from './orders/List';
 // import MdHome from 'react-icons/lib/md/home';
 export class HomePage extends React.Component {
   constructor(props) {
@@ -11,7 +10,7 @@ export class HomePage extends React.Component {
   render() {
     return (
       <div>
-        <ListOrders />
+        Home
       </div>
     );
   }

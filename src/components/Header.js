@@ -3,6 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import MdMailOutline from 'react-icons/lib/md/mail-outline';
+import MdAlarmOn from 'react-icons/lib/md/alarm-on';
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -46,8 +47,11 @@ export class Header extends React.Component {
             <div id="navMenu" className={this.state.isBurger === true ? "navbar-menu is-active" : "navbar-menu"}>
               <div className="navbar-start">
                 {/* <Link className="navbar-item" to="/authen">ยืนยันตัวตน</Link> */}
-                <Link className="navbar-item" to="/users">
+                <Link className="navbar-item" to="/orders">
                   <span className="icon"><MdMailOutline /></span>เลขพัสดุ
+                    </Link>
+                <Link className="navbar-item" to="/cutoff">
+                  <span className="icon"><MdAlarmOn /></span>ปิดรอบ
                     </Link>
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   Logout
