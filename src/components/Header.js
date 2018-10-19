@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import MdMailOutline from 'react-icons/lib/md/mail-outline';
 import MdAlarmOn from 'react-icons/lib/md/alarm-on';
+import MdContactMail from 'react-icons/lib/md/contact-mail';
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -31,6 +32,11 @@ export class Header extends React.Component {
     const color = { color: '#333' };
     const borderRadius = { borderRadius: '25px' }
     // console.log(this.state.isAdmin)
+    const yyyymmdd = () => {
+      function twoDigit(n) { return (n < 10 ? '0' : '') + n; }
+      var now = new Date();
+      return '' + now.getFullYear() + twoDigit(now.getMonth() + 1) + twoDigit(now.getDate());
+    }
     return (
       <div>
         <nav className="navbar is-dark">
@@ -53,6 +59,9 @@ export class Header extends React.Component {
                 <Link className="navbar-item" to="/cutoff">
                   <span className="icon"><MdAlarmOn /></span>ปิดรอบ
                     </Link>
+                <a className="navbar-item" href={`http://yaumjai.com:3000/api/report/print?date=${yyyymmdd()}`} target="_blank">
+                  <span className="icon"><MdContactMail /></span>รายชื่อลูกค้า
+                 </a>
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   Logout
                     </a>

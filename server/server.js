@@ -202,7 +202,7 @@ const initMsgOrder = (txt) => {
                         value = value.split(',').map(p => {
                             if (p.split('=').length == 2) {
                                 return {
-                                    code: p.split('=')[0],
+                                    code: p.split('=')[0].toUpperCase(),
                                     amount: Number(p.split('=')[1].replace(/\D/g, ''))
                                 }
                             } else {
