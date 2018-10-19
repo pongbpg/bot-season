@@ -22,6 +22,8 @@ admin.initializeApp({
     databaseURL: 'https://bot-orders.firebaseio.com'
 });
 var db = admin.firestore();
+const settings = {/* your settings... */ timestampsInSnapshots: true };
+db.settings(settings);
 const LINE_MESSAGING_API = 'https://api.line.me/v2/bot/message';
 const LINE_HEADER = {
     'Content-Type': 'application/json',
@@ -55,7 +57,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 //     packageId: '11538',
                 //     stickerId: '51626498'
                 // })
-                reply2(obj);
+                reply(obj);
             })
     } else {
         userRef.get()
@@ -74,7 +76,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                 type: 'text',
                                                 text: `ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ`
                                             })
-                                            reply2(obj);
+                                            reply(obj);
                                         } else {
                                             orderRef.delete()
                                                 .then(cancel => {
@@ -82,7 +84,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         type: 'text',
                                                         text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
                                                     })
-                                                    reply2(obj);
+                                                    reply(obj);
                                                 })
                                         }
                                     } else {
@@ -91,7 +93,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                             text: `ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ`
                                         })
                                     }
-                                    reply2(obj);
+                                    reply(obj);
                                 })
                         } else if (msg.indexOf('#') > -1) {
                             const resultOrder = initMsgOrder(msg);
@@ -127,13 +129,13 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     type: 'text',
                                                     text: `@@ยกเลิก=${orderId}`
                                                 })
-                                                reply2(obj);
+                                                reply(obj);
                                             })
                                     })
 
                             } else {
                                 obj.messages.push({ type: `text`, text: resultOrder.text })
-                                reply2(obj);
+                                reply(obj);
                             }
                         }
                     } else {
@@ -141,7 +143,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                             type: 'text',
                             text: `คุยในกลุ่มดีกว่านะคะ`
                         })
-                        reply2(obj);
+                        reply(obj);
                     }
                 } else {
                     return;
@@ -149,7 +151,13 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             })
     }
 })
-
+app.post('/api/boardcast', jsonParser, (req, res) => {
+    const boardcasts = req.body.boardcasts;
+    for (var bc = 0; bc < boardcasts.length; bc++) {
+        push(boardcasts[bc]);
+    }
+    return;
+})
 
 app.use(express.static(publicPath));
 app.get('*', (req, res) => {
@@ -159,7 +167,7 @@ app.listen(port, () => {
     console.log('Server is up!')
 });
 
-const reply2 = (obj) => {
+const reply = (obj) => {
     return request({
         method: `POST`,
         uri: `${LINE_MESSAGING_API}/reply`,
@@ -168,6 +176,14 @@ const reply2 = (obj) => {
             replyToken: obj.replyToken,
             messages: obj.messages
         })
+    });
+};
+const push = (obj) => {
+    return request({
+        method: `POST`,
+        uri: `${LINE_MESSAGING_API}/push`,
+        headers: LINE_HEADER,
+        body: JSON.stringify(obj)
     });
 };
 const initMsgOrder = (txt) => {

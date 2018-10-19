@@ -68,7 +68,7 @@ export class OrderPage extends React.Component {
                                             <div className="field">
                                                 <div className="control">
                                                     <input type="text" name={order.id}
-                                                        className="input is-rounded"
+                                                        className="input is-rounded is-small"
                                                         value={order.tracking}
                                                         onChange={this.onTrackingChange} />
                                                 </div>
