@@ -34,7 +34,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     const request = req.body.events[0];
     const msg = request.message.text;
     const userId = request.source.userId;
-    const userRef = db.collection('admins').doc(userId);
+    const adminRef = db.collection('admins').doc(userId);
     let obj = {
         replyToken: request.replyToken,
         messages: []
@@ -42,7 +42,25 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     // if (request.message.type !== 'text' || request.source.type !== 'group') {
     //}
     if (msg.indexOf('@@admin=') > -1 && msg.split('=').length == 2) {
-        userRef.set({
+        adminRef.set({
+            userId,
+            name: msg.split('=')[1],
+            timestamp: admin.firestore.FieldValue.serverTimestamp()
+        })
+            .then(admin => {
+                obj.messages.push({
+                    type: 'text',
+                    text: `ลงทะเบียน ${msg.split('=')[1]} เป็น Admin เรียบร้อยค่ะ`
+                })
+                // obj.messages.push({
+                //     type: 'sticker',
+                //     packageId: '11538',
+                //     stickerId: '51626498'
+                // })
+                reply(obj);
+            })
+    } else if (msg.indexOf('@@admin=') > -1 && msg.split('=').length == 2) {
+        adminRef.set({
             userId,
             name: msg.split('=')[1],
             timestamp: admin.firestore.FieldValue.serverTimestamp()
@@ -60,7 +78,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 reply(obj);
             })
     } else {
-        userRef.get()
+        adminRef.get()
             .then(user => {
                 if (user.exists) {
                     if (request.source.type == 'group') {
@@ -125,18 +143,22 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         for (var p = 0; p < resultOrder.data.product.length; p++) {
                                                             db.collection('products').doc(resultOrder.data.product[p].code).get()
                                                                 .then(product => {
-                                                                    db.collection('products').doc(resultOrder.data.product[p].code)
-                                                                        .set({ amount: product.data().amount - resultOrder.data.product[p].amount }, { merge: true })
+                                                                    obj.messages.push({
+                                                                        type: 'text',
+                                                                        text: `${resultOrder.data.product[p].code} ${product.data().amount} ${resultOrder.data.product[p].amount}`
+                                                                    })
+                                                                    // db.collection('products').doc(resultOrder.data.product[p].code)
+                                                                    //     .set({ amount: product.data().amount - resultOrder.data.product[p].amount }, { merge: true })
                                                                 })
                                                         }
-                                                        obj.messages.push({
-                                                            type: 'text',
-                                                            text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
-                                                        })
-                                                        obj.messages.push({
-                                                            type: 'text',
-                                                            text: `@@ยกเลิก=${orderId}`
-                                                        })
+                                                        // obj.messages.push({
+                                                        //     type: 'text',
+                                                        //     text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                        // })
+                                                        // obj.messages.push({
+                                                        //     type: 'text',
+                                                        //     text: `@@ยกเลิก=${orderId}`
+                                                        // })
                                                         reply(obj);
                                                     })
                                             })
