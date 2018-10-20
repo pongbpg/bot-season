@@ -1,7 +1,8 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { startSaveTracking } from '../actions/orders';
+import { startListOrders, startSaveTracking } from '../actions/orders';
+import FaSearch from 'react-icons/lib/fa/search';
 import Money from '../selectors/money';
 import moment from 'moment';
 moment.locale('th');
@@ -9,8 +10,10 @@ export class OrderPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            orders: props.orders || []
+            orders: props.orders || [],
+            filterText: props.filterText || ''
         }
+        this.props.startListOrders();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.orders.length != this.state.orders.length) {
@@ -41,6 +44,39 @@ export class OrderPage extends React.Component {
                         {/* <h2 className="subtitle">Hero subtitle</h2> */}
                     </div>
                 </div>
+                <nav className="level">
+                    {/* <div className="level-left">
+                        <div className="level-item">
+                            <div className="control has-icons-left">
+                                <div className="select">
+                                    <select className="is-hovered" value={this.state.sortBy} onChange={this.onSortChange}>
+                                        <option value="username">ชื่อผู้ใช้งาน</option>
+                                        <option value="name">ชื่อ-นามสกุล</option>
+                                        <option value="role">ประเภทผู้ใช้งาน</option>
+                                        <option value="division">แผนก</option>
+                                    </select>
+                                </div>
+                                <div className="icon is-small is-left">
+                                    <FaSort />
+                                </div>
+                            </div>
+                        </div>
+                    </div> */}
+                    <div className="level-right">
+                        <div className="level-item">
+                            <div className="control has-icons-right">
+                                <input className="input" type="text" placeholder="ค้นหา"
+                                    value={this.state.filterText}
+                                    // onChange={this.onFilterTextChange}
+                                />
+                                <span className="icon is-small is-right">
+                                    <FaSearch />
+                                </span>
+                            </div>
+                        </div>
+                    </div>
+                </nav>
+
                 <div className="container">
                     <table className="table is-bordered is-striped is-fullwidth">
                         <thead>
@@ -102,6 +138,6 @@ const mapStateToProps = (state, props) => ({
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startSaveTracking: (orders) => dispatch(startSaveTracking(orders)),
-    // startListOrders:()
+    startListOrders: () => dispatch(startListOrders())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(OrderPage);

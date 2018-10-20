@@ -4,8 +4,9 @@ export const startListOrders = () => {
         return firestore.collection('orders')
             .where('cutoff', '==', true)
             .where('tracking', '==', '')
-            // .get()
-            .onSnapshot(querySnapshot => {
+            // .onSnapshot()
+            .get()
+            .then(querySnapshot => {
                 let orders = [];
                 querySnapshot.forEach(function (doc) {
                     orders.push({
@@ -28,10 +29,10 @@ export const startSaveTracking = (orders) => {
     return (dispatch) => {
         let update = firestore.collection('orders');
         for (let x = 0; x < orders.length; x++) {
-            update.doc(orders[x].id).set({ 
+            update.doc(orders[x].id).set({
                 tracking: orders[x].tracking
             }, { merge: true })
         }
-        // dispatch(startListOrders())
+        dispatch(startListOrders())
     }
 }
