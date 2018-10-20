@@ -187,7 +187,7 @@ const push = (obj) => {
     });
 };
 const initMsgOrder = (txt) => {
-    return db.collection('products').get()
+    db.collection('products').get()
         .then(snapShot => {
             let products = [];
             snapShot.forEach(product => {
