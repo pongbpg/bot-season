@@ -96,48 +96,49 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                     reply(obj);
                                 })
                         } else if (msg.indexOf('#') > -1) {
-                            initMsgOrder(msg).then(resultOrder => {
-                                if (resultOrder.success) {
-                                    db.collection('counter').doc('orders').get()
-                                        .then(counts => {
-                                            const countsData = counts.data();
-                                            let no = 1;
-                                            let cutoff = countsData.cutoff;
-                                            if (countsData.date == yyyymmdd()) {
-                                                no = countsData.no + 1;
-                                            } else {
-                                                if (cutoff == true) cutoff = false;
-                                            }
-                                            db.collection('counter').doc('orders').set({ date: yyyymmdd(), no, cutoff }, { merge: true })
-                                            const orderId = yyyymmdd() + '-' + fourDigit(no);
-                                            db.collection('orders').doc(orderId)
-                                                .set(Object.assign({
-                                                    userId, groupId,
-                                                    admin: user.data().name,
-                                                    cutoffDate: countsData.cutoffDate,
-                                                    cutoff: false,
-                                                    tracking: '',
-                                                    timestamp: admin.firestore.FieldValue.serverTimestamp()
-                                                }, resultOrder.data))
-                                                .then(order => {
-                                                    db.collection('groups').doc(groupId).set({})
-                                                    obj.messages.push({
-                                                        type: 'text',
-                                                        text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                            initMsgOrder(msg)
+                                .then(resultOrder => {
+                                    if (resultOrder.success) {
+                                        db.collection('counter').doc('orders').get()
+                                            .then(counts => {
+                                                const countsData = counts.data();
+                                                let no = 1;
+                                                let cutoff = countsData.cutoff;
+                                                if (countsData.date == yyyymmdd()) {
+                                                    no = countsData.no + 1;
+                                                } else {
+                                                    if (cutoff == true) cutoff = false;
+                                                }
+                                                db.collection('counter').doc('orders').set({ date: yyyymmdd(), no, cutoff }, { merge: true })
+                                                const orderId = yyyymmdd() + '-' + fourDigit(no);
+                                                db.collection('orders').doc(orderId)
+                                                    .set(Object.assign({
+                                                        userId, groupId,
+                                                        admin: user.data().name,
+                                                        cutoffDate: countsData.cutoffDate,
+                                                        cutoff: false,
+                                                        tracking: '',
+                                                        timestamp: admin.firestore.FieldValue.serverTimestamp()
+                                                    }, resultOrder.data))
+                                                    .then(order => {
+                                                        db.collection('groups').doc(groupId).set({})
+                                                        obj.messages.push({
+                                                            type: 'text',
+                                                            text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                        })
+                                                        obj.messages.push({
+                                                            type: 'text',
+                                                            text: `@@ยกเลิก=${orderId}`
+                                                        })
+                                                        reply(obj);
                                                     })
-                                                    obj.messages.push({
-                                                        type: 'text',
-                                                        text: `@@ยกเลิก=${orderId}`
-                                                    })
-                                                    reply(obj);
-                                                })
-                                        })
+                                            })
 
-                                } else {
-                                    obj.messages.push({ type: `text`, text: resultOrder.text })
-                                    reply(obj);
-                                }
-                            })
+                                    } else {
+                                        obj.messages.push({ type: `text`, text: resultOrder.text })
+                                        reply(obj);
+                                    }
+                                })
 
                         }
                     } else {
@@ -220,13 +221,13 @@ const initMsgOrder = (txt) => {
                                                 }
                                             } else {
                                                 return {
-                                                    code: code + ' หมดสต็อก',
+                                                    code: code + 'หมดสต็อก',
                                                     amount: 'undefined'
                                                 }
                                             }
                                         } else {
                                             return {
-                                                code: 'รหัสสินค้า',
+                                                code: ' รหัส' + code+'ไม่มีในรายการ',
                                                 amount: 'undefined'
                                             }
                                         }
