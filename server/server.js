@@ -122,7 +122,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     }, resultOrder.data))
                                                     .then(order => {
                                                         db.collection('groups').doc(groupId).set({})
-                                                        for (var p = 0; p < resultOrder.data.product; p++) {
+                                                        for (var p = 0; p < resultOrder.data.product.length; p++) {
                                                             db.collection('products').doc(resultOrder.data.product[p].code).get()
                                                                 .then(product => {
                                                                     db.collection('products').doc(resultOrder.data.product[p].code)
