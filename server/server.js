@@ -147,7 +147,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                     .then(product => {
                                                                         const balance = product.data().amount - resultOrder.data.product[p].amount;
                                                                         if (balance <= product.data().alert) {
-                                                                            await db.collection('owners').get()
+                                                                            db.collection('owners').get()
                                                                                 .then(snapShot => {
                                                                                     snapShot.forEach(owner => {
                                                                                         push({
@@ -162,7 +162,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                     })
                                                                                 })
                                                                         }
-                                                                        await db.collection('products').doc(resultOrder.data.product[p].code)
+                                                                        db.collection('products').doc(resultOrder.data.product[p].code)
                                                                             .set({ amount: balance }, { merge: true })
                                                                     })
                                                             }
