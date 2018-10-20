@@ -279,7 +279,7 @@ const initMsgOrder = (txt) => {
                                                 }
                                             } else {
                                                 return {
-                                                    code: code + 'หมดสต็อก',
+                                                    code: code + `เหลือเพียง${product.amount}ชิ้น`,
                                                     amount: 'undefined'
                                                 }
                                             }
