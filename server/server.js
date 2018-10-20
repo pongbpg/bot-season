@@ -97,14 +97,30 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                             })
                                             reply(obj);
                                         } else {
-                                            orderRef.delete()
-                                                .then(cancel => {
-                                                    obj.messages.push({
-                                                        type: 'text',
-                                                        text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
-                                                    })
-                                                    reply(obj);
+                                            async function callback() {
+                                                for (var p = 0; p < order.data().product.length; p++) {
+                                                    await db.collection('products').doc(order.data().product[p].code).get()
+                                                        .then(product => {
+                                                            const balance = product.data().amount + order.data().product[p].amount;
+                                                            db.collection('products').doc(order.data().product[p].code)
+                                                                .set({ amount: balance }, { merge: true })
+                                                        })
+                                                }
+                                                await obj.messages.push({
+                                                    type: 'text',
+                                                    text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
                                                 })
+                                                await reply(obj);
+                                            }
+                                            callback();
+                                            // orderRef.delete()
+                                            //     .then(cancel => {
+                                            //         obj.messages.push({
+                                            //             type: 'text',
+                                            //             text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
+                                            //         })
+                                            //         reply(obj);
+                                            //     })
                                         }
                                     } else {
                                         obj.messages.push({
