@@ -106,21 +106,17 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                 .set({ amount: balance }, { merge: true })
                                                         })
                                                 }
-                                                await obj.messages.push({
-                                                    type: 'text',
-                                                    text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
-                                                })
-                                                await reply(obj);
+                                                await orderRef.delete()
+                                                    .then(cancel => {
+                                                        obj.messages.push({
+                                                            type: 'text',
+                                                            text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
+                                                        })
+                                                        reply(obj);
+                                                    })
                                             }
                                             callback();
-                                            // orderRef.delete()
-                                            //     .then(cancel => {
-                                            //         obj.messages.push({
-                                            //             type: 'text',
-                                            //             text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
-                                            //         })
-                                            //         reply(obj);
-                                            //     })
+
                                         }
                                     } else {
                                         obj.messages.push({
