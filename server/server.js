@@ -140,7 +140,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     }, resultOrder.data))
                                                     .then(order => {
                                                         db.collection('groups').doc(groupId).set({})
-                                                        async () => {
+                                                        async function callback() {
                                                             for (var p = 0; p < resultOrder.data.product.length; p++) {
                                                                 await db.collection('products').doc(resultOrder.data.product[p].code).get()
                                                                     .then(product => {
@@ -152,7 +152,9 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                         //     .set({ amount: product.data().amount - resultOrder.data.product[p].amount }, { merge: true })
                                                                     })
                                                             }
+                                                            await reply(obj);
                                                         }
+                                                        callback();
                                                         // obj.messages.push({
                                                         //     type: 'text',
                                                         //     text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
@@ -161,7 +163,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         //     type: 'text',
                                                         //     text: `@@ยกเลิก=${orderId}`
                                                         // })
-                                                        reply(obj);
+
                                                     })
                                             })
 
