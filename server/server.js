@@ -285,7 +285,7 @@ const initMsgOrder = (txt) => {
                                             }
                                         } else {
                                             return {
-                                                code: ' รหัส' + code + 'ไม่มีในรายการ',
+                                                code: ' รหัส' + code + 'ไม่มีในรายการสินค้า',
                                                 amount: 'undefined'
                                             }
                                         }
