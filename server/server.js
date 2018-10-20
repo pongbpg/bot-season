@@ -141,15 +141,15 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     .then(order => {
                                                         db.collection('groups').doc(groupId).set({})
                                                         for (var p = 0; p < resultOrder.data.product.length; p++) {
-                                                            db.collection('products').doc(resultOrder.data.product[p].code).get()
-                                                                .then(product => {
-                                                                    obj.messages.push({
-                                                                        type: 'text',
-                                                                        text: `${resultOrder.data.product[p].code} ${product.data().amount} ${resultOrder.data.product[p].amount}`
-                                                                    })
-                                                                    // db.collection('products').doc(resultOrder.data.product[p].code)
-                                                                    //     .set({ amount: product.data().amount - resultOrder.data.product[p].amount }, { merge: true })
-                                                                })
+                                                            // db.collection('products').doc(resultOrder.data.product[p].code).get()
+                                                            //     .then(product => {
+                                                            obj.messages.push({
+                                                                type: 'text',
+                                                                text: `${resultOrder.data.product[p].code}  ${resultOrder.data.product[p].amount}`
+                                                            })
+                                                            // db.collection('products').doc(resultOrder.data.product[p].code)
+                                                            //     .set({ amount: product.data().amount - resultOrder.data.product[p].amount }, { merge: true })
+                                                            // })
                                                         }
                                                         // obj.messages.push({
                                                         //     type: 'text',
