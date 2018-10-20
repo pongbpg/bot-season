@@ -35,6 +35,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     const msg = request.message.text;
     const userId = request.source.userId;
     const adminRef = db.collection('admins').doc(userId);
+    const ownerRef = db.collection('owners').doc(userId);
     let obj = {
         replyToken: request.replyToken,
         messages: []
@@ -59,16 +60,16 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 // })
                 reply(obj);
             })
-    } else if (msg.indexOf('@@admin=') > -1 && msg.split('=').length == 2) {
-        adminRef.set({
+    } else if (msg.indexOf('@@owner=') > -1 && msg.split('=').length == 2) {
+        ownerRef.set({
             userId,
             name: msg.split('=')[1],
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         })
-            .then(admin => {
+            .then(owner => {
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split('=')[1]} เป็น Admin เรียบร้อยค่ะ`
+                    text: `ลงทะเบียน ${msg.split('=')[1]} เป็น Owner เรียบร้อยค่ะ`
                 })
                 // obj.messages.push({
                 //     type: 'sticker',
@@ -144,12 +145,25 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             for (var p = 0; p < resultOrder.data.product.length; p++) {
                                                                 await db.collection('products').doc(resultOrder.data.product[p].code).get()
                                                                     .then(product => {
-                                                                        // obj.messages.push({
-                                                                        //     type: 'text',
-                                                                        //     text: `${resultOrder.data.product[p].code}  ${resultOrder.data.product[p].amount}`
-                                                                        // })
-                                                                        db.collection('products').doc(resultOrder.data.product[p].code)
-                                                                            .set({ amount: product.data().amount - resultOrder.data.product[p].amount }, { merge: true })
+                                                                        const balance = product.data().amount - resultOrder.data.product[p].amount;
+                                                                        if (balance <= product.data().alert) {
+                                                                            await db.collection('owners').get()
+                                                                                .then(snapShot => {
+                                                                                    snapShot.forEach(owner => {
+                                                                                        push({
+                                                                                            to: owner.id,
+                                                                                            messages: [
+                                                                                                {
+                                                                                                    "type": "text",
+                                                                                                    "text": `สินค้า ${product.id}:${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+                                                                                                }
+                                                                                            ]
+                                                                                        })
+                                                                                    })
+                                                                                })
+                                                                        }
+                                                                        await db.collection('products').doc(resultOrder.data.product[p].code)
+                                                                            .set({ amount: balance }, { merge: true })
                                                                     })
                                                             }
                                                             await obj.messages.push({
@@ -163,8 +177,6 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             await reply(obj);
                                                         }
                                                         callback();
-
-
                                                     })
                                             })
 

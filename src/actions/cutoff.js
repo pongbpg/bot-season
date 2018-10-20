@@ -51,7 +51,7 @@ export const startCutOff = () => {
                                         console.log(result);
                                     })
                             })
-                        dispatch(startListOrders())
+                        // dispatch(startListOrders())
                     });
             })
 
