@@ -5,6 +5,7 @@ import LoginPage from '../components/LoginPage';
 import HomePage from '../components/HomePage';
 import OrderPage from '../components/OrderPage';
 import CutOffPage from '../components/CutOffPage';
+import ReportPage from '../components/ReportPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -19,6 +20,7 @@ const AppRouter = () => (
         <PrivateRoute path="/home" component={HomePage} exact={true} />
         <PrivateRoute path="/orders" component={OrderPage} exact={true} />
         <PrivateRoute path="/cutoff" component={CutOffPage} exact={true} />
+        <PrivateRoute path="/report" component={ReportPage} exact={true} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

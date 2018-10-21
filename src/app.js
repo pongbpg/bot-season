@@ -8,6 +8,7 @@ import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
 
 import 'bulma/css/bulma.css'
+import 'react-datepicker/dist/react-datepicker.css';
 import { auth } from './firebase/firebase';
 import LoadingPage from './components/LoadingPage';
 

@@ -1,9 +1,10 @@
-export default (users, text, sortBy) => {
-    // console.log(users);
-    return users.filter((user) => {
-        const idcardMatch = user.idcard.toLowerCase().includes(text.toLowerCase());
-        const nameMatch = user.name.toLowerCase().includes(text.toLowerCase());
-        return idcardMatch || nameMatch;
+export default (orders, search) => {
+    return orders.filter((order) => {
+        const nameMatch = order.name.toLowerCase().includes(search.toLowerCase());
+        const idMatch = order.id.toLowerCase().includes(search.toLowerCase());
+        const pageMatch = order.page.toLowerCase().includes(search.toLowerCase());
+        const adminMatch = order.admin.toLowerCase().includes(search.toLowerCase());
+        return nameMatch || idMatch || pageMatch || adminMatch;
     }).sort((a, b) => {
         return a.id > b.id ? 1 : -1;
     })

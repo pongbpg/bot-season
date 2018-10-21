@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { startListOrders, startSaveTracking } from '../actions/orders';
+import filterOrders from '../selectors/orders';
 import FaSearch from 'react-icons/lib/fa/search';
 import Money from '../selectors/money';
 import moment from 'moment';
@@ -11,13 +12,16 @@ export class OrderPage extends React.Component {
         super(props);
         this.state = {
             orders: props.orders || [],
-            filterText: props.filterText || ''
+            search: props.search || ''
         }
         this.props.startListOrders();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.orders.length != this.state.orders.length) {
             this.setState({ orders: nextProps.orders });
+        }
+        if (nextProps.search != this.state.search) {
+            this.setState({ search: nextProps.search });
         }
     }
     onTrackingChange = (e) => {
@@ -35,6 +39,10 @@ export class OrderPage extends React.Component {
         const orders = this.state.orders.filter(f => f.tracking !== '');
         this.props.startSaveTracking(orders);
     }
+    onSearchChange = (e) => {
+        console.log(e.target.value)
+        this.setState({ search: e.target.value })
+    }
     render() {
         return (
             <section className="hero">
@@ -44,30 +52,19 @@ export class OrderPage extends React.Component {
                         {/* <h2 className="subtitle">Hero subtitle</h2> */}
                     </div>
                 </div>
+
                 <nav className="level">
-                    {/* <div className="level-left">
+                    <div className="level-left">
                         <div className="level-item">
-                            <div className="control has-icons-left">
-                                <div className="select">
-                                    <select className="is-hovered" value={this.state.sortBy} onChange={this.onSortChange}>
-                                        <option value="username">ชื่อผู้ใช้งาน</option>
-                                        <option value="name">ชื่อ-นามสกุล</option>
-                                        <option value="role">ประเภทผู้ใช้งาน</option>
-                                        <option value="division">แผนก</option>
-                                    </select>
-                                </div>
-                                <div className="icon is-small is-left">
-                                    <FaSort />
-                                </div>
-                            </div>
+                            {/* <h1 className="title">บันทึกเลขพัสดุ</h1> */}
                         </div>
-                    </div> */}
+                    </div>
                     <div className="level-right">
                         <div className="level-item">
                             <div className="control has-icons-right">
                                 <input className="input" type="text" placeholder="ค้นหา"
-                                    value={this.state.filterText}
-                                    // onChange={this.onFilterTextChange}
+                                    value={this.state.search}
+                                    onChange={this.onSearchChange}
                                 />
                                 <span className="icon is-small is-right">
                                     <FaSearch />
@@ -92,7 +89,7 @@ export class OrderPage extends React.Component {
                         </thead>
                         <tbody>
                             {this.state.orders.length > 0 ?
-                                this.state.orders.map((order, i) => {
+                                filterOrders(this.state.orders, this.state.search).map((order, i) => {
                                     return <tr key={order.id}>
                                         <td className="has-text-centered">{++i}</td>
                                         <td className="has-text-centered">{order.id}</td>
@@ -134,7 +131,8 @@ export class OrderPage extends React.Component {
     }
 }
 const mapStateToProps = (state, props) => ({
-    orders: state.orders
+    orders: state.orders,
+    search: state.search
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startSaveTracking: (orders) => dispatch(startSaveTracking(orders)),

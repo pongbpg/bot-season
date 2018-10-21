@@ -59,9 +59,9 @@ export class Header extends React.Component {
                 <Link className="navbar-item" to="/cutoff">
                   <span className="icon"><MdAlarmOn /></span>ปิดรอบ
                     </Link>
-                <a className="navbar-item" href={`http://yaumjai.com:3000/api/report/print?date=${yyyymmdd()}`} target="_blank">
-                  <span className="icon"><MdContactMail /></span>รายชื่อลูกค้า
-                 </a>
+                <Link className="navbar-item" to="/report">
+                  <span className="icon"><MdContactMail /></span>รายงาน
+                  </Link>
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   Logout
                     </a>

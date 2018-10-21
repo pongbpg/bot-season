@@ -24,6 +24,7 @@ export const startCutOff = () => {
                             firestore.collection('orders').doc(doc.id).set({ ...doc.data(), cutoff: true })
                         })
                         dispatch(setCutOff(true))
+                        dispatch(startListOrders())
                         return firestore.collection('groups').get()
                             .then(snapShot => {
                                 let boardcasts = [];
@@ -51,7 +52,7 @@ export const startCutOff = () => {
                                         console.log(result);
                                     })
                             })
-                        // dispatch(startListOrders())
+
                     });
             })
 

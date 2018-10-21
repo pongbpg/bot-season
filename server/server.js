@@ -42,16 +42,16 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     };
     // if (request.message.type !== 'text' || request.source.type !== 'group') {
     //}
-    if (msg.indexOf('@@admin=') > -1 && msg.split('=').length == 2) {
+    if (msg.indexOf('@@admin:') > -1 && msg.split(':').length == 2) {
         adminRef.set({
             userId,
-            name: msg.split('=')[1],
+            name: msg.split(':')[1],
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         })
             .then(admin => {
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split('=')[1]} เป็น Admin เรียบร้อยค่ะ`
+                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Admin เรียบร้อยค่ะ`
                 })
                 // obj.messages.push({
                 //     type: 'sticker',
@@ -60,16 +60,16 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 // })
                 reply(obj);
             })
-    } else if (msg.indexOf('@@owner=') > -1 && msg.split('=').length == 2) {
+    } else if (msg.indexOf('@@owner:') > -1 && msg.split(':').length == 2) {
         ownerRef.set({
             userId,
-            name: msg.split('=')[1],
+            name: msg.split(':')[1],
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         })
             .then(owner => {
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split('=')[1]} เป็น Owner เรียบร้อยค่ะ`
+                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ`
                 })
                 // obj.messages.push({
                 //     type: 'sticker',
@@ -84,8 +84,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 if (user.exists) {
                     if (request.source.type == 'group') {
                         const groupId = request.source.groupId;
-                        if (msg.indexOf('@@ยกเลิก=') > -1 && msg.split('=').length == 2) {
-                            const orderId = msg.split('=')[1];
+                        if (msg.indexOf('@@ยกเลิก:') > -1 && msg.split(':').length == 2) {
+                            const orderId = msg.split(':')[1];
                             const orderRef = db.collection('orders').doc(orderId);
                             orderRef.get()
                                 .then(order => {
@@ -184,7 +184,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             })
                                                             await obj.messages.push({
                                                                 type: 'text',
-                                                                text: `@@ยกเลิก=${orderId}`
+                                                                text: `@@ยกเลิก:${orderId}`
                                                             })
                                                             await reply(obj);
                                                         }
