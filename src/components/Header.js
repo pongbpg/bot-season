@@ -4,7 +4,7 @@ import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import MdMailOutline from 'react-icons/lib/md/mail-outline';
 import MdAlarmOn from 'react-icons/lib/md/alarm-on';
-import MdContactMail from 'react-icons/lib/md/contact-mail';
+import FaFileTextO from 'react-icons/lib/fa/file-text-o';
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -60,7 +60,7 @@ export class Header extends React.Component {
                   <span className="icon"><MdAlarmOn /></span>ปิดรอบ
                     </Link>
                 <Link className="navbar-item" to="/report">
-                  <span className="icon"><MdContactMail /></span>รายงาน
+                  <span className="icon"><FaFileTextO /></span>รายงาน
                   </Link>
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   Logout

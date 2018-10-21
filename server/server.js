@@ -261,7 +261,7 @@ const initMsgOrder = (txt) => {
                         const key = m.split(':')[0];
                         let value = m.split(':')[1];
                         if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
-                        if (key !== 'addr') value = value.replace(/\n/g, '');
+                        if (key !== 'addr') value = value.replace(/\n/g, '').toUpperCase();
                         if (key == 'tel') value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
                         if (key !== 'price') {
                             value = value.trim();
@@ -322,9 +322,9 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
-ธนาคาร: ${data.bank} จำนวนเงิน: ${data.price ? formatMoney(data.price) : 'undefined'}
+ธนาคาร: ${data.bank} ยอดเงิน: ${data.price ? formatMoney(data.price,0)+' บาท' : 'undefined'}
 FB: ${data.fb}
-Page: ${data.page}
+เพจ: ${data.page}
     `;
 }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {

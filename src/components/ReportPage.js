@@ -64,11 +64,22 @@ export class ReportPage extends React.Component {
                                     <td className="has-text-centered">1</td>
                                     <td className="has-text-centered">รายชื่อแพ็คของ</td>
                                     <td className="has-text-centered">
-                                        <a className="button is-info is-centered"
-                                            href={`http://yaumjai.com:3000/api/report/print?date=${moment(this.state.startDate).format('YYYYMMDD')}`}
-                                            target="_blank">
-                                            PDF
+                                        <div className="field is-grouped is-grouped-centered">
+                                            <p className="control">
+                                                <a className="button is-danger is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/rpt01?date=${moment(this.state.startDate).format('YYYYMMDD')}&file=pdf`}
+                                                    target="_blank">
+                                                    PDF
                                         </a>
+                                            </p>
+                                            <p className="control">
+                                                <a className="button is-success is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/rpt01?date=${moment(this.state.startDate).format('YYYYMMDD')}&file=excel`}
+                                                    target="_blank">
+                                                    EXCEL
+                                        </a>
+                                            </p>
+                                        </div>
                                     </td>
                                 </tr>
                             </tbody>
