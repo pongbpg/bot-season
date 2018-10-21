@@ -8,7 +8,7 @@ export const startLoginWithFacebook = () => {
 };
 export const startLoginLocal = (username, password) => {
     return (dispatch) => {
-        const email = username + '@season.com';
+        const email = username ;//+ '@season.com';
         return auth.signInWithEmailAndPassword(email, password)
             .catch(function (error) {
                 // Handle Errors here.
