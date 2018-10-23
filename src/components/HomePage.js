@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-// import MdHome from 'react-icons/lib/md/home';
+import StockWidget from './widget/StockPage';
 export class HomePage extends React.Component {
   constructor(props) {
     super(props);
@@ -9,8 +9,12 @@ export class HomePage extends React.Component {
 
   render() {
     return (
-      <div>
-        Home
+      <div className="hero-body">
+        <div className="columns">
+          <div className="column is-8 is-offset-2">
+            <StockWidget />
+          </div>
+        </div>
       </div>
     );
   }

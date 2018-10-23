@@ -53,11 +53,6 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     type: 'text',
                     text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Admin เรียบร้อยค่ะ`
                 })
-                // obj.messages.push({
-                //     type: 'sticker',
-                //     packageId: '11538',
-                //     stickerId: '51626498'
-                // })
                 reply(obj);
             })
     } else if (msg.indexOf('@@owner:') > -1 && msg.split(':').length == 2) {
@@ -71,13 +66,14 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     type: 'text',
                     text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ`
                 })
-                // obj.messages.push({
-                //     type: 'sticker',
-                //     packageId: '11538',
-                //     stickerId: '51626498'
-                // })
                 reply(obj);
             })
+    } else if (msg.indexOf('@@format') > -1) {
+        obj.messages.push({
+            type: 'text',
+            text: `#name:\n#tel:\n#addr:\n#product:\n#bank:\n#price:\n#fb:\n#page:`
+        })
+        reply(obj);
     } else {
         adminRef.get()
             .then(user => {
@@ -322,7 +318,7 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
-ธนาคาร: ${data.bank} ยอดเงิน: ${data.price ? formatMoney(data.price,0)+' บาท' : 'undefined'}
+ธนาคาร: ${data.bank} ยอดเงิน: ${data.price ? formatMoney(data.price, 0) + ' บาท' : 'undefined'}
 FB: ${data.fb}
 เพจ: ${data.page}
     `;

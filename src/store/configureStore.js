@@ -4,6 +4,7 @@ import authReducer from '../reducers/auth';
 import ordersReducer from '../reducers/orders';
 import cutoffReducer from '../reducers/cutoff';
 import searchReducer from '../reducers/search';
+import stockReducer from '../reducers/stock';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default () => {
@@ -12,7 +13,8 @@ export default () => {
       auth: authReducer,
       orders: ordersReducer,
       cutoff: cutoffReducer,
-      search: searchReducer
+      search: searchReducer,
+      stock: stockReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
     // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

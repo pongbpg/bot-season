@@ -1,52 +1,61 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startGetCutOff, startCutOff } from '../actions/cutoff';
-import MdAlarmOn from 'react-icons/lib/md/alarm-on';
-import moment from 'moment';
-moment.locale('th');
+import { startGetStock } from '../../actions/widget/stock';
+import Money from '../../selectors/money';
 export class StockPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            cutoff: props.cutoff
+            stock: props.stock
         }
-        this.props.startGetCutOff()
+        this.props.startGetStock();
     }
     componentWillReceiveProps(nextProps) {
-        if (nextProps.cutoff != this.state.cutoff) {
-            this.setState({ cutoff: nextProps.cutoff });
+        if (nextProps.stock != this.state.stock) {
+            this.setState({ stock: nextProps.stock });
         }
     }
-    onCutOffClick = () => {
-        this.props.startCutOff()
-        this.props.history.push('/orders')
-    }
+
     render() {
         return (
             <section className="hero">
-                <div className="hero-body">
+                <div className="hero-head">
                     <div className="container">
-                        <h1 className="title">ปิดรอบ</h1>
-                        <h2 className="subtitle">วันที่ {moment(new Date()).format('ll')}</h2>
+                        <h2 className="title">สินค้าคงคลัง</h2>
                     </div>
                 </div>
-                <nav className="level">
-                    <p className="level-item has-text-centered">
-                        <button className="button is-info is-centered is-large"
-                            onClick={this.onCutOffClick} disabled={this.state.cutoff}>
-                            ปิด{this.state.cutoff ? 'แล้ว' : 'รอบ'}จ้า
-                        </button>
-                    </p>
-                </nav>
+                <div className="hero-body">
+                    <table className="table is-fullwidth is-striped is-narrow">
+                        <thead>
+                            <tr>
+                                <th className="has-text-centered">ลำดับ</th>
+                                <th className="has-text-left">รหัส</th>
+                                <th className="has-text-left">ชื่อสินค้า</th>
+                                <th className="has-text-right">คงเหลือ</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {this.state.stock.map((st, i) => {
+                                return <tr key={st.id}>
+                                    <td className="has-text-centered">{++i}</td>
+                                    <td className="has-text-left">{st.id}</td>
+                                    <td className="has-text-left">{st.name}</td>
+                                    <td className="has-text-right">{Money(st.amount, 0)}</td>
+                                </tr>;
+                            })
+                            }
+                        </tbody>
+                    </table>
+                </div>
             </section>
         )
     }
 }
 const mapStateToProps = (state, props) => ({
-    cutoff: state.cutoff
+    stock: state.stock
 });
 const mapDispatchToProps = (dispatch, props) => ({
-    startGetCutOff: () => dispatch(startGetCutOff()),
-    startCutOff: () => dispatch(startCutOff())
+    startGetStock: () => dispatch(startGetStock())
+
 });
 export default connect(mapStateToProps, mapDispatchToProps)(StockPage);
