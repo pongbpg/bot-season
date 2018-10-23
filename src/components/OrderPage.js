@@ -79,7 +79,7 @@ export class OrderPage extends React.Component {
                                 <th className="has-text-centered">รหัสสั่งซื้อ</th>
                                 <th className="has-text-centered">ชื่อลูกค้า</th>
                                 <th className="has-text-centered">เพจ</th>
-                                <th className="has-text-right">จำนวนเงิน</th>
+                                <th className="has-text-right">ยอดโอน</th>
                                 <th className="has-text-centered">Admin</th>
                                 <th className="has-text-centered">เลขพัสดุ</th>
                             </tr>

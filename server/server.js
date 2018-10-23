@@ -318,7 +318,7 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
-ธนาคาร: ${data.bank} ยอดเงิน: ${data.price ? formatMoney(data.price, 0) + ' บาท' : 'undefined'}
+ธนาคาร: ${data.bank} ยอดโอน: ${data.price ? formatMoney(data.price, 0) + ' บาท' : 'undefined'}
 FB: ${data.fb}
 เพจ: ${data.page}
     `;
