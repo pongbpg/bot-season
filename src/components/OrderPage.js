@@ -12,16 +12,13 @@ export class OrderPage extends React.Component {
         super(props);
         this.state = {
             orders: props.orders || [],
-            search: props.search || ''
+            search: ''
         }
         this.props.startListOrders();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.orders.length != this.state.orders.length) {
             this.setState({ orders: nextProps.orders });
-        }
-        if (nextProps.search != this.state.search) {
-            this.setState({ search: nextProps.search });
         }
     }
     onTrackingChange = (e) => {
@@ -40,7 +37,7 @@ export class OrderPage extends React.Component {
         this.props.startSaveTracking(orders);
     }
     onSearchChange = (e) => {
-        console.log(e.target.value)
+        // console.log(e.target.value)
         this.setState({ search: e.target.value })
     }
     render() {
@@ -131,8 +128,7 @@ export class OrderPage extends React.Component {
     }
 }
 const mapStateToProps = (state, props) => ({
-    orders: state.orders,
-    search: state.search
+    orders: state.orders
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startSaveTracking: (orders) => dispatch(startSaveTracking(orders)),

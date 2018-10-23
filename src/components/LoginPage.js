@@ -65,7 +65,7 @@ export class LoginPage extends React.Component {
                 <div className="hero-body">
                     <div className="container has-text-centered">
                         <div className="column is-6 is-offset-3">
-                            <h3 className="title has-text-white">Order System Management</h3>
+                            <h3 className="title has-text-white">TOPSLIM OFFICE</h3>
                             <p className="subtitle has-text-white">สำหรับเจ้าหน้าที่</p>
                             <div className="box">
                                 <div className="field">
@@ -95,12 +95,12 @@ export class LoginPage extends React.Component {
                                     <a
                                         className={`button is-block is-info ${this.state.isLoading}`}
                                         onClick={this.onLoginClick}
-                                    >Login</a>
+                                    >เข้าสู่ระบบ</a>
                                 </div>
                             </div>
                             <div>
-                                <Link className="button is-text is-inverted" to="/tracking">
-                                    <span className="has-text-link">ตรวจสอบเลขพัสดุสินค้า</span>
+                                <Link className="button is-text is-inverted" to="/">
+                                    <span className="has-text-link">ตรวจสอบเลขพัสดุสำหรับลูกค้า</span>
                                 </Link>
                             </div>
                         </div>
