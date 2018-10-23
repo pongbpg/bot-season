@@ -60,7 +60,7 @@ export class Header extends React.Component {
                   <span className="icon"><MdAlarmOn /></span>ปิดรอบ
                     </Link>
                 <Link className="navbar-item" to="/orders">
-                  <span className="icon"><MdMailOutline /></span>กรอกเลขพัสดุ
+                  <span className="icon"><MdMailOutline /></span>บันทึกเลขพัสดุ
                     </Link>
                 <Link className="navbar-item" to="/">
                   <span className="icon"><FaSearch /></span>ค้นหาเลขพัสดุ
