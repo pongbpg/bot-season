@@ -74,6 +74,19 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             text: `#name:\n#tel:\n#addr:\n#product:\n#bank:\n#price:\n#fb:\n#page:`
         })
         reply(obj);
+    } else if (msg.indexOf('@@product') > -1) {
+        db.collection('products').get()
+            .then(snapShot => {
+                let pt = 'รายการสินค้า\n';
+                snapShot.forEach(product => {
+                    pt += `${product.id} ${product.data().name} ${product.data().amount},\n`;
+                })
+                obj.messages.push({
+                    type: 'text',
+                    text: pt
+                })
+                reply(obj);
+            })
     } else {
         adminRef.get()
             .then(user => {
