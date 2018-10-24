@@ -64,7 +64,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             .then(owner => {
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ`
+                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ 0x100058`
                 })
                 reply(obj);
             })
@@ -119,7 +119,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     .then(cancel => {
                                                         obj.messages.push({
                                                             type: 'text',
-                                                            text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${formatOrder(order.data())}`
+                                                            text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ`//${formatOrder(order.data())}`
                                                         })
                                                         reply(obj);
                                                     })
