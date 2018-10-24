@@ -71,7 +71,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     } else if (msg.indexOf('@@format') > -1) {
         obj.messages.push({
             type: 'text',
-            text: `#name:\n#tel:\n#addr:\n#product:\n#bank:\n#price:\n#fb:\n#page:`
+            text: `#n:ชื่อผู้รับสินค้า\n#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#p:ยอดโอน\n#s:FB หรือ Line ลูกค้า\n#f:ชื่อเพจหรือLine@`
         })
         reply(obj);
     } else if (msg.indexOf('@@product') > -1) {
@@ -267,7 +267,18 @@ const initMsgOrder = (txt) => {
                 .map(m => {
                     if (m.split(':').length == 2) {
                         const dontReplces = ["name", "fb", "bank", "addr"];
-                        const key = m.split(':')[0];
+                        let key = m.split(':')[0];
+                        switch (key) {
+                            case 'n': key = 'name'; break;
+                            case 't': key = 'tel'; break;
+                            case 'a': key = 'addr'; break;
+                            case 'o': key = 'product'; break;
+                            case 'b': key = 'bank'; break;
+                            case 'p': key = 'price'; break;
+                            case 's': key = 'fb'; break;
+                            case 'f': key = 'page'; break;
+                            default: key;
+                        }
                         let value = m.split(':')[1];
                         if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
                         if (key !== 'addr') value = value.replace(/\n/g, '').toUpperCase();
@@ -325,14 +336,15 @@ const initMsgOrder = (txt) => {
 }
 const formatOrder = (data) => {
     return `
-ชื่อ: ${data.name}
-เบอร์โทร: ${data.tel}
-ที่อยู่: ${data.addr}
+ชื่อ: ${data.name} 
+เบอร์โทร: ${data.tel} 
+ที่อยู่: ${data.addr} 
 สินค้า: ${data.product
-            ? data.product.map((p, i) => '\n' + p.code + ' ' + p.amount + 'ชิ้น')
+            ? data.product.map((p, i) => '\n' + p.code + ' ' + p.amount + 'ชิ้น ')
             : 'undefined'}
-ธนาคาร: ${data.bank} ยอดโอน: ${data.price ? formatMoney(data.price, 0) + ' บาท' : 'undefined'}
-FB: ${data.fb}
+ธนาคาร: ${data.bank} 
+ยอดโอน: ${data.price ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
+FB/Line: ${data.fb} 
 เพจ: ${data.page}
     `;
 }
