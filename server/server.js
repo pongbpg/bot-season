@@ -159,7 +159,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         cutoffDate: countsData.cutoffDate,
                                                         cutoff: false,
                                                         tracking: '',
-                                                        timestamp: admin.firestore.FieldValue.serverTimestamp()
+                                                        timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                                                        orderDate: yyyymmdd()
                                                     }, resultOrder.data))
                                                     .then(order => {
                                                         db.collection('groups').doc(groupId).set({})
