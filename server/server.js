@@ -51,7 +51,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             .then(admin => {
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Admin เรียบร้อยค่ะ`
+                    text: `${emoji(0x10002D)}${emoji(0x10002D)} ลงทะเบียน ${msg.split(':')[1]} เป็น Admin เรียบร้อยค่ะ ${emoji(0x10002D)}${emoji(0x10002D)}`
                 })
                 reply(obj);
             })
@@ -62,10 +62,10 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         })
             .then(owner => {
-                const charCode =String.fromCodePoint(0x100035);
+
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ ${charCode}`
+                    text: `${emoji(0x100058)}${emoji(0x100058)} ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ ${emoji(0x100058)}${emoji(0x100058)}`
                 })
                 reply(obj);
             })
@@ -78,7 +78,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     } else if (msg.indexOf('@@product') > -1) {
         db.collection('products').get()
             .then(snapShot => {
-                let pt = 'รายการสินค้า\n';
+                let pt = `${emoji(0x10005C)}รายการสินค้า${emoji(0x100060)}\n`;
                 snapShot.forEach(product => {
                     pt += `${product.id} ${product.data().name} ${product.data().amount},\n`;
                 })
@@ -103,7 +103,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                         if (order.data().cutoff) {
                                             obj.messages.push({
                                                 type: 'text',
-                                                text: `ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ`
+                                                text: `${emoji(0x100035)}ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ${emoji(0x1000AE)}`
                                             })
                                             reply(obj);
                                         } else {
@@ -120,7 +120,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     .then(cancel => {
                                                         obj.messages.push({
                                                             type: 'text',
-                                                            text: `ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ`//${formatOrder(order.data())}`
+                                                            text: `${emoji(0x100035)}ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${emoji(0x100018)}`//${formatOrder(order.data())}`
                                                         })
                                                         reply(obj);
                                                     })
@@ -131,7 +131,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                     } else {
                                         obj.messages.push({
                                             type: 'text',
-                                            text: `ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ`
+                                            text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
                                         })
                                     }
                                     reply(obj);
@@ -190,7 +190,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             }
                                                             await obj.messages.push({
                                                                 type: 'text',
-                                                                text: `รหัสสั่งซื้อ: ${orderId}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                                text: `${emoji(0x100006)}${emoji(0x100006)}รหัสสั่งซื้อ: ${orderId}${emoji(0x100006)}${emoji(0x100006)}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
                                                             })
                                                             await obj.messages.push({
                                                                 type: 'text',
@@ -300,7 +300,7 @@ const initMsgOrder = (txt) => {
                                                 }
                                             } else {
                                                 return {
-                                                    code: code + `เหลือเพียง${product.amount}ชิ้น`,
+                                                    code: code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`,
                                                     amount: 'undefined'
                                                 }
                                             }
@@ -329,7 +329,7 @@ const initMsgOrder = (txt) => {
             let success = true;
             if (indexUndefined > -1) {
                 const t = text.substring(0, indexUndefined - 1).split(' ');
-                text = 'รายการสั่งของคุณไม่ถูกต้องค่ะ กรุณาตรวจสอบ "' + t[t.length - 1] + '"';
+                text = `${emoji(0x1000A6)}${emoji(0x1000A6)}${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]} ${emoji(0x10001D)}`;
                 success = false;
             }
             return { text, success, data };
@@ -380,3 +380,4 @@ const fourDigit = (n) => {
         return n.toString();
     }
 }
+const emoji = (hex) => { return String.fromCodePoint(hex) };
