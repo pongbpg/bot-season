@@ -258,6 +258,7 @@ const push = (obj) => {
     });
 };
 const initMsgOrder = (txt) => {
+    const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST"];
     return db.collection('products').get()
         .then(snapShot => {
             let products = [];
@@ -317,6 +318,10 @@ const initMsgOrder = (txt) => {
                                         }
                                     }
                                 });
+                            } else if (key == 'page') {
+                                if (pages.indexOf(value) == -1) {
+                                    value = 'undefined';
+                                }
                             }
                         } else {
                             value = Number(value.replace(/\D/g, ''));
