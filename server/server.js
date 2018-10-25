@@ -62,11 +62,10 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             timestamp: admin.firestore.FieldValue.serverTimestamp()
         })
             .then(owner => {
-                var bytestring = Number('0x100058').toString(10);    // '128'
-                var emoji = parseInt(bytestring, 2).toString(16);
+                const charCode =String.fromCodePoint(0x100035);
                 obj.messages.push({
                     type: 'text',
-                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ ${emoji}`
+                    text: `ลงทะเบียน ${msg.split(':')[1]} เป็น Owner เรียบร้อยค่ะ ${charCode}`
                 })
                 reply(obj);
             })
