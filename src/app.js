@@ -2,7 +2,7 @@ import { Provider } from 'react-redux';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { login, logout } from './actions/auth';
+import { login, startGetAuth, logout } from './actions/auth';
 import { startListOrders } from './actions/orders';
 import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
@@ -39,7 +39,7 @@ const logOut = () => {
 auth.onAuthStateChanged((user) => {
   // console.log(user)
   if (user) {
-    store.dispatch(login(user))
+    store.dispatch(startGetAuth(user))
     store.dispatch(startListOrders())
     renderApp()
   } else {

@@ -27,7 +27,9 @@ export class Header extends React.Component {
   };
 
   componentWillReceiveProps(nextProps) {
-
+    if (nextProps.auth != this.state.auth) {
+      this.setState({ auth: nextProps.auth });
+    }
   };
   render() {
     const color = { color: '#333' };
@@ -38,7 +40,7 @@ export class Header extends React.Component {
       var now = new Date();
       return '' + now.getFullYear() + twoDigit(now.getMonth() + 1) + twoDigit(now.getDate());
     }
- 
+
     return (
       <div>
         <nav className="navbar is-dark">
@@ -54,18 +56,19 @@ export class Header extends React.Component {
             </div>
             <div id="navMenu" className={this.state.isBurger === true ? "navbar-menu is-active" : "navbar-menu"}>
               <div className="navbar-start">
-                {/* <Link className="navbar-item" to="/authen">ยืนยันตัวตน</Link> */}
-
-                <Link className="navbar-item" to="/cutoff">
-                  <span className="icon"><MdAlarmOn /></span>ปิดรอบ
-                    </Link>
-                <Link className="navbar-item" to="/orders">
-                  <span className="icon"><MdMailOutline /></span>บันทึกเลขพัสดุ
-                    </Link>
                 <Link className="navbar-item" to="/">
                   <span className="icon"><FaSearch /></span>ค้นหาเลขพัสดุ
+                </Link>
+                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                  < Link className="navbar-item" to="/cutoff">
+                    <span className="icon"><MdAlarmOn /></span>ปิดรอบ
+                    </Link>
+                )}
+                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                  <Link className="navbar-item" to="/orders">
+                    <span className="icon"><MdMailOutline /></span>บันทึกเลขพัสดุ
                   </Link>
-
+                )}
                 <Link className="navbar-item" to="/report">
                   <span className="icon"><FaFileTextO /></span>รายงาน
                   </Link>

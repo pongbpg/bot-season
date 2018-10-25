@@ -1,4 +1,4 @@
-import database, { auth, firebase, facebookAuthProvider } from '../firebase/firebase';
+import database, { auth, facebookAuthProvider } from '../firebase/firebase';
 import moment from 'moment';
 
 export const startLoginWithFacebook = () => {
@@ -8,8 +8,11 @@ export const startLoginWithFacebook = () => {
 };
 export const startLoginLocal = (username, password) => {
     return (dispatch) => {
-        const email = username ;//+ '@season.com';
+        const email = username;//+ '@season.com';
         return auth.signInWithEmailAndPassword(email, password)
+            .then((user) => {
+                return { code: false }
+            })
             .catch(function (error) {
                 // Handle Errors here.
                 var errorCode = error.code;
@@ -17,6 +20,17 @@ export const startLoginLocal = (username, password) => {
                 console.log(errorCode, errorMessage)
                 return error;
             });
+    }
+}
+export const startGetAuth = (user) => {
+    return (dispatch) => {
+        return database.collection('emails').doc(user.uid).get()
+            .then(doc => {
+                dispatch(setAuth({
+                    ...user,
+                    ...doc.data()
+                }))
+            })
     }
 }
 
@@ -41,6 +55,10 @@ export const changePasswordLocal = (uid, password) => {
 
 export const login = (auth) => ({
     type: 'LOGIN',
+    ...auth
+});
+export const setAuth = (auth) => ({
+    type: 'SET_AUTH',
     ...auth
 });
 
