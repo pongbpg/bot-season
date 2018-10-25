@@ -5,7 +5,10 @@ export default (orders, search) => {
         const pageMatch = order.page.toLowerCase().includes(search.toLowerCase());
         const adminMatch = order.admin.toLowerCase().includes(search.toLowerCase());
         return nameMatch || idMatch || pageMatch || adminMatch;
-    }).sort((a, b) => {
-        return a.id > b.id ? 1 : -1;
     })
+        // .sort((a, b) => {
+        //     const aName = a.name.substr(0, 1) + a.id;
+        //     const bName = b.name.substr(0, 1) + b.id;
+        //     return aName > bName ? 1 : -1;
+        // })
 };

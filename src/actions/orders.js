@@ -4,6 +4,7 @@ export const startListOrders = () => {
         return firestore.collection('orders')
             .where('cutoff', '==', true)
             .where('tracking', '==', '')
+            .orderBy('name', 'asc')
             // .onSnapshot()
             .get()
             .then(querySnapshot => {

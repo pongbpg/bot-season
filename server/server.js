@@ -177,7 +177,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                             messages: [
                                                                                                 {
                                                                                                     "type": "text",
-                                                                                                    "text": `สินค้า ${product.id}:${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+                                                                                                    "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
                                                                                                 }
                                                                                             ]
                                                                                         })
@@ -190,7 +190,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             }
                                                             await obj.messages.push({
                                                                 type: 'text',
-                                                                text: `${emoji(0x100006)}${emoji(0x100006)}รหัสสั่งซื้อ: ${orderId}${emoji(0x100006)}${emoji(0x100006)}\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                                text: `***** รหัสสั่งซื้อ: ${orderId} *****\n ${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
                                                             })
                                                             await obj.messages.push({
                                                                 type: 'text',
@@ -258,6 +258,7 @@ const push = (obj) => {
     });
 };
 const initMsgOrder = (txt) => {
+    const express = ["R", "M", "A", "K"];
     const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST"];
     return db.collection('products').get()
         .then(snapShot => {
@@ -320,6 +321,10 @@ const initMsgOrder = (txt) => {
                                 });
                             } else if (key == 'page') {
                                 if (pages.indexOf(value) == -1) {
+                                    value = 'undefined';
+                                }
+                            } else if (key == 'name') {
+                                if (express.indexOf(value.substr(0, 1).toUpperCase()) == -1) {
                                     value = 'undefined';
                                 }
                             }
