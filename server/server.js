@@ -334,7 +334,7 @@ const initMsgOrder = (txt) => {
             let success = true;
             if (indexUndefined > -1) {
                 const t = text.substring(0, indexUndefined - 1).split(' ');
-                text = `${emoji(0x1000A6)}${emoji(0x1000A6)}${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]} ${emoji(0x10001D)}`;
+                text = `${emoji(0x1000A6)}${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]}`;
                 success = false;
             }
             return { text, success, data };
