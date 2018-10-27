@@ -7,6 +7,7 @@ import OrderPage from '../components/OrderPage';
 import CutOffPage from '../components/CutOffPage';
 import ReportPage from '../components/ReportPage';
 import TrackingPage from '../components/TrackingPage';
+import TrackEditPage from '../components/TrackEditPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -21,6 +22,7 @@ const AppRouter = () => (
         <PublicRoute path="/login" component={LoginPage} exact={true} />
         <PrivateRoute path="/home" component={HomePage} exact={true} />
         <PrivateRoute path="/orders" component={OrderPage} exact={true} />
+        <PrivateRoute path="/orders/edit" component={TrackEditPage} exact={true} />
         <PrivateRoute path="/cutoff" component={CutOffPage} exact={true} />
         <PrivateRoute path="/report" component={ReportPage} exact={true} />
         <Route component={NotFoundPage} />

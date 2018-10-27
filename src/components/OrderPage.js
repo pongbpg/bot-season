@@ -4,6 +4,7 @@ import { Link } from 'react-router-dom';
 import { startListOrders, startSaveTracking } from '../actions/orders';
 import filterOrders from '../selectors/orders';
 import FaSearch from 'react-icons/lib/fa/search';
+import MdEdit from 'react-icons/lib/md/edit';
 import Money from '../selectors/money';
 import moment from 'moment';
 moment.locale('th');
@@ -53,7 +54,7 @@ export class OrderPage extends React.Component {
                 <nav className="level">
                     <div className="level-left">
                         <div className="level-item">
-                            {/* <h1 className="title">บันทึกเลขพัสดุ</h1> */}
+                            <Link to="/orders/edit" className="button"><h1 className="sub-title"><MdEdit />แก้ไข</h1></Link>
                         </div>
                     </div>
                     <div className="level-right">
@@ -98,7 +99,7 @@ export class OrderPage extends React.Component {
                                             <div className="field">
                                                 <div className="control">
                                                     <input type="text" name={order.id}
-                                                        className="input is-rounded is-small"
+                                                        className="input is-rounded is-small has-text-centered"
                                                         value={order.tracking}
                                                         onChange={this.onTrackingChange} />
                                                 </div>

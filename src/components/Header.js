@@ -57,7 +57,7 @@ export class Header extends React.Component {
             <div id="navMenu" className={this.state.isBurger === true ? "navbar-menu is-active" : "navbar-menu"}>
               <div className="navbar-start">
                 <Link className="navbar-item" to="/">
-                  <span className="icon"><FaSearch /></span>ค้นหาเลขพัสดุ
+                  <span className="icon"><FaSearch /></span>ค้นหาพัสดุ
                 </Link>
                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
                   < Link className="navbar-item" to="/cutoff">
@@ -66,7 +66,7 @@ export class Header extends React.Component {
                 )}
                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
                   <Link className="navbar-item" to="/orders">
-                    <span className="icon"><MdMailOutline /></span>บันทึกเลขพัสดุ
+                    <span className="icon"><MdMailOutline /></span>เลขพัสดุ
                   </Link>
                 )}
                 <Link className="navbar-item" to="/report">

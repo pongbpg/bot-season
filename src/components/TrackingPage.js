@@ -93,12 +93,15 @@ export class TrackingPage extends React.Component {
             <div className="columns">
               <div className="column is-8 is-offset-2">
                 {/* <h4 className="pretitol" style={{ marginBottom: 1 + 'rem' }}>CRYPTOCURRENCY INDEX FUND</h4> */}
-                <h1 className="title has-text-white"><FaSearch />ค้นหาเลขพัสดุ</h1>
+                <h1 className="title has-text-white">ค้นหาเลขพัสดุ</h1>
                 <div className="field is-grouped">
-                  <p className="control is-expanded">
+                  <p className="control has-icons-left is-expanded">
                     <input className="input is-large" type="text" placeholder="รหัสสั่งซื้อ/เบอร์โทรศัพท์"
                       value={this.state.search}
                       onChange={this.onSearchChange} />
+                    <span className="icon is-small is-left">
+                      <FaSearch />
+                    </span>
                   </p>
                   <p className="control">
                     <button className={`button is-success is-large is-rounded ${this.state.isLoading ? 'is-loading' : ''}`}
