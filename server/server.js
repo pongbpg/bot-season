@@ -260,91 +260,99 @@ const push = (obj) => {
 };
 const initMsgOrder = (txt) => {
     const express = ["R", "M", "A", "K"];
-    const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST","TPF01"];
-    return db.collection('products').get()
-        .then(snapShot => {
-            let products = [];
-            snapShot.forEach(product => {
-                products.push({ id: product.id, ...product.data() })
+    // const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST", "TPF01"];
+    return db.collection('pages').get()
+        .then(snapShotPages => {
+            let pages = [];
+            snapShotPages.forEach(page => {
+                pages.push(page.id)
             })
-            const data = Object.assign(...txt.split('#').filter(f => f != "")
-                .map(m => {
-                    if (m.split(':').length == 2) {
-                        const dontReplces = ["name", "fb", "bank", "addr"];
-                        let key = m.split(':')[0];
-                        switch (key) {
-                            case 'n': key = 'name'; break;
-                            case 't': key = 'tel'; break;
-                            case 'a': key = 'addr'; break;
-                            case 'o': key = 'product'; break;
-                            case 'b': key = 'bank'; break;
-                            case 'p': key = 'price'; break;
-                            case 's': key = 'fb'; break;
-                            case 'f': key = 'page'; break;
-                            default: key;
-                        }
-                        let value = m.split(':')[1];
-                        if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
-                        if (key !== 'addr') value = value.replace(/\n/g, '').toUpperCase();
-                        if (key == 'tel') value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
-                        if (key !== 'price') {
-                            value = value.trim();
-                            if (key == 'product') {
-                                value = value.split(',').map(p => {
-                                    if (p.split('=').length == 2) {
-                                        const code = p.split('=')[0].toUpperCase();
-                                        const amount = Number(p.split('=')[1].replace(/\D/g, ''));
-                                        const product = products.find(f => f.id === code)
-                                        if (product) {
-                                            if (product.amount >= amount) {
-                                                return {
-                                                    code,
-                                                    amount
+            return db.collection('products').get()
+                .then(snapShot => {
+                    let products = [];
+                    snapShot.forEach(product => {
+                        products.push({ id: product.id, ...product.data() })
+                    })
+                    const data = Object.assign(...txt.split('#').filter(f => f != "")
+                        .map(m => {
+                            if (m.split(':').length == 2) {
+                                const dontReplces = ["name", "fb", "bank", "addr"];
+                                let key = m.split(':')[0];
+                                switch (key) {
+                                    case 'n': key = 'name'; break;
+                                    case 't': key = 'tel'; break;
+                                    case 'a': key = 'addr'; break;
+                                    case 'o': key = 'product'; break;
+                                    case 'b': key = 'bank'; break;
+                                    case 'p': key = 'price'; break;
+                                    case 's': key = 'fb'; break;
+                                    case 'f': key = 'page'; break;
+                                    default: key;
+                                }
+                                let value = m.split(':')[1];
+                                if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
+                                if (key !== 'addr') value = value.replace(/\n/g, '').toUpperCase();
+                                if (key == 'tel') value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
+                                if (key !== 'price') {
+                                    value = value.trim();
+                                    if (key == 'product') {
+                                        value = value.split(',').map(p => {
+                                            if (p.split('=').length == 2) {
+                                                const code = p.split('=')[0].toUpperCase();
+                                                const amount = Number(p.split('=')[1].replace(/\D/g, ''));
+                                                const product = products.find(f => f.id === code)
+                                                if (product) {
+                                                    if (product.amount >= amount) {
+                                                        return {
+                                                            code,
+                                                            amount
+                                                        }
+                                                    } else {
+                                                        return {
+                                                            code: code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`,
+                                                            amount: 'undefined'
+                                                        }
+                                                    }
+                                                } else {
+                                                    return {
+                                                        code: ' รหัส' + code + 'ไม่มีในรายการสินค้า',
+                                                        amount: 'undefined'
+                                                    }
                                                 }
                                             } else {
                                                 return {
-                                                    code: code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`,
+                                                    code: 'รหัสสินค้า',
                                                     amount: 'undefined'
                                                 }
                                             }
-                                        } else {
-                                            return {
-                                                code: ' รหัส' + code + 'ไม่มีในรายการสินค้า',
-                                                amount: 'undefined'
-                                            }
+                                        });
+                                    } else if (key == 'page') {
+                                        if (pages.indexOf(value) == -1) {
+                                            value = 'undefined';
                                         }
-                                    } else {
-                                        return {
-                                            code: 'รหัสสินค้า',
-                                            amount: 'undefined'
+                                    } else if (key == 'name') {
+                                        if (express.indexOf(value.substr(0, 1).toUpperCase()) == -1) {
+                                            value = 'undefined';
                                         }
                                     }
-                                });
-                            } else if (key == 'page') {
-                                if (pages.indexOf(value) == -1) {
-                                    value = 'undefined';
+                                } else {
+                                    value = Number(value.replace(/\D/g, ''));
                                 }
-                            } else if (key == 'name') {
-                                if (express.indexOf(value.substr(0, 1).toUpperCase()) == -1) {
-                                    value = 'undefined';
-                                }
+                                return { [key]: value };
                             }
-                        } else {
-                            value = Number(value.replace(/\D/g, ''));
-                        }
-                        return { [key]: value };
+                        }));
+                    let text = formatOrder(data);
+                    const indexUndefined = text.indexOf('undefined');
+                    let success = true;
+                    if (indexUndefined > -1) {
+                        const t = text.substring(0, indexUndefined - 1).split(' ');
+                        text = `${emoji(0x1000A6)}${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]}`;
+                        success = false;
                     }
-                }));
-            let text = formatOrder(data);
-            const indexUndefined = text.indexOf('undefined');
-            let success = true;
-            if (indexUndefined > -1) {
-                const t = text.substring(0, indexUndefined - 1).split(' ');
-                text = `${emoji(0x1000A6)}${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]}`;
-                success = false;
-            }
-            return { text, success, data };
+                    return { text, success, data };
+                })
         })
+
 }
 const formatOrder = (data) => {
     return `

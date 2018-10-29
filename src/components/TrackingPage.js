@@ -129,21 +129,21 @@ export class TrackingPage extends React.Component {
                       <tbody>
                         {this.state.searchList.map((order, i) => {
                           const d = order.cutoffDate.substr(0, 4) + '-' + order.cutoffDate.substr(4, 2) + '-' + order.cutoffDate.substr(6, 2);
-                          let deliver = '';
-                          let link = '';
-                          if (order.name.substr(0, 1).toUpperCase() == 'A') {
-                            deliver = 'ALPHA FAST';
-                            link = 'https://www.alphafast.com/th/track-alpha';
-                          } else if (order.name.substr(0, 1).toUpperCase() == 'K') {
-                            deliver = 'KERRY';
-                            link = 'https://th.kerryexpress.com/th/track/?track=' + order.tracking;
-                          } else if (order.name.substr(0, 1).toUpperCase() == 'M') {
-                            deliver = 'EMS';
-                            link = 'http://track.thailandpost.co.th/tracking/default.aspx';
-                          } else if (order.name.substr(0, 1).toUpperCase() == 'R') {
-                            deliver = 'ลงทะเบียน';
-                            link = 'http://track.thailandpost.co.th/tracking/default.aspx';
-                          }
+                          // let deliver = '';
+                          // let link = '';
+                          // if (order.name.substr(0, 1).toUpperCase() == 'A') {
+                          //   deliver = 'ALPHA FAST';
+                          //   link = 'https://www.alphafast.com/th/track-alpha';
+                          // } else if (order.name.substr(0, 1).toUpperCase() == 'K') {
+                          //   deliver = 'KERRY';
+                          //   link = 'https://th.kerryexpress.com/th/track/?track=' + order.tracking;
+                          // } else if (order.name.substr(0, 1).toUpperCase() == 'M') {
+                          //   deliver = 'EMS';
+                          //   link = 'http://track.thailandpost.co.th/tracking/default.aspx';
+                          // } else if (order.name.substr(0, 1).toUpperCase() == 'R') {
+                          //   deliver = 'ลงทะเบียน';
+                          //   link = 'http://track.thailandpost.co.th/tracking/default.aspx';
+                          // }
                           return <tr key={order.id}>
                             <td className="has-text-centered">{order.id}</td>
                             <td className="has-text-centered">{order.name}</td>
@@ -151,12 +151,15 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking}</td>
                             <td className="has-text-centered">
+                              <a href={order.expressLink} target="_blank">{order.expressName}</a>
+                            </td>
+                            {/* <td className="has-text-centered">
                               {deliver != '' ?
                                 (
                                   <a href={link} target="_blank">{deliver}</a>
                                 ) : deliver
                               }
-                            </td>
+                            </td> */}
                           </tr>;
                         })
                         }
