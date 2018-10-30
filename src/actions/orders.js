@@ -28,7 +28,7 @@ export const setListOrders = (orders) => ({
 
 export const startSaveTracking = (orders) => {
     orders = orders.filter(f => {
-        if (f.tracking.length == 5 || f.tracking.length == 8 || f.tracking.length == 12) {
+        if ([5, 7, 8, 12].indexOf(f.tracking.length) > -1) {
             return true;
         } else if (f.tracking.substr(0, 1).toUpperCase() == 'K' && f.tracking.length == 13) {
             return true;
