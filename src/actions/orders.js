@@ -42,7 +42,7 @@ export const startSaveTracking = (orders) => {
         let update = firestore.collection('orders');
         for (let x = 0; x < orders.length; x++) {
             let expressLink = '', expressName = '';
-            if (orders[x].tracking.length == 5 || orders[x].tracking.length == 8 || orders[x].tracking.length == 12) {
+            if ([5, 7, 8, 12].indexOf(orders[x].tracking.length) > -1) {
                 expressName = 'ALPHA FAST';
                 expressLink = 'https://www.alphafast.com/th/track-alpha';
             } else if (orders[x].tracking.substr(0, 1).toUpperCase() == 'K' && orders[x].tracking.length == 13) {
