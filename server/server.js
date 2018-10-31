@@ -72,7 +72,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     } else if (msg.indexOf('@@format') > -1) {
         obj.messages.push({
             type: 'text',
-            text: `#n:ชื่อผู้รับสินค้า\n#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#p:ยอดโอน\n#s:FB หรือ Line ลูกค้า\n#f:ชื่อเพจหรือLine@`
+            text: `#n:ชื่อผู้รับสินค้า\n#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#p:ยอดโอน\n#f:Facebookลูกค้า\n#l:Lineลูกค้า\n#z:ชื่อเพจหรือLine@`
         })
         reply(obj);
     } else if (msg.indexOf('@@product') > -1) {
@@ -277,7 +277,7 @@ const initMsgOrder = (txt) => {
                         .map(m => {
                             if (m.split(':').length == 2) {
                                 const dontReplces = ["name", "fb", "bank", "addr"];
-                                let key = m.split(':')[0];
+                                let key = m.split(':')[0].toLowerCase();
                                 switch (key) {
                                     case 'n': key = 'name'; break;
                                     case 't': key = 'tel'; break;
@@ -285,8 +285,9 @@ const initMsgOrder = (txt) => {
                                     case 'o': key = 'product'; break;
                                     case 'b': key = 'bank'; break;
                                     case 'p': key = 'price'; break;
-                                    case 's': key = 'fb'; break;
-                                    case 'f': key = 'page'; break;
+                                    case 'f': key = 'fb'; break;
+                                    case 'l': key = 'fb'; break;
+                                    case 'z': key = 'page'; break;
                                     default: key;
                                 }
                                 let value = m.split(':')[1];
