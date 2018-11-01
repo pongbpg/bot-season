@@ -177,19 +177,18 @@ export class TrackingPage extends React.Component {
                   const d = order.cutoffDate.substr(0, 4) + '-' + order.cutoffDate.substr(4, 2) + '-' + order.cutoffDate.substr(6, 2);
                   return <div className="box content">
                     <article className="post">
-                      <h3>รหัสสั่งซื้อ: {order.id}</h3>
+                      <h3>เลขพัสดุ: {order.tracking == '' ? '-' : order.tracking}</h3>
                       <h4>{order.name}</h4>
                       <div className="media">
                         <div className="media-left">
-                          <span className="has-text-grey-light">{moment(d).format('ll')}</span>
+                          <span className="has-text-grey-light">REF:{order.id}</span>
                         </div>
                         <div className="media-content">
                           <div className="content">
-                            <p>เลขพัสดุ : 
-                              <span className="tag">{order.tracking}</span>
-                              &nbsp;
+                            <p>
                               โดย &nbsp;
                           <a href={order.expressLink + (order.expressName == 'KERRY' && '=' + order.tracking)} target="_blank">{order.expressName}</a>
+                              &nbsp;{moment(d).format('ll')}
                             </p>
                           </div>
                         </div>
