@@ -35,7 +35,7 @@ export class TrackingPage extends React.Component {
     }))
   }
   onSearchChange = (e) => {
-    this.setState({ search: e.target.value })
+    this.setState({ search: e.target.value.replace(/\s/g, '') })
   }
   onSearchClick = () => {
     if (this.state.search.length > 0) {
@@ -90,7 +90,7 @@ export class TrackingPage extends React.Component {
         </nav>
         <div className="hero-body">
           <div className="container">
-            <div className="columns">
+            <div className="columns is-hidden-mobile">
               <div className="column is-8 is-offset-2">
                 {/* <h4 className="pretitol" style={{ marginBottom: 1 + 'rem' }}>CRYPTOCURRENCY INDEX FUND</h4> */}
                 <h1 className="title has-text-white">ค้นหาเลขพัสดุ</h1>
@@ -111,7 +111,31 @@ export class TrackingPage extends React.Component {
                 </div>
               </div>
             </div>
-            <div className="columns">
+
+            <div className="columns is-hidden-tablet">
+              <div className="column is-8 is-offset-2">
+                {/* <h4 className="pretitol" style={{ marginBottom: 1 + 'rem' }}>CRYPTOCURRENCY INDEX FUND</h4> */}
+                <h1 className="title has-text-white">ค้นหาเลขพัสดุ</h1>
+                <div className="field">
+                  <p className="control has-icons-left is-expanded">
+                    <input className="input is-large" type="text" placeholder="รหัสสั่งซื้อ/เบอร์โทรศัพท์"
+                      value={this.state.search}
+                      onChange={this.onSearchChange} />
+                    <span className="icon is-small is-left">
+                      <FaSearch />
+                    </span>
+                  </p>
+                </div>
+                <div className="field">
+                  <p className="control has-text-centered">
+                    <button className={`button is-success is-large is-rounded ${this.state.isLoading ? 'is-loading' : ''}`}
+                      onClick={this.onSearchClick}>
+                      ค้นหา</button>
+                  </p>
+                </div>
+              </div>
+            </div>
+            <div className="columns is-hidden-mobile">
               <div className="column is-10 is-offset-1">
                 {this.state.searchList.length > 0 &&
                   (
@@ -129,21 +153,6 @@ export class TrackingPage extends React.Component {
                       <tbody>
                         {this.state.searchList.map((order, i) => {
                           const d = order.cutoffDate.substr(0, 4) + '-' + order.cutoffDate.substr(4, 2) + '-' + order.cutoffDate.substr(6, 2);
-                          // let deliver = '';
-                          // let link = '';
-                          // if (order.name.substr(0, 1).toUpperCase() == 'A') {
-                          //   deliver = 'ALPHA FAST';
-                          //   link = 'https://www.alphafast.com/th/track-alpha';
-                          // } else if (order.name.substr(0, 1).toUpperCase() == 'K') {
-                          //   deliver = 'KERRY';
-                          //   link = 'https://th.kerryexpress.com/th/track/?track=' + order.tracking;
-                          // } else if (order.name.substr(0, 1).toUpperCase() == 'M') {
-                          //   deliver = 'EMS';
-                          //   link = 'http://track.thailandpost.co.th/tracking/default.aspx';
-                          // } else if (order.name.substr(0, 1).toUpperCase() == 'R') {
-                          //   deliver = 'ลงทะเบียน';
-                          //   link = 'http://track.thailandpost.co.th/tracking/default.aspx';
-                          // }
                           return <tr key={order.id}>
                             <td className="has-text-centered">{order.id}</td>
                             <td className="has-text-centered">{order.name}</td>
@@ -151,15 +160,8 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking}</td>
                             <td className="has-text-centered">
-                              <a href={order.expressLink} target="_blank">{order.expressName}</a>
+                              <a href={order.expressLink + (order.expressName == 'KERRY' && '=' + order.tracking)} target="_blank">{order.expressName}</a>
                             </td>
-                            {/* <td className="has-text-centered">
-                              {deliver != '' ?
-                                (
-                                  <a href={link} target="_blank">{deliver}</a>
-                                ) : deliver
-                              }
-                            </td> */}
                           </tr>;
                         })
                         }
@@ -167,6 +169,37 @@ export class TrackingPage extends React.Component {
                     </table>
                   )
                 }
+              </div>
+            </div>
+            <div className="columns is-hidden-tablet">
+              <div className="column is-10 is-offset-1">
+                {this.state.searchList.map((order, i) => {
+                  const d = order.cutoffDate.substr(0, 4) + '-' + order.cutoffDate.substr(4, 2) + '-' + order.cutoffDate.substr(6, 2);
+                  return <div className="box content">
+                    <article className="post">
+                      <h3>รหัสสั่งซื้อ: {order.id}</h3>
+                      <h4>{order.name}</h4>
+                      <div className="media">
+                        <div className="media-left">
+                          <span className="has-text-grey-light">{moment(d).format('ll')}</span>
+                        </div>
+                        <div className="media-content">
+                          <div className="content">
+                            <p>เลขพัสดุ : 
+                              <span className="tag">{order.tracking}</span>
+                              &nbsp;
+                              โดย &nbsp;
+                          <a href={order.expressLink + (order.expressName == 'KERRY' && '=' + order.tracking)} target="_blank">{order.expressName}</a>
+                            </p>
+                          </div>
+                        </div>
+                        <div className="media-right">
+                          <span className="has-text-weight-bold">{Money(order.price, 0)}฿</span>
+                        </div>
+                      </div>
+                    </article>
+                  </div>;
+                })}
               </div>
             </div>
             {
@@ -184,7 +217,7 @@ export class TrackingPage extends React.Component {
             }
           </div>
         </div>
-      </div>
+      </div >
       // </div>
     )
   }
