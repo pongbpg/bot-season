@@ -46,7 +46,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
         adminRef.set({
             userId,
             name: msg.split(':')[1],
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
+            role: 'admin'
         })
             .then(admin => {
                 obj.messages.push({
@@ -59,7 +60,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
         ownerRef.set({
             userId,
             name: msg.split(':')[1],
-            timestamp: admin.firestore.FieldValue.serverTimestamp()
+            timestamp: admin.firestore.FieldValue.serverTimestamp(),
         })
             .then(owner => {
 
@@ -93,14 +94,14 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             .then(user => {
                 if (user.exists) {
                     if (request.source.type == 'group') {
-                       const groupId = request.source.groupId;
+                        const groupId = request.source.groupId;
                         if (msg.indexOf('@@ยกเลิก:') > -1 && msg.split(':').length == 2) {
                             const orderId = msg.split(':')[1];
                             const orderRef = db.collection('orders').doc(orderId);
                             orderRef.get()
                                 .then(order => {
                                     if (order.exists) {
-                                        if (order.data().cutoff) {
+                                        if (order.data().cutoff && user.data().role == 'admin') {
                                             obj.messages.push({
                                                 type: 'text',
                                                 text: `${emoji(0x100035)}ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ${emoji(0x1000AE)}`
