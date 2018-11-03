@@ -298,37 +298,83 @@ const initMsgOrder = (txt) => {
                                 if (key !== 'price') {
                                     value = value.trim();
                                     if (key == 'product') {
-                                        value = value.split(',').map(p => {
-                                            if (p.split('=').length == 2) {
-                                                const code = p.split('=')[0].toUpperCase();
-                                                const amount = Number(p.split('=')[1].replace(/\D/g, ''));
-                                                const product = products.find(f => f.id === code)
-                                                if (product) {
-                                                    if (product.amount >= amount) {
-                                                        return {
-                                                            code,
-                                                            amount,
-                                                            name:product.name
-                                                        }
-                                                    } else {
-                                                        return {
-                                                            code: code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`,
-                                                            amount: 'undefined'
-                                                        }
-                                                    }
+                                        const str = value;
+                                        let orders = [];
+                                        let arr = str.split(',');
+                                        for (var a in arr) {
+                                            if (arr[a].split('=').length == 2) {
+                                                const code = arr[a].split('=')[0].toUpperCase();
+                                                const amount = Number(arr[a].split('=')[1].replace(/\D/g, ''));
+                                                const orderIndex = orders.findIndex(f => f.code == code);
+                                                if (orderIndex > -1) {
+                                                    orders[orderIndex]['amount'] = orders[orderIndex]['amount'] + amount
                                                 } else {
-                                                    return {
-                                                        code: ' รหัส' + code + 'ไม่มีในรายการสินค้า',
-                                                        amount: 'undefined'
-                                                    }
+                                                    orders.push({
+                                                        code,
+                                                        amount,
+                                                        name: ''
+                                                    })
                                                 }
                                             } else {
-                                                return {
-                                                    code: 'รหัสสินค้า',
-                                                    amount: 'undefined'
+                                                const orderIndex = orders.findIndex(f => f.code == 'รหัสสินค้า');
+                                                if (orderIndex > -1) {
+
+                                                } else {
+                                                    orders.push({
+                                                        code: 'รหัสสินค้า',
+                                                        amount: 'undefined'
+                                                    })
                                                 }
                                             }
-                                        });
+                                        }
+                                        for (var order in orders) {
+                                            const code = orders[order]['code'];
+                                            const amount = orders[order]['amount'];
+                                            const product = products.find(f => f.id === orders[order]['code'])
+                                            if (product) {
+                                                if (product.amount >= amount) {
+                                                    orders[order]['name'] = product.name;
+                                                } else {
+                                                    orders[order]['code'] = code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`;
+                                                    orders[order]['amount'] = 'undefined';
+                                                }
+                                            } else {
+                                                orders[order]['code'] = ' รหัส' + code + 'ไม่มีในรายการสินค้า';
+                                                orders[order]['amount'] = 'undefined';
+                                            }
+                                        }
+                                        value = orders;
+                                        // value = value.split(',').map(p => {
+                                        //     if (p.split('=').length == 2) {
+                                        //         const code = p.split('=')[0].toUpperCase();
+                                        //         const amount = Number(p.split('=')[1].replace(/\D/g, ''));
+                                        //         const product = products.find(f => f.id === code)
+                                        //         if (product) {
+                                        //             if (product.amount >= amount) {
+                                        //                 return {
+                                        //                     code,
+                                        //                     amount,
+                                        //                     name:product.name
+                                        //                 }
+                                        //             } else {
+                                        //                 return {
+                                        //                     code: code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`,
+                                        //                     amount: 'undefined'
+                                        //                 }
+                                        //             }
+                                        //         } else {
+                                        //             return {
+                                        //                 code: ' รหัส' + code + 'ไม่มีในรายการสินค้า',
+                                        //                 amount: 'undefined'
+                                        //             }
+                                        //         }
+                                        //     } else {
+                                        //         return {
+                                        //             code: 'รหัสสินค้า',
+                                        //             amount: 'undefined'
+                                        //         }
+                                        //     }
+                                        // });
                                     } else if (key == 'page') {
                                         if (pages.indexOf(value) == -1) {
                                             value = 'undefined';
@@ -363,7 +409,7 @@ const formatOrder = (data) => {
 เบอร์โทร: ${data.tel} 
 ที่อยู่: ${data.addr} 
 สินค้า: ${data.product
-            ? data.product.map((p, i) => '\n' + p.code + ':'+p.name+' ' + p.amount + 'ชิ้น')
+            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
 ธนาคาร: ${data.bank} 
 ยอดโอน: ${data.price ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
