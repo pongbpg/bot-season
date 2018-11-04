@@ -192,7 +192,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             }
                                                             await obj.messages.push({
                                                                 type: 'text',
-                                                                text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\nถ้าข้อมูลไม่ถูกต้องหรือต้องการยกเลิกรายการให้พิมพ์ข้อความด้านล่างนี้ค่ะ`
+                                                                text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}`
                                                             })
                                                             await obj.messages.push({
                                                                 type: 'text',
@@ -412,7 +412,7 @@ const formatOrder = (data) => {
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
 ธนาคาร: ${data.bank} 
-ยอดโอน: ${data.price ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
+ยอดชำระ: ${data.price ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
 FB/Line: ${data.fb} 
 เพจ: ${data.page}
     `;
