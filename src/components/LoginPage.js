@@ -45,6 +45,7 @@ export class LoginPage extends React.Component {
                 reqPwd: 'is-danger'
             }))
         } else {
+            this.setState({ isLoading: 'is-loading' })
             this.props.startLoginLocal(this.state.username, this.state.password)
                 .then((res) => {
                     if (res.code) {

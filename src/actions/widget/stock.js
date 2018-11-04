@@ -11,6 +11,17 @@ export const startGetStock = () => {
             })
     }
 }
+export const startChangeStock = (stock) => {
+    return (dispatch) => {
+        return firestore.collection('products').doc(stock.id).get()
+            .then(doc => {
+                let amount = 0;
+                if (stock.action == 'plus') amount = doc.data().amount + stock.amount
+                if (stock.action == 'minus') amount = doc.data().amount - stock.amount
+                return firestore.collection('products').doc(stock.id).update({ amount })
+            })
+    }
+}
 export const setStock = (stock) => ({
     type: 'SET_STOCK',
     stock

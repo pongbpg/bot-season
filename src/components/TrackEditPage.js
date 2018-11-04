@@ -73,7 +73,7 @@ export class TrackEditPage extends React.Component {
     this.setState({ isSave: true })
   }
   render() {
-    console.log(this.state.orders)
+    // console.log(this.state.orders)
     const style = {
       // alignItems: 'center',
       backgroundImage: 'url("/images/tracking.jpg")',
