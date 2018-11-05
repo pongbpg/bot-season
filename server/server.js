@@ -192,7 +192,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             }
                                                             await obj.messages.push({
                                                                 type: 'text',
-                                                                text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}`
+                                                                text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\nกรุณาตรวจสอบข้อมูลสั่งซื้อด้วยนะคะ ถ้าไม่ถูกต้องแจ้งแอดมินได้เลยค่ะ`
                                                             })
                                                             await obj.messages.push({
                                                                 type: 'text',
@@ -294,7 +294,12 @@ const initMsgOrder = (txt) => {
                                 let value = m.split(':')[1];
                                 if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
                                 if (key !== 'addr') value = value.replace(/\n/g, '').toUpperCase();
-                                if (key == 'tel') value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
+                                if (key == 'tel') {
+                                    value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
+                                    if (value.length != 10) {
+                                        value = 'undefined'
+                                    }
+                                }
                                 if (key !== 'price') {
                                     value = value.trim();
                                     if (key == 'product') {
@@ -414,8 +419,7 @@ const formatOrder = (data) => {
 ธนาคาร: ${data.bank} 
 ยอดชำระ: ${data.price ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
 FB/Line: ${data.fb} 
-เพจ: ${data.page}
-    `;
+เพจ: ${data.page}`;
 }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
     try {
