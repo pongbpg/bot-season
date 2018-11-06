@@ -358,6 +358,13 @@ const initMsgOrder = (txt) => {
                                         if (express.indexOf(deliver) == -1) {
                                             value = 'undefined';
                                         }
+                                    } else if (key == 'bank') {
+                                        if (value.match(/[a-zA-Z]+/g, '') == null) {
+                                            value = 'undefined';
+                                        }
+                                        if (value.match(/\d{2}\.\d{2}/g) == null) {
+                                            value = 'undefined';
+                                        }
                                     }
                                 } else {
                                     value = Number(value.replace(/\D/g, ''));
