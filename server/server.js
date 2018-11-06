@@ -349,43 +349,13 @@ const initMsgOrder = (txt) => {
                                             }
                                         }
                                         value = orders;
-                                        // value = value.split(',').map(p => {
-                                        //     if (p.split('=').length == 2) {
-                                        //         const code = p.split('=')[0].toUpperCase();
-                                        //         const amount = Number(p.split('=')[1].replace(/\D/g, ''));
-                                        //         const product = products.find(f => f.id === code)
-                                        //         if (product) {
-                                        //             if (product.amount >= amount) {
-                                        //                 return {
-                                        //                     code,
-                                        //                     amount,
-                                        //                     name:product.name
-                                        //                 }
-                                        //             } else {
-                                        //                 return {
-                                        //                     code: code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`,
-                                        //                     amount: 'undefined'
-                                        //                 }
-                                        //             }
-                                        //         } else {
-                                        //             return {
-                                        //                 code: ' รหัส' + code + 'ไม่มีในรายการสินค้า',
-                                        //                 amount: 'undefined'
-                                        //             }
-                                        //         }
-                                        //     } else {
-                                        //         return {
-                                        //             code: 'รหัสสินค้า',
-                                        //             amount: 'undefined'
-                                        //         }
-                                        //     }
-                                        // });
                                     } else if (key == 'page') {
                                         if (pages.indexOf(value) == -1) {
                                             value = 'undefined';
                                         }
                                     } else if (key == 'name') {
-                                        if (express.indexOf(value.substr(0, 1).toUpperCase()) == -1) {
+                                        const deliver = value.substr(0, 1).toUpperCase();
+                                        if (express.indexOf(deliver) == -1) {
                                             value = 'undefined';
                                         }
                                     }
@@ -416,7 +386,7 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
-ธนาคาร: ${data.bank} 
+ธนาคาร: ${data.bank == 'COD' && ['A', 'K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
 ยอดชำระ: ${data.price ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
 FB/Line: ${data.fb} 
 เพจ: ${data.page}`;
