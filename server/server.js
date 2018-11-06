@@ -362,7 +362,7 @@ const initMsgOrder = (txt) => {
                                         if (value.match(/[a-zA-Z]+/g, '') == null) {
                                             value = 'undefined';
                                         }
-                                        if (value.match(/\d{2}\.\d{2}/g) == null) {
+                                        if (value.match(/\d{2}\.\d{2}/g) == null && value != 'COD') {
                                             value = 'undefined';
                                         }
                                     }
