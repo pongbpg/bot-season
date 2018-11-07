@@ -9,7 +9,8 @@ export class ReportPage extends React.Component {
         this.state = {
             startDate: moment(),
             endDate: moment(),
-            uid: props.auth.uid
+            uid: props.auth.uid,
+            auth: props.auth
         }
         this.handleStartChange = this.handleStartChange.bind(this);
         this.handleEndChange = this.handleEndChange.bind(this);
@@ -140,6 +141,30 @@ export class ReportPage extends React.Component {
                                         </div>
                                     </td>
                                 </tr>
+                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                                    < tr >
+                                        <td className="has-text-centered">4</td>
+                                        <td className="has-text-centered">ยอดโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)</td>
+                                        <td className="has-text-centered">
+                                            <div className="field is-grouped is-grouped-centered">
+                                                <p className="control">
+                                                    <a className="button is-danger is-centered is-small"
+                                                        href={`http://yaumjai.com:3000/api/report/dailyBank?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                        target="_blank">
+                                                        PDF
+                                        </a>
+                                                </p>
+                                                <p className="control">
+                                                    <a className="button is-success is-centered is-small"
+                                                        href={`http://yaumjai.com:3000/api/report/dailyBank?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                        target="_blank">
+                                                        EXCEL
+                                        </a>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
                             </tbody>
                         </table>
 
