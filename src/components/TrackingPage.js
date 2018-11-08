@@ -160,7 +160,7 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking}</td>
                             <td className="has-text-centered">
-                              <a href={order.expressLink + (order.expressName == 'KERRY' && '=' + order.tracking)} target="_blank">{order.expressName}</a>
+                              <a href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">{order.expressName}</a>
                             </td>
                           </tr>;
                         })
@@ -175,21 +175,26 @@ export class TrackingPage extends React.Component {
               <div className="column is-10 is-offset-1">
                 {this.state.searchList.map((order, i) => {
                   const d = order.cutoffDate.substr(0, 4) + '-' + order.cutoffDate.substr(4, 2) + '-' + order.cutoffDate.substr(6, 2);
+                  const color = (
+                    order.expressName == 'KERRY' ? 'warning' : (
+                      order.expressName == 'EMS' ? 'danger' : 'success'
+                    )
+                  )
                   return <div className="box content">
                     <article className="post">
-                      <h3>เลขพัสดุ: {order.tracking == '' ? '-' : order.tracking}</h3>
+                      <h3>
+                        <a className={`button is-link is-${color}`} href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">{order.expressName}</a>
+                        <span className="tag is-medium">{order.tracking == '' ? '-' : order.tracking}</span>
+                      </h3>
                       <h4>{order.name}</h4>
+
                       <div className="media">
                         <div className="media-left">
-                          <span className="has-text-grey-light">REF:{order.id}</span>
+                          <p className="has-text-grey-light">REF:{order.id}</p>
                         </div>
                         <div className="media-content">
                           <div className="content">
-                            <p>
-                              โดย &nbsp;
-                          <a href={order.expressLink + (order.expressName == 'KERRY' && '=' + order.tracking)} target="_blank">{order.expressName}</a>
-                              &nbsp;{moment(d).format('ll')}
-                            </p>
+                            <span className="has-text-grey">{moment(d).format('Do MMM YY')}</span>
                           </div>
                         </div>
                         <div className="media-right">
