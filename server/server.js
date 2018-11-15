@@ -171,11 +171,11 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                     .then(product => {
                                                                         const balance = product.data().amount - resultOrder.data.product[p].amount;
                                                                         if (balance <= product.data().alert) {
-                                                                            db.collection('owners').get()
+                                                                            db.collection('admins').get()
                                                                                 .then(snapShot => {
-                                                                                    snapShot.forEach(owner => {
+                                                                                    snapShot.forEach(admin => {
                                                                                         push({
-                                                                                            to: owner.id,
+                                                                                            to: admin.id,
                                                                                             messages: [
                                                                                                 {
                                                                                                     "type": "text",
