@@ -4,6 +4,7 @@ import ReactDOM from 'react-dom';
 
 import { login, startGetAuth, logout } from './actions/auth';
 import { startListOrders } from './actions/orders';
+import {startListPages} from './actions/pages';
 import AppRouter, { history } from './routers/AppRouter';
 import configureStore from './store/configureStore';
 
@@ -41,6 +42,7 @@ auth.onAuthStateChanged((user) => {
   if (user) {
     store.dispatch(startGetAuth(user))
     store.dispatch(startListOrders())
+    store.dispatch(startListPages())
     renderApp()
   } else {
     logOut();

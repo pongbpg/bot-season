@@ -5,6 +5,7 @@ import ordersReducer from '../reducers/orders';
 import cutoffReducer from '../reducers/cutoff';
 import searchReducer from '../reducers/search';
 import stockReducer from '../reducers/stock';
+import pagesReducer from '../reducers/pages';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default () => {
@@ -14,7 +15,8 @@ export default () => {
       orders: ordersReducer,
       cutoff: cutoffReducer,
       search: searchReducer,
-      stock: stockReducer
+      stock: stockReducer,
+      pages: pagesReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
     // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
