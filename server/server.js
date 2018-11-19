@@ -165,7 +165,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
-                                                    db.collection('counter').doc('orders').set({ dateกิ: orderDate, no, cutoff }, { merge: true })
+                                                    db.collection('counter').doc('orders').set({ date: orderDate, no, cutoff }, { merge: true })
                                                     cutoff = false;
                                                 }
                                                 if (cutoffOk == true) {
