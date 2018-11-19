@@ -393,7 +393,7 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น')
             : 'undefined'}
-${data.bank == 'ชำระปลายทาง: COD' && ['A', 'K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : 'ธนาคาร: ' + data.bank} 
+ธนาคาร: ${data.bank == 'COD' && ['A', 'K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
 ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
 FB/Line: ${data.fb} 
 เพจ: ${data.page}`;
