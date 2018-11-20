@@ -71,7 +71,7 @@ export class TrackingPage extends React.Component {
         <nav className="navbar">
           <div className="container">
             <div className="navbar-brand">
-              <span className="navbar-item title">TOPSLIM OFFICE</span>
+              <span className="navbar-item title">TOPSLIM STORE</span>
               <span data-target="navbarMenu" onClick={this.toggleIsBurger}
                 className={this.state.isBurger === true ? "navbar-burger burger is-active" : "navbar-burger burger"}>
                 <span></span>

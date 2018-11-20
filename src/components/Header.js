@@ -46,7 +46,7 @@ export class Header extends React.Component {
         <nav className="navbar is-dark">
           <div className="container">
             <div className="navbar-brand">
-              <Link className="navbar-item brand-text" to="/home">TOPSLIM OFFICE</Link>
+              <Link className="navbar-item brand-text" to="/home">TOPSLIM STORE</Link>
               <div data-target="navMenu" onClick={this.toggleIsBurger}
                 className={this.state.isBurger === true ? "navbar-burger burger is-active" : "navbar-burger burger"}>
                 <span></span>

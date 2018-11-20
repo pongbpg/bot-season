@@ -18,8 +18,14 @@ export class CutOffPage extends React.Component {
         }
     }
     onCutOffClick = () => {
-        this.props.startCutOff()
-        this.props.history.push('/orders')
+        var r = confirm("จะปิดรอบจริงหรอเป้??!!");
+        if (r == true) {
+            alert("ปิดรอบให้แล้วนะเป้!");
+            this.props.startCutOff()
+            this.props.history.push('/orders')
+        } else {
+            alert("ยังไม่ได้ปิดรอบนะเป้ รอแอดมินแปป!!");
+        }
     }
     render() {
         return (
