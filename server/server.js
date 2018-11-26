@@ -412,10 +412,10 @@ const formatOrder = (data) => {
 เบอร์โทร: ${data.tel} 
 ที่อยู่: ${data.addr} 
 สินค้า: ${data.product
-            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น')
-            : 'undefined'}
+            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น ')
+            : 'undefined'} 
 ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
-ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท ' : 'undefined'}
+ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : 'undefined'} 
 FB/Line: ${data.fb} 
 เพจ: ${data.page}`;
 }
