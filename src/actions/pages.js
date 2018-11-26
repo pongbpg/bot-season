@@ -1,5 +1,6 @@
 import firestore from '../firebase/firebase';
-export const startListPages = () => {
+import selectPages from '../selectors/pages';
+export const startListPages = (auth) => {
     return (dispatch) => {
         return firestore.collection('pages')
             .get()
@@ -13,7 +14,8 @@ export const startListPages = () => {
                         })
                     }
                 });
-                dispatch(setListPages(pages))
+                pages = selectPages(pages, auth)
+                return dispatch(setListPages(pages))
             })
     }
 }

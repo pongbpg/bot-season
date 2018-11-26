@@ -34,7 +34,7 @@ export class ReportPage extends React.Component {
         })
     }
     render() {
-        console.log('pages', this.state.pages)
+        // console.log('pages', this.state.pages)
         return (
             <section className="hero">
                 <div className="hero-body">
@@ -130,19 +130,19 @@ export class ReportPage extends React.Component {
                                 </tr>
                                 <tr>
                                     <td className="has-text-centered">3</td>
-                                    <td className="has-text-centered">ยอดขายประจำวันที่สั่งซื้อ (วันที่เริ่ม-ถึงวันที่)</td>
+                                    <td className="has-text-centered">ยอดทักประจำวันที่สั่งซื้อ (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
                                                 <a className="button is-danger is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                    href={`http://yaumjai.com:3000/api/report/dailySayHi?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
                                                     target="_blank">
                                                     PDF
                                         </a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-success is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                    href={`http://yaumjai.com:3000/api/report/dailySayHi?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
                                                     target="_blank">
                                                     EXCEL
                                         </a>
@@ -150,40 +150,66 @@ export class ReportPage extends React.Component {
                                         </div>
                                     </td>
                                 </tr>
-                                < tr >
-                                    <td className="has-text-centered">4</td>
-                                    <td className="has-text-centered">
-                                        ยอดขายสินค้าเพจ&nbsp;
-                                            <select className="select is-info"
-                                            onChange={this.handlePageChange}
-                                            value={this.state.page}>
-                                            {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (<option value="ALL">ทุกเพจ</option>)}
-                                            {this.state.pages.map(page => {
-                                                return <option key={page.id}
-                                                    value={page.id}>{page.id + ':' + page.admin}</option>
-                                            })}
-                                        </select>
-                                        &nbsp;(วันที่เริ่ม-ถึงวันที่)
+                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                                    <tr>
+                                        <td className="has-text-centered">4</td>
+                                        <td className="has-text-centered">ยอดขายประจำวันที่สั่งซื้อ (วันที่เริ่ม-ถึงวันที่)</td>
+                                        <td className="has-text-centered">
+                                            <div className="field is-grouped is-grouped-centered">
+                                                <p className="control">
+                                                    <a className="button is-danger is-centered is-small"
+                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                        target="_blank">
+                                                        PDF
+                                        </a>
+                                                </p>
+                                                <p className="control">
+                                                    <a className="button is-success is-centered is-small"
+                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                        target="_blank">
+                                                        EXCEL
+                                        </a>
+                                                </p>
+                                            </div>
                                         </td>
-                                    <td className="has-text-centered">
-                                        <div className="field is-grouped is-grouped-centered">
-                                            <p className="control">
-                                                <a className="button is-danger is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/dailyProduct?uid=${this.state.uid}&page=${this.state.page}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
-                                                    target="_blank">
-                                                    PDF</a>
-                                            </p>
-                                            <p className="control">
-                                                <a className="button is-success is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/dailyProduct?uid=${this.state.uid}&page=${this.state.page}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
-                                                    target="_blank">
-                                                    EXCEL</a>
-                                            </p>
-                                        </div>
-                                    </td>
-                                </tr>
+                                    </tr>
+                                )}
+                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                                    <tr>
+                                        <td className="has-text-centered">5</td>
+                                        <td className="has-text-centered">
+                                            ยอดขายสินค้าเพจ&nbsp;
+                                            <select className="select is-info"
+                                                onChange={this.handlePageChange}
+                                                value={this.state.page}>
+                                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (<option value="ALL">ทุกเพจ</option>)}
+                                                {this.state.pages.map(page => {
+                                                    return <option key={page.id}
+                                                        value={page.id}>{page.id + ':' + page.admin}</option>
+                                                })}
+                                            </select>
+                                            &nbsp;(วันที่เริ่ม-ถึงวันที่)
+                                        </td>
+                                        <td className="has-text-centered">
+                                            <div className="field is-grouped is-grouped-centered">
+                                                <p className="control">
+                                                    <a className="button is-danger is-centered is-small"
+                                                        href={`http://yaumjai.com:3000/api/report/dailyProduct?uid=${this.state.uid}&page=${this.state.page}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                        target="_blank">
+                                                        PDF</a>
+                                                </p>
+                                                <p className="control">
+                                                    <a className="button is-success is-centered is-small"
+                                                        href={`http://yaumjai.com:3000/api/report/dailyProduct?uid=${this.state.uid}&page=${this.state.page}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                        target="_blank">
+                                                        EXCEL</a>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>
+                                )}
                                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
-                                    <td className="has-text-centered">5</td>
+                                    <td className="has-text-centered">6</td>
                                     <td className="has-text-centered">ยอดโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
@@ -214,7 +240,7 @@ export class ReportPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
-    pages: selectPages(state.pages, state.auth)
+    pages: state.pages//selectPages(state.pages, state.auth)
 });
 const mapDispatchToProps = (dispatch, props) => ({
 });

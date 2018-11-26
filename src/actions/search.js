@@ -19,7 +19,7 @@ export const startSearchTracking = (search) => {
                             snapShot.forEach(list => {
                                 lists.push({ id: list.id, ...list.data() })
                             })
-                            return dispatch(setSearch(lists));
+                            return dispatch(setSearch(lists.sort((a, b) => a.id < b.id ? 1 : -1)));
                         })
                 }
             })

@@ -55,7 +55,7 @@ export class TrackingPage extends React.Component {
     this.setState({ alert: false })
   }
   render() {
-    console.log(this.state.searchList)
+    // console.log(this.state.searchList)
     const style = {
       // alignItems: 'center',
       backgroundImage: 'url("/images/tracking.jpg")',
@@ -144,6 +144,7 @@ export class TrackingPage extends React.Component {
                         <tr>
                           <th className="has-text-centered">รหัสสั่งซื้อ</th>
                           <th className="has-text-centered">ชื่อผู้สั่งซื้อ</th>
+                          <th className="has-text-centered">เพจ</th>
                           <th className="has-text-centered">วันที่ส่งสินค้า</th>
                           <th className="has-text-right">ยอดโอน</th>
                           <th className="has-text-centered">เลขพัสดุ</th>
@@ -156,6 +157,7 @@ export class TrackingPage extends React.Component {
                           return <tr key={order.id}>
                             <td className="has-text-centered">{order.id}</td>
                             <td className="has-text-centered">{order.name}</td>
+                            <td className="has-text-centered">{order.page}</td>
                             <td className="has-text-centered">{moment(d).format('ll')}</td>
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking}</td>
@@ -180,7 +182,7 @@ export class TrackingPage extends React.Component {
                       order.expressName == 'EMS' ? 'danger' : 'success'
                     )
                   )
-                  return <div className="box content">
+                  return <div key={order.id} className="box content">
                     <article className="post">
                       <h3>
                         <a className={`button is-link is-${color}`} href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">{order.expressName}</a>
@@ -190,7 +192,7 @@ export class TrackingPage extends React.Component {
 
                       <div className="media">
                         <div className="media-left">
-                          <p className="has-text-grey-light">REF:{order.id}</p>
+                          <p className="has-text-grey-light">{order.id}</p>
                         </div>
                         <div className="media-content">
                           <div className="content">
@@ -198,7 +200,7 @@ export class TrackingPage extends React.Component {
                           </div>
                         </div>
                         <div className="media-right">
-                          <span className="has-text-weight-bold">{Money(order.price, 0)}฿</span>
+                          <span className="has-text-weight-bold">฿{Money(order.price, 0)}</span>
                         </div>
                       </div>
                     </article>

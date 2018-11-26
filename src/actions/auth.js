@@ -26,7 +26,7 @@ export const startGetAuth = (user) => {
     return (dispatch) => {
         return database.collection('emails').doc(user.uid).get()
             .then(doc => {
-                dispatch(setAuth({
+                return dispatch(setAuth({
                     ...user,
                     ...doc.data()
                 }))

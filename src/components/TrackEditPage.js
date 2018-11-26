@@ -120,7 +120,7 @@ export class TrackEditPage extends React.Component {
                     <th className="has-text-centered">รหัสสั่งซื้อ</th>
                     <th className="has-text-centered">ชื่อลูกค้า</th>
                     <th className="has-text-centered">วันที่ปิดรอบ</th>
-                    <th className="has-text-centered">แอดมิน</th>
+                    <th className="has-text-centered">เพจ</th>
                     <th className="has-text-right">ยอดโอน</th>
                     <th className="has-text-centered">เลขพัสดุ</th>
                   </tr>
@@ -133,7 +133,7 @@ export class TrackEditPage extends React.Component {
                       <td className="has-text-centered">{order.id}</td>
                       <td className="has-text-centered">{order.name}</td>
                       <td className="has-text-centered">{moment(d).format('ll')}</td>
-                      <td className="has-text-centered">{order.admin}</td>
+                      <td className="has-text-centered">{order.page}</td>
                       <td className="has-text-right">{Money(order.price)}</td>
                       <td className="has-text-centered">
                         <div className="field">

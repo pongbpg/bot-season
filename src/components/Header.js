@@ -6,6 +6,7 @@ import MdMailOutline from 'react-icons/lib/md/mail-outline';
 import MdAlarmOn from 'react-icons/lib/md/alarm-on';
 import FaSearch from 'react-icons/lib/fa/search';
 import FaFileTextO from 'react-icons/lib/fa/file-text-o';
+import MdPanTool from 'react-icons/lib/md/pan-tool';
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -69,6 +70,9 @@ export class Header extends React.Component {
                     <span className="icon"><MdMailOutline /></span>เลขพัสดุ
                   </Link>
                 )}
+                <Link className="navbar-item" to="/sayhi">
+                  <span className="icon"><MdPanTool /></span>ยอดทัก
+                  </Link>
                 <Link className="navbar-item" to="/report">
                   <span className="icon"><FaFileTextO /></span>รายงาน
                   </Link>

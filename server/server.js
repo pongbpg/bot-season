@@ -45,7 +45,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     if (msg.indexOf('@@admin:') > -1 && msg.split(':').length == 2) {
         adminRef.set({
             userId,
-            name: msg.split(':')[1],
+            name: msg.split(':')[1].replace(/\s/g, ''),
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
             role: 'admin'
         })
