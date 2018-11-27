@@ -160,9 +160,13 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-centered">{order.page}</td>
                             <td className="has-text-centered">{moment(d).format('ll')}</td>
                             <td className="has-text-right">{Money(order.price)}</td>
-                            <td className="has-text-centered">{order.tracking}</td>
+                            <td className="has-text-centered">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</td>
                             <td className="has-text-centered">
-                              <a href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">{order.expressName}</a>
+                              <a href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">
+                                {!order.expressName ?
+                                  (order.cutoff ? 'จัดส่งแล้ว' : 'ยังไม่ได้จัดส่ง')
+                                  : order.expressName}
+                              </a>
                             </td>
                           </tr>;
                         })
@@ -185,8 +189,12 @@ export class TrackingPage extends React.Component {
                   return <div key={order.id} className="box content">
                     <article className="post">
                       <h3>
-                        <a className={`button is-link is-${color}`} href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">{order.expressName}</a>
-                        <span className="tag is-medium">{order.tracking == '' ? '-' : order.tracking}</span>
+                        <a className={`button is-link is-${color}`} href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">
+                          {!order.expressName ?
+                            (order.cutoff ? 'จัดส่งแล้ว' : 'ยังไม่ได้จัดส่ง')
+                            : order.expressName}
+                        </a>
+                        <span className="tag is-medium">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</span>
                       </h3>
                       <h4>{order.name}</h4>
 
