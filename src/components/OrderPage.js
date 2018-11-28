@@ -78,6 +78,7 @@ export class OrderPage extends React.Component {
                             <tr>
                                 <th className="has-text-centered">ลำดับ</th>
                                 <th className="has-text-centered">รหัสสั่งซื้อ</th>
+                                <th className="has-text-centered">วันที่ปิดรอบ</th>
                                 <th className="has-text-centered">ชื่อลูกค้า</th>
                                 <th className="has-text-centered">เพจ</th>
                                 <th className="has-text-right">ยอดโอน</th>
@@ -91,6 +92,7 @@ export class OrderPage extends React.Component {
                                     return <tr key={order.id}>
                                         <td className="has-text-centered">{++i}</td>
                                         <td className="has-text-centered">{order.id}</td>
+                                        <td className="has-text-centered">{moment(order.cutoffDate).format('Do MMM YY')}</td>
                                         <td className="has-text-centered">{order.name}</td>
                                         <td className="has-text-centered">{order.page}</td>
                                         <td className="has-text-right">{Money(order.price)}</td>

@@ -7,8 +7,8 @@ export default (orders, search) => {
         return nameMatch || idMatch || pageMatch || adminMatch;
     })
         .sort((a, b) => {
-            const aName = a.id.substr(0, 8) + a.name.substr(0, 1) + a.id;
-            const bName = b.id.substr(0, 8) + b.name.substr(0, 1) + b.id;
+            const aName = a.cutoffDate + a.name.substr(0, 1) + a.id;
+            const bName = b.cutoffDate + b.name.substr(0, 1) + b.id;
             return aName > bName ? 1 : -1;
         })
 };
