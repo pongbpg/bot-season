@@ -229,6 +229,27 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
+                                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                    <td className="has-text-centered">7</td>
+                                    <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)</td>
+                                    <td className="has-text-centered">
+                                        <div className="field is-grouped is-grouped-centered">
+                                            <p className="control">
+                                                <a className="button is-danger is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/dailyStatement?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                    target="_blank">
+                                                    PDF</a>
+                                            </p>
+                                            <p className="control">
+                                                <a className="button is-success is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/dailyStatement?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                    target="_blank">
+                                                    EXCEL</a>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
+                                )}
                             </tbody>
                         </table>
 

@@ -75,7 +75,6 @@
     "webpack-dev-server": "2.5.1"
   },
   "engines": {
-    "node": "10.6.0",
-    "yarn": "1.0.2"
+    "node": "10.6.0"
   }
 }
