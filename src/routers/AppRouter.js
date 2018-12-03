@@ -9,6 +9,7 @@ import ReportPage from '../components/ReportPage';
 import TrackingPage from '../components/TrackingPage';
 import TrackEditPage from '../components/TrackEditPage';
 import SayHiPage from '../components/SayHiPage';
+import CostPage from '../components/CostPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -27,6 +28,7 @@ const AppRouter = () => (
         <PrivateRoute path="/cutoff" component={CutOffPage} exact={true} />
         <PrivateRoute path="/report" component={ReportPage} exact={true} />
         <PrivateRoute path="/sayhi" component={SayHiPage} exact={true} />
+        <PrivateRoute path="/cost" component={CostPage} exact={true} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

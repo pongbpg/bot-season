@@ -1,7 +1,5 @@
 import React from 'react';
-import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
-import selectPages from '../selectors/pages';
 import Money from '../selectors/money';
 import { startListSayhis, startSaveSayhi } from '../actions/sayhis';
 import moment from 'moment';

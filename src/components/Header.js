@@ -7,6 +7,7 @@ import MdAlarmOn from 'react-icons/lib/md/alarm-on';
 import FaSearch from 'react-icons/lib/fa/search';
 import FaFileTextO from 'react-icons/lib/fa/file-text-o';
 import MdPanTool from 'react-icons/lib/md/pan-tool';
+import MdAttachMoney from 'react-icons/lib/md/attach-money';
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -73,6 +74,11 @@ export class Header extends React.Component {
                 <Link className="navbar-item" to="/sayhi">
                   <span className="icon"><MdPanTool /></span>ยอดทัก
                   </Link>
+                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                  <Link className="navbar-item" to="/cost">
+                    <span className="icon"><MdAttachMoney /></span>ค่าใช้จ่าย
+                  </Link>
+                )}
                 <Link className="navbar-item" to="/report">
                   <span className="icon"><FaFileTextO /></span>รายงาน
                   </Link>

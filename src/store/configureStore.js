@@ -7,6 +7,7 @@ import searchReducer from '../reducers/search';
 import stockReducer from '../reducers/stock';
 import pagesReducer from '../reducers/pages';
 import sayhisReducer from '../reducers/sayhis';
+import costsReducer from '../reducers/costs';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default () => {
@@ -19,6 +20,7 @@ export default () => {
       stock: stockReducer,
       pages: pagesReducer,
       sayhis: sayhisReducer,
+      costs: costsReducer,
 
     }),
     composeEnhancers(applyMiddleware(thunk))
