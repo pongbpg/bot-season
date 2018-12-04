@@ -310,6 +310,7 @@ const initMsgOrder = (txt) => {
                                     case 'f': key = 'fb'; break;
                                     case 'l': key = 'fb'; break;
                                     case 'z': key = 'page'; break;
+                                    case 'cutoffdate': key = 'cutoffDate'; break;
                                     default: key;
                                 }
                                 let value = m.split(':')[1];
