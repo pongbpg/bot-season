@@ -334,7 +334,7 @@ const initMsgOrder = (txt) => {
                                                 const code = arr[a].split('=')[0].toUpperCase();
                                                 const amount = Number(arr[a].split('=')[1].replace(/\D/g, ''));
                                                 const orderIndex = orders.findIndex(f => f.code == code);
-                                                if (orderIndex > -1) {
+                                                if (orderIndex > -1 && amount > 0) {
                                                     orders[orderIndex]['amount'] = orders[orderIndex]['amount'] + amount
                                                 } else {
                                                     orders.push({
