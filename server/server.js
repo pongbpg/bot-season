@@ -310,19 +310,20 @@ const initMsgOrder = (txt) => {
                                     case 'f': key = 'fb'; break;
                                     case 'l': key = 'fb'; break;
                                     case 'z': key = 'page'; break;
+                                    case 'd': key = 'delivery'; break;
                                     case 'cutoffdate': key = 'cutoffDate'; break;
                                     default: key;
                                 }
                                 let value = m.split(':')[1];
                                 if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
-                                if (key !== 'addr') value = value.replace(/\n/g, '').toUpperCase();
+                                if (key !== 'addr' && key !== 'fb') value = value.replace(/\n/g, '').toUpperCase();
                                 if (key == 'tel') {
                                     value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
                                     if (value.length != 10) {
                                         value = 'undefined'
                                     }
                                 }
-                                if (key !== 'price') {
+                                if (key !== 'price' && key !== 'delivery') {
                                     value = value.trim();
                                     if (key == 'product') {
                                         const str = value;
@@ -417,6 +418,7 @@ const formatOrder = (data) => {
             : 'undefined'} 
 ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
 ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : 'undefined'} 
+ค่าจัดส่ง: ${data.delivery ? formatMoney(data.delivery, 0) + ' บาท' : 'undefined'} 
 FB/Line: ${data.fb} 
 เพจ: ${data.page}`;
 }
