@@ -11,6 +11,7 @@ export class ReportPage extends React.Component {
             startDate: moment(),
             endDate: moment(),
             uid: props.auth.uid,
+            sum: 'daily',
             auth: props.auth,
             pages: props.pages,
             page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
@@ -28,10 +29,14 @@ export class ReportPage extends React.Component {
             endDate: date
         });
     }
+    onSumChange = (e) => {
+        this.setState({ sum: e.target.value })
+    }
     handlePageChange = (e) => {
         this.setState({
             page: e.target.value
         })
+        console.log(e.target.value)
     }
     render() {
         // console.log('pages', this.state.pages)
@@ -68,6 +73,17 @@ export class ReportPage extends React.Component {
                                         selected={this.state.endDate}
                                         onChange={this.handleEndChange}
                                     />
+                                </div>
+                            </div>
+                            <div className="level-item has-text-centered">
+                                <div className="field">
+                                    <label className="label">ยอดรวม</label>
+                                    <div className="select">
+                                        <select selected={this.state.sum} onChange={this.onSumChange}>
+                                            <option value="daily">รายวัน</option>
+                                            <option value="all">ทั้งหมด</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                         </div>
@@ -135,18 +151,22 @@ export class ReportPage extends React.Component {
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
                                                 <a className="button is-danger is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/dailySayHi?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                    href={`http://yaumjai.com:3000/api/report/dailySayHi?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf&sum=${this.state.sum}`}
                                                     target="_blank">
-                                                    PDF
-                                        </a>
+                                                    PDF</a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-success is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/dailySayHi?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel&sum=${this.state.sum}`}
+                                                    target="_blank">
+                                                    EXCEL</a>
+                                            </p>
+                                            {/* <p className="control">
+                                                <a className="button is-success is-centered is-small"
                                                     href={`http://yaumjai.com:3000/api/report/dailySayHi?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
                                                     target="_blank">
-                                                    EXCEL
-                                        </a>
-                                            </p>
+                                                    EXCEL</a>
+                                            </p> */}
                                         </div>
                                     </td>
                                 </tr>
@@ -158,17 +178,15 @@ export class ReportPage extends React.Component {
                                             <div className="field is-grouped is-grouped-centered">
                                                 <p className="control">
                                                     <a className="button is-danger is-centered is-small"
-                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf&sum=${this.state.sum}`}
                                                         target="_blank">
-                                                        PDF
-                                        </a>
+                                                        PDF</a>
                                                 </p>
                                                 <p className="control">
                                                     <a className="button is-success is-centered is-small"
-                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel&sum=${this.state.sum}`}
                                                         target="_blank">
-                                                        EXCEL
-                                        </a>
+                                                        EXCEL</a>
                                                 </p>
                                             </div>
                                         </td>
@@ -229,7 +247,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">7</td>
                                     <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
