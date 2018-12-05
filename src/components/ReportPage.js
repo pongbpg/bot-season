@@ -247,7 +247,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">7</td>
                                     <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
@@ -268,7 +268,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">8</td>
                                     <td className="has-text-centered">ค่าคอมฯ Admin (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
@@ -289,7 +289,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {[ 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">9</td>
                                     <td className="has-text-centered">กำไรขาดทุนแต่ละเพจ (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
