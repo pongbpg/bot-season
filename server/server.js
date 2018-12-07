@@ -418,7 +418,7 @@ const formatOrder = (data) => {
             : 'undefined'} 
 ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
 ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : 'undefined'} 
-ค่าจัดส่ง: ${data.delivery >= 0 ? formatMoney(data.delivery, 0) + ' บาท' : 'undefined'} 
+${data.delivery >= 0 ? '' : 'ค่าจัดส่ง: undefined'} 
 FB/Line: ${data.fb} 
 เพจ: ${data.page}`;
 }
