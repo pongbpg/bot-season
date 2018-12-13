@@ -57,10 +57,11 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 reply(obj);
             })
     } else if (msg.indexOf('@@owner:') > -1 && msg.split(':').length == 2) {
-        ownerRef.set({
+        adminRef.set({
             userId,
             name: msg.split(':')[1],
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
+            role:'owner'
         })
             .then(owner => {
 
@@ -416,7 +417,7 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น ')
             : 'undefined'} 
-ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
+ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A','K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
 ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : 'undefined'} 
 ${data.delivery >= 0 ? '' : 'ค่าจัดส่ง: undefined'} 
 FB/Line: ${data.fb} 
