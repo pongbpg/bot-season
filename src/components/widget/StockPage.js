@@ -53,9 +53,7 @@ export class StockPage extends React.Component {
             amount: this.state.amount,
             action
         }).then(() => {
-            this.props.startGetStock().then(() => {
-                this.setState({ isLoading: '' })
-            })
+            this.setState({ isLoading: '' })
         })
 
     }
