@@ -61,7 +61,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             userId,
             name: msg.split(':')[1],
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
-            role:'owner'
+            role: 'owner'
         })
             .then(owner => {
 
@@ -363,6 +363,7 @@ const initMsgOrder = (txt) => {
                                             if (product) {
                                                 if (product.amount >= amount) {
                                                     orders[order]['name'] = product.name;
+                                                    orders[order]['cost'] = product.cost;
                                                 } else {
                                                     orders[order]['code'] = code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`;
                                                     orders[order]['amount'] = 'undefined';
@@ -417,9 +418,8 @@ const formatOrder = (data) => {
 สินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + 'ชิ้น ')
             : 'undefined'} 
-ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A','K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
-ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : 'undefined'} 
-${data.delivery >= 0 ? '' : 'ค่าจัดส่ง: undefined'} 
+ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K'].indexOf(data.name.substr(0, 1)) == -1 ? 'undefined' : data.bank} 
+ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : 'undefined'} ${data.delivery >= 0 ? '' : ' ค่าจัดส่ง: undefined'} 
 FB/Line: ${data.fb} 
 เพจ: ${data.page}`;
 }
