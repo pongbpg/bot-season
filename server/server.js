@@ -290,119 +290,143 @@ const initMsgOrder = (txt) => {
             snapShotPages.forEach(page => {
                 pages.push(page.id)
             })
-            return db.collection('products').get()
+            // return db.collection('products').get()
+            //     .then(snapShot => {
+            let orders = [];
+            // snapShot.forEach(product => {
+            //     products.push({ id: product.id, ...product.data() })
+            // })
+            let data = Object.assign(...txt.split('#').filter(f => f != "")
+                .map(m => {
+                    if (m.split(':').length == 2) {
+                        const dontReplces = ["name", "fb", "bank", "addr"];
+                        let key = m.split(':')[0].toLowerCase();
+                        switch (key) {
+                            case 'n': key = 'name'; break;
+                            case 't': key = 'tel'; break;
+                            case 'a': key = 'addr'; break;
+                            case 'o': key = 'product'; break;
+                            case 'b': key = 'bank'; break;
+                            case 'p': key = 'price'; break;
+                            case 'f': key = 'fb'; break;
+                            case 'l': key = 'fb'; break;
+                            case 'z': key = 'page'; break;
+                            case 'd': key = 'delivery'; break;
+                            case 'cutoffdate': key = 'cutoffDate'; break;
+                            default: key;
+                        }
+                        let value = m.split(':')[1];
+                        if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
+                        if (key !== 'addr' && key !== 'fb') value = value.replace(/\n/g, '').toUpperCase();
+                        if (key == 'tel') {
+                            value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
+                            if (value.length != 10) {
+                                value = 'undefined'
+                            }
+                        }
+                        if (key !== 'price' && key !== 'delivery') {
+                            value = value.trim();
+                            if (key == 'product') {
+                                const str = value;
+                                // let orders = [];
+                                let arr = str.split(',');
+                                for (var a in arr) {
+                                    if (arr[a].split('=').length == 2) {
+                                        const code = arr[a].split('=')[0].toUpperCase();
+                                        const amount = Number(arr[a].split('=')[1].replace(/\D/g, ''));
+                                        const orderIndex = orders.findIndex(f => f.code == code);
+                                        if (orderIndex > -1 && amount > 0) {
+                                            orders[orderIndex]['amount'] = orders[orderIndex]['amount'] + amount
+                                        } else {
+                                            orders.push({
+                                                code,
+                                                amount,
+                                                name: ''
+                                            })
+                                        }
+                                    } else {
+                                        const orderIndex = orders.findIndex(f => f.code == 'รหัสสินค้า');
+                                        if (orderIndex > -1) {
+
+                                        } else {
+                                            orders.push({
+                                                code: 'รหัสสินค้า',
+                                                amount: 'undefined'
+                                            })
+                                        }
+                                    }
+                                }
+                                // for (var order in orders) {
+                                //     const code = orders[order]['code'];
+                                //     const amount = orders[order]['amount'];
+                                //     const product = products.find(f => f.id === orders[order]['code'])
+                                //     if (product) {
+                                //         if (product.amount >= amount) {
+                                //             orders[order]['name'] = product.name;
+                                //             orders[order]['cost'] = product.cost;
+                                //         } else {
+                                //             orders[order]['code'] = code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`;
+                                //             orders[order]['amount'] = 'undefined';
+                                //         }
+                                //     } else {
+                                //         orders[order]['code'] = ' รหัส' + code + 'ไม่มีในรายการสินค้า';
+                                //         orders[order]['amount'] = 'undefined';
+                                //     }
+                                // }
+                                value = orders;
+                            } else if (key == 'page') {
+                                if (pages.indexOf(value) == -1) {
+                                    value = 'undefined';
+                                }
+                            } else if (key == 'name') {
+                                const deliver = value.substr(0, 1).toUpperCase();
+                                if (express.indexOf(deliver) == -1) {
+                                    value = 'undefined';
+                                }
+                            } else if (key == 'bank') {
+                                if (value.match(/[a-zA-Z]+/g, '') == null) {
+                                    value = 'undefined';
+                                }
+                                if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM'].indexOf(value) == -1) {
+                                    value = 'undefined';
+                                }
+                            }
+                        } else {
+                            value = Number(value.replace(/\D/g, ''));
+                        }
+                        return { [key]: value };
+                    }
+                }));
+            const refs = orders.map(order => db.collection('products').doc(order.code));
+            return db.getAll(...refs)
                 .then(snapShot => {
                     let products = [];
-                    snapShot.forEach(product => {
-                        products.push({ id: product.id, ...product.data() })
+                    snapShot.forEach(doc => {
+                        if (doc.exists)
+                            products.push({ id: doc.id, ...doc.data() })
                     })
-                    const data = Object.assign(...txt.split('#').filter(f => f != "")
-                        .map(m => {
-                            if (m.split(':').length == 2) {
-                                const dontReplces = ["name", "fb", "bank", "addr"];
-                                let key = m.split(':')[0].toLowerCase();
-                                switch (key) {
-                                    case 'n': key = 'name'; break;
-                                    case 't': key = 'tel'; break;
-                                    case 'a': key = 'addr'; break;
-                                    case 'o': key = 'product'; break;
-                                    case 'b': key = 'bank'; break;
-                                    case 'p': key = 'price'; break;
-                                    case 'f': key = 'fb'; break;
-                                    case 'l': key = 'fb'; break;
-                                    case 'z': key = 'page'; break;
-                                    case 'd': key = 'delivery'; break;
-                                    case 'cutoffdate': key = 'cutoffDate'; break;
-                                    default: key;
-                                }
-                                let value = m.split(':')[1];
-                                if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
-                                if (key !== 'addr' && key !== 'fb') value = value.replace(/\n/g, '').toUpperCase();
-                                if (key == 'tel') {
-                                    value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
-                                    if (value.length != 10) {
-                                        value = 'undefined'
-                                    }
-                                }
-                                if (key !== 'price' && key !== 'delivery') {
-                                    value = value.trim();
-                                    if (key == 'product') {
-                                        const str = value;
-                                        let orders = [];
-                                        let arr = str.split(',');
-                                        for (var a in arr) {
-                                            if (arr[a].split('=').length == 2) {
-                                                const code = arr[a].split('=')[0].toUpperCase();
-                                                const amount = Number(arr[a].split('=')[1].replace(/\D/g, ''));
-                                                const orderIndex = orders.findIndex(f => f.code == code);
-                                                if (orderIndex > -1 && amount > 0) {
-                                                    orders[orderIndex]['amount'] = orders[orderIndex]['amount'] + amount
-                                                } else {
-                                                    orders.push({
-                                                        code,
-                                                        amount,
-                                                        name: ''
-                                                    })
-                                                }
-                                            } else {
-                                                const orderIndex = orders.findIndex(f => f.code == 'รหัสสินค้า');
-                                                if (orderIndex > -1) {
-
-                                                } else {
-                                                    orders.push({
-                                                        code: 'รหัสสินค้า',
-                                                        amount: 'undefined'
-                                                    })
-                                                }
-                                            }
-                                        }
-                                        for (var order in orders) {
-                                            const code = orders[order]['code'];
-                                            const amount = orders[order]['amount'];
-                                            const product = products.find(f => f.id === orders[order]['code'])
-                                            if (product) {
-                                                if (product.amount >= amount) {
-                                                    orders[order]['name'] = product.name;
-                                                    orders[order]['cost'] = product.cost;
-                                                } else {
-                                                    orders[order]['code'] = code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`;
-                                                    orders[order]['amount'] = 'undefined';
-                                                }
-                                            } else {
-                                                orders[order]['code'] = ' รหัส' + code + 'ไม่มีในรายการสินค้า';
-                                                orders[order]['amount'] = 'undefined';
-                                            }
-                                        }
-                                        value = orders;
-                                    } else if (key == 'page') {
-                                        if (pages.indexOf(value) == -1) {
-                                            value = 'undefined';
-                                        }
-                                    } else if (key == 'name') {
-                                        const deliver = value.substr(0, 1).toUpperCase();
-                                        if (express.indexOf(deliver) == -1) {
-                                            value = 'undefined';
-                                        }
-                                    } else if (key == 'bank') {
-                                        if (value.match(/[a-zA-Z]+/g, '') == null) {
-                                            value = 'undefined';
-                                        }
-                                        if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM'].indexOf(value) == -1) {
-                                            value = 'undefined';
-                                        }
-                                    }
-                                } else {
-                                    value = Number(value.replace(/\D/g, ''));
-                                }
-                                return { [key]: value };
+                    for (var order in data.product) {
+                        const code = data.product[order]['code'];
+                        const amount = data.product[order]['amount'];
+                        const product = products.find(f => f.id === data.product[order]['code'])
+                        if (product) {
+                            if (product.amount >= amount) {
+                                data.product[order]['name'] = product.name;
+                            } else {
+                                data.product[order]['code'] = code + `เหลือเพียง${product.amount}ชิ้น`;
+                                data.product[order]['amount'] = 'undefined';
                             }
-                        }));
+                        } else {
+                            data.product[order]['code'] = ' รหัส' + code + 'ไม่มีในรายการสินค้า';
+                            data.product[order]['amount'] = 'undefined';
+                        }
+                    }
                     let text = formatOrder(data);
                     const indexUndefined = text.indexOf('undefined');
                     let success = true;
                     if (indexUndefined > -1) {
                         const t = text.substring(0, indexUndefined - 1).split(' ');
-                        text = `${emoji(0x1000A6)}${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]}`;
+                        text = `${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${t[t.length - 1]}`;
                         success = false;
                     }
                     return { text, success, data };
