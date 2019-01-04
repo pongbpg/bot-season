@@ -142,7 +142,6 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                             initMsgOrder(msg)
                                 .then(resultOrder => {
                                     if (resultOrder.success) {
-                                        let admin = user.data().name;
                                         db.collection('counter').doc('orders').get()
                                             .then(counts => {
                                                 const countsData = counts.data();
@@ -160,9 +159,6 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                 if (resultOrder.data.id && user.data().role == 'owner') { //edit with id
                                                     orderId = resultOrder.data.id;
                                                     orderDate = resultOrder.data.id.split('-')[0];
-                                                    if (resultOrder.data.admin) {
-                                                        admin = resultOrder.data.admin
-                                                    }
                                                     cutoff = true;
                                                     if (resultOrder.data.cutoffDate) {
                                                         cutoffDate = resultOrder.data.cutoffDate;
@@ -177,7 +173,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     db.collection('orders').doc(orderId)
                                                         .set(Object.assign({
                                                             userId, groupId,
-                                                            admin,
+                                                            admin: user.data().name,
                                                             cutoffDate,
                                                             cutoff,
                                                             tracking: '',
