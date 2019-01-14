@@ -1,17 +1,26 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import StockWidget from './widget/StockPage';
+import AddProduct from './widget/AddProduct';
 export class HomePage extends React.Component {
   constructor(props) {
     super(props);
+    this.state = {
+      auth: props.auth
+    }
   }
-
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth != this.state.auth) {
+      this.setState({ auth: nextProps.auth });
+    }
+  }
 
   render() {
     return (
       <div className="hero-body">
         <div className="columns">
-          <div className="column is-10 is-offset-1">
+          <div className="column is-12">
+            {this.state.auth.role == 'owner' && (<AddProduct />)}
             <StockWidget />
           </div>
         </div>
@@ -21,6 +30,7 @@ export class HomePage extends React.Component {
 }
 
 const mapStateToProps = (state) => ({
+  auth: state.auth
 });
 
 const mapDispatchToProps = (dispatch) => ({

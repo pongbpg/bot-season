@@ -1,7 +1,9 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startGetStock, startChangeStock } from '../../actions/widget/stock';
+import { startGetStock } from '../../actions/widget/stock';
+import { startUpdateProduct, startDeleteProduct } from '../../actions/widget/product';
 import Money from '../../selectors/money';
+import MdEdit from 'react-icons/lib/md/edit';
 export class StockPage extends React.Component {
     constructor(props) {
         super(props);
@@ -9,9 +11,14 @@ export class StockPage extends React.Component {
             stock: props.stock,
             auth: props.auth,
             id: '',
+            name: '',
+            unit: '',
             amount: 0,
+            cost: 0,
+            alert: 0,
             action: false,
-            isLoading: ''
+            isLoading: '',
+            filter: ''
         }
         this.props.startGetStock();
     }
@@ -23,7 +30,39 @@ export class StockPage extends React.Component {
             this.setState({ auth: nextProps.auth });
         }
     }
-    onStockChange = (e) => {
+    onNameChange = (e) => {
+        const name = e.target.value;
+        this.setState({ name })
+    }
+    onUnitChange = (e) => {
+        const unit = e.target.value;
+        this.setState({ unit })
+    }
+    onFilterChange = (e) => {
+        const filter = e.target.value.replace(/\D/g, '');
+        this.setState({ filter })
+    }
+    onAlertChange = (e) => {
+        const alert = e.target.value.replace(/\D/g, '');
+        if (!isNaN(alert)) {
+            this.setState({
+                alert: Number(alert)
+            })
+        } else {
+            console.log(alert)
+        }
+    }
+    onCostChange = (e) => {
+        const cost = e.target.value.replace(/\D/g, '');
+        if (!isNaN(cost)) {
+            this.setState({
+                cost: Number(cost)
+            })
+        } else {
+            console.log(cost)
+        }
+    }
+    onAmountChange = (e) => {
         const amount = e.target.value.replace(/\D/g, '');
         if (!isNaN(amount)) {
             this.setState({
@@ -34,28 +73,49 @@ export class StockPage extends React.Component {
         }
     }
     onActionClick = (action, id) => {
-        if (!action) {
-            this.setState({ amount: 0 })
-        }
+        const data = this.state.stock.find(f => f.id == id)
+        // if (!action) {
+        //     this.setState({ amount: 0, cost: 0, alert: 0 })
+        // }
         this.setState({
             id,
-            action
+            action,
+            ...data
         })
     }
     handleSelectAll = (e) => {
         e.target.select()
     }
-    onStockClick = (action) => {
-        // console.log(this.state.id, this.state.amount, action)
-        this.setState({ isLoading: 'is-loading' })
-        this.props.startChangeStock({
-            id: this.state.id,
-            amount: this.state.amount,
-            action
-        }).then(() => {
-            this.setState({ isLoading: '' })
-        })
-
+    onUpdateClick = () => {
+        if (this.state.id != '') {
+            this.setState({ isLoading: 'is-loading' })
+            this.props.startUpdateProduct({
+                id: this.state.id,
+                name: this.state.name,
+                unit: this.state.unit,
+                amount: this.state.amount,
+                cost: this.state.cost,
+                alert: this.state.alert
+            }).then(() => {
+                this.setState({ isLoading: '', action: false, id: '', name: '', unit: '', amount: 0, alert: 0, cost: 0 })
+            })
+        } else {
+            alert('กรุณาเลือกใหม่อีกรอบ')
+        }
+    }
+    onDeleteClick = () => {
+        if (this.state.id != '' && this.state.amount == 0) {
+            if (confirm('ยืนยันต้องการลบสินค้านี้ใช่หรือไม่?')) {
+                this.setState({ isLoading: 'is-loading' })
+                this.props.startDeleteProduct({
+                    id: this.state.id
+                }).then(() => {
+                    this.setState({ isLoading: '', action: false, id: '', name: '', unit: '', amount: 0, alert: 0, cost: 0 })
+                })
+            }
+        } else {
+            alert('สินค้านี้ยังมีสต็อกคงเหลือไม่สามารถลบได้')
+        }
     }
     render() {
         return (
@@ -66,24 +126,130 @@ export class StockPage extends React.Component {
                     </div>
                 </div>
                 <div className="hero-body">
+                    <div className="columns">
+                        <div className="column is-2 is-offset-10">
+                            <div className="field">
+                                <div className="control">
+                                    <input className="input has-text-centered" type="text" placeholder="จำนวน"
+                                        value={this.state.filter}
+                                        onChange={this.onFilterChange} />
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
                     <table className="table is-fullwidth is-striped is-narrow">
                         <thead>
                             <tr>
-                                <th className="has-text-centered">ลำดับ</th>
+                                <th className="has-text-left">ลำดับ</th>
                                 <th className="has-text-left">รหัส</th>
                                 <th className="has-text-left">ชื่อสินค้า</th>
+                                <th className="has-text-left">หน่วยนับ</th>
+                                {this.state.auth.role == 'owner' && (<th className="has-text-right">ต้นทุน</th>)}
+                                {this.state.auth.role == 'owner' && (<th className="has-text-right">แจ้งเตือน</th>)}
                                 <th className="has-text-right">คงเหลือ</th>
                                 {this.state.auth.role == 'owner' && (< th className="has-text-right">จัดการ</th>)}
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.stock.map((st, i) => {
-                                return <tr key={st.id}>
-                                    <td className="has-text-centered">{++i}</td>
-                                    <td className="has-text-left">{st.id}</td>
-                                    <td className="has-text-left">{st.name}</td>
-                                    <td className="has-text-right">{Money(st.amount, 0)}</td>
-                                    {((this.state.id !== st.id) && this.state.auth.role == 'owner') && (
+                            {this.state.stock.filter(f => f.amount <= Number(this.state.filter) || this.state.filter == '').map((st, i) => {
+                                if (this.state.id !== st.id) {
+                                    return <tr key={st.id}>
+                                        <td className="has-text-left">{i + 1}</td>
+                                        <td className="has-text-left">{st.id}</td>
+                                        <td className="has-text-left">{st.name}</td>
+                                        <td className="has-text-left">{st.unit}</td>
+                                        {this.state.auth.role == 'owner' && (<td className="has-text-right">{Money(st.cost, 0)}</td>)}
+                                        {this.state.auth.role == 'owner' && (<td className="has-text-right">{Money(st.alert, 0)}</td>)}
+                                        <td className="has-text-right">{Money(st.amount, 0)}</td>
+                                        {this.state.auth.role == 'owner' && (<td className="has-text-right">
+                                            <a className="button is-outlined"
+                                                onClick={() => { this.onActionClick(true, st.id) }}>
+                                                <span>แก้ไข</span>
+                                                <span className="icon is-small">
+                                                    <MdEdit />
+                                                </span>
+                                            </a>
+                                        </td>)}
+                                    </tr>;
+                                } else {
+                                    return <tr key={st.id}>
+                                        <td className="has-text-left">{i + 1}</td>
+                                        <td className="has-text-left">{st.id}</td>
+                                        <td className="has-text-left">
+                                            <div className="control">
+                                                <input type="text" name={this.state.id}
+                                                    className="input is-rounded has-text-left is-4"
+                                                    value={this.state.name}
+                                                    onChange={this.onNameChange}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td className="has-text-left">
+                                            <div className="control">
+                                                <input type="text" name={this.state.id}
+                                                    className="input is-rounded has-text-left"
+                                                    value={this.state.unit}
+                                                    onChange={this.onUnitChange}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td className="has-text-right">
+                                            <div className="control">
+                                                <input type="text" name={this.state.id}
+                                                    className="input is-rounded has-text-right"
+                                                    onFocus={this.handleSelectAll}
+                                                    value={Money(this.state.cost, 0)}
+                                                    onChange={this.onCostChange}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td className="has-text-right">
+                                            <div className="control">
+                                                <input type="text" name={this.state.id}
+                                                    className="input is-rounded has-text-right"
+                                                    onFocus={this.handleSelectAll}
+                                                    value={Money(this.state.alert, 0)}
+                                                    onChange={this.onAlertChange}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td className="has-text-right">
+                                            <div className="control">
+                                                <input type="text" name={this.state.id}
+                                                    className="input is-rounded has-text-right"
+                                                    onFocus={this.handleSelectAll}
+                                                    value={Money(this.state.amount, 0)}
+                                                    onChange={this.onAmountChange}
+                                                />
+                                            </div>
+                                        </td>
+                                        <td className="has-text-right">
+                                            <div className="field is-grouped">
+                                                <p className="control">
+                                                    <a className={`button is-link ${this.state.isLoading}`}
+                                                        onClick={this.onUpdateClick}>
+                                                        บันทึก
+                                                    </a>
+                                                </p>
+                                                <p className="control">
+                                                    <a className={`button ${this.state.isLoading}`}
+                                                        onClick={() => { this.onActionClick(false, '') }}>
+                                                        ยกเลิก
+                                                    </a>
+                                                </p>
+                                                <p className="control">
+                                                    <a className={`button is-danger ${this.state.isLoading}`}
+                                                        onClick={this.onDeleteClick}>
+                                                        ลบ
+                                                    </a>
+                                                </p>
+                                            </div>
+                                        </td>
+                                    </tr>;
+                                }
+
+                                {/*((this.state.id !== st.id) && this.state.auth.role == 'owner') && (
                                         <td className="has-text-right">
                                             <button
                                                 className="button is-small"
@@ -92,13 +258,12 @@ export class StockPage extends React.Component {
                                         </button>
                                         </td>
                                     )}
-                                    {((this.state.id === st.id) && this.state.auth.role == 'owner') && (
+                                    { {((this.state.id === st.id) && this.state.auth.role == 'owner') && (
                                         <td className="has-text-right">
                                             <div className="field has-addons has-addons-right">
                                                 <div className="control">
                                                     <a className="delete is-default is-larg"
                                                         onClick={() => { this.onActionClick(false, '') }}>
-                                                        {/* <span className="tag">&nbsp;</span> */}
                                                         ปิด
                                                     </a>
                                                 </div>
@@ -124,27 +289,9 @@ export class StockPage extends React.Component {
                                                 </div>
 
                                             </div>
-                                            {/* <div className="field is-grouped is-grouped-right">
-                                                <div className="control">
-                                                    <button className={`button is-success ${this.state.isLoading}`}
-                                                        onClick={() => { this.onStockClick('plus') }}>
-                                                        เพิ่ม</button>
-                                                </div>
-                                                <div className="control">
-                                                    <button className={`button is-danger ${this.state.isLoading}`}
-                                                        onClick={() => { this.onStockClick('minus') }}>
-                                                        ลด</button>
-                                                </div> 
-                                                <div className="control">
-                                                    <button className={`button ${this.state.isLoading}`}
-                                                        onClick={() => { this.onActionClick(false, '') }}>
-                                                        ยกเลิก</button>
-                                                </div>
-                                            </div> */}
                                         </td>
-                                    )}
+                                    )} */}
 
-                                </tr>;
                             })
                             }
                         </tbody>
@@ -160,6 +307,7 @@ const mapStateToProps = (state, props) => ({
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startGetStock: () => dispatch(startGetStock()),
-    startChangeStock: (stock) => dispatch(startChangeStock(stock))
+    startUpdateProduct: (product) => dispatch(startUpdateProduct(product)),
+    startDeleteProduct: (product) => dispatch(startDeleteProduct(product))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(StockPage);
