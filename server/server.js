@@ -227,7 +227,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                             })
 
                                     } else {
-                                        obj.messages.push({ type: `text`, text: `${emoji(0x1000A6)} รายการสั่งของคุณไม่ถูกต้องค่ะ\nกรุณาตรวจสอบ ${resultOrder.text}` })
+                                        obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการสั่งซื้อไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
                                         reply(obj);
                                     }
                                 })
