@@ -376,7 +376,7 @@ const initMsgOrder = (txt) => {
                                 value = orders;
                             } else if (key == 'page') {
                                 if (pages.indexOf(value) == -1) {
-                                    value = 'undefined';
+                                    value = `${emoji(0x1000A6)}undefined`;
                                 }
                             } else if (key == 'name') {
                                 const deliver = value.substr(0, 1).toUpperCase();
