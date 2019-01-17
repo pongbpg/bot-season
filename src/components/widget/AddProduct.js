@@ -11,7 +11,8 @@ export class AddProduct extends React.Component {
             amount: '',
             cost: '',
             alert: '',
-            unit: ''
+            unit: '',
+            isLoading: ''
         }
     }
     onIDChange = (e) => {
@@ -55,6 +56,7 @@ export class AddProduct extends React.Component {
         } else if (this.state.unit == '') {
             alert('กรุณาใส่หน่วยนับ')
         } else {
+            this.setState({ isLoading: 'is-loading' })
             this.props.startAddProduct({
                 id: this.state.id,
                 name: this.state.name,
@@ -63,6 +65,7 @@ export class AddProduct extends React.Component {
                 alert: this.state.alert == '' ? 0 : this.state.alert,
                 cost: this.state.cost == '' ? 0 : this.state.cost
             }).then((msg) => {
+                this.setState({ isLoading: '' })
                 if (msg == 'no') {
                     alert('กรุณาตรวจสอบรหัสสินค้านี้มีแล้ว')
                 } else {
