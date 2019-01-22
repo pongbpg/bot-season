@@ -334,9 +334,9 @@ const initMsgOrder = (txt) => {
                             case 't': key = 'tel'; break;
                             case 'a': key = 'addr'; break;
                             case 'o': key = 'product'; break;
-                            case 'b': key = 'bank'; break;
-                            case 'bs': key = 'banks'; break;
-                            case 'p': key = 'price'; break;
+                            // case 'b': key = 'bank'; break;
+                            case 'b': key = 'banks'; break;
+                            // case 'p': key = 'price'; break;
                             case 'f': key = 'fb'; break;
                             case 'l': key = 'fb'; break;
                             case 'z': key = 'page'; break;
@@ -450,8 +450,8 @@ const initMsgOrder = (txt) => {
                                         })
                                     } else {
                                         banks.push({
-                                            name: 'ธนาคาร',
-                                            price: 'undefined'
+                                            name: arr[a].toUpperCase(),
+                                            price: `${emoji(0x1000A6)}ยอดเงินundefined`
                                         })
                                     }
                                 }
@@ -464,7 +464,7 @@ const initMsgOrder = (txt) => {
                     }
                 }));
 
-            // data.sum = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) : 0
+            data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
@@ -508,48 +508,51 @@ const initMsgOrder = (txt) => {
         })
 
 }
+// const formatOrder = (data) => {
+//     return `
+// ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
+// เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
+// ที่อยู่: ${data.addr} 
+// รายการสินค้า: ${data.product
+//             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+//             : `${emoji(0x1000A6)}undefined`} 
+// ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}undefined` : data.bank} 
+// ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+// FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
+// เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
+// }
 const formatOrder = (data) => {
+    // if (data.banks) {
     return `
-ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
-เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
-ที่อยู่: ${data.addr} 
-รายการสินค้า: ${data.product
+        ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
+        เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
+        ที่อยู่: ${data.addr} 
+        รายการสินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
-ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}undefined` : data.bank} 
-ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
-FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
-เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
+        ธนาคาร: ${data.banks ?
+            data.banks.map(bank => {
+                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(bank.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}${bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + bank.price
+            })
+            : emoji(0x1000A6) + 'undefined'
+        } 
+        ยอดชำระ: ${formatMoney(data.price, 0)}บาท ${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+        FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
+        เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
+    // } else {
+    //     return `
+    //     ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
+    //     เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
+    //     ที่อยู่: ${data.addr} 
+    //     รายการสินค้า: ${data.product
+    //             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+    //             : `${emoji(0x1000A6)}undefined`} 
+    //     ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}undefined` : data.bank} 
+    //     ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+    //     FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
+    //     เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
+    // }
 }
-// const formatOrder = (data) => {
-//     if (data.banks) {
-//         return `
-//         ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
-//         เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
-//         ที่อยู่: ${data.addr} 
-//         รายการสินค้า: ${data.product
-//                 ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
-//                 : `${emoji(0x1000A6)}undefined`} 
-//         ธนาคาร: ${data.banks.map(bank => {
-//                     return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(bank.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}${bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + bank.price
-//                 })} 
-//         ยอดชำระ: ${data.sum || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
-//         FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
-//         เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
-//     } else {
-//         return `
-//         ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
-//         เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
-//         ที่อยู่: ${data.addr} 
-//         รายการสินค้า: ${data.product
-//                 ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
-//                 : `${emoji(0x1000A6)}undefined`} 
-//         ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}undefined` : data.bank} 
-//         ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
-//         FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
-//         เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
-//     }
-// }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
     try {
         decimalCount = Math.abs(decimalCount);
