@@ -465,6 +465,7 @@ const initMsgOrder = (txt) => {
                 }));
 
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
+            data.bank = data.banks ? data.banks.map(bank => bank.name + bank.time + '=' + bank.price).reduce((le, ri) => le + ',' + ri) : 'undefined';
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
@@ -523,19 +524,19 @@ const initMsgOrder = (txt) => {
 // }
 const formatOrder = (data) => {
     // if (data.banks) {
-return `
+    return `
 ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
 เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
 ที่อยู่: ${data.addr} 
 รายการสินค้า: ${data.product
-    ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
-    : `${emoji(0x1000A6)}undefined`} 
+            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+            : `${emoji(0x1000A6)}undefined`} 
 ธนาคาร: ${data.banks ?
-    data.banks.map(bank => {
-        return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(bank.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}${bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + bank.price
-    })
-    : emoji(0x1000A6) + 'undefined'
-} 
+            data.banks.map(bank => {
+                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(bank.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}${bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + bank.price
+            })
+            : emoji(0x1000A6) + 'undefined'
+        } 
 ยอดชำระ: ${formatMoney(data.price, 0)}บาท ${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
 FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
 เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
