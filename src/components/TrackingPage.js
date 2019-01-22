@@ -71,7 +71,8 @@ export class TrackingPage extends React.Component {
         <nav className="navbar">
           <div className="container">
             <div className="navbar-brand">
-              <span className="navbar-item title">TOPSLIM STORE</span>
+              {/* <span className="navbar-item title">TOPSLIM STORE</span> */}
+              <Link className="navbar-item title" to="/home">TOPSLIM STORE</Link>
               <span data-target="navbarMenu" onClick={this.toggleIsBurger}
                 className={this.state.isBurger === true ? "navbar-burger burger is-active" : "navbar-burger burger"}>
                 <span></span>
@@ -162,10 +163,12 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</td>
                             <td className="has-text-centered">
-                              <a href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">
+                              <a className='is-link'
+                                href={(order.expressName == 'KERRY' ? order.expressLink + '=' + order.tracking :
+                                  (order.expressName == 'EMS' ? 'http://emsbot.com/#/?s=' + order.tracking : order.expressLink))} target="_blank">
                                 {!order.expressName ?
                                   (order.cutoff ? 'จัดส่งแล้ว' : 'ยังไม่ได้จัดส่ง')
-                                  : order.expressName}
+                                  : 'คลิกเพื่อตรวจสอบพัสดุ'} {/* + order.expressName}*/}
                               </a>
                             </td>
                           </tr>;
@@ -189,12 +192,24 @@ export class TrackingPage extends React.Component {
                   return <div key={order.id} className="box content">
                     <article className="post">
                       <h3>
-                        <a className={`button is-link is-${color}`} href={order.expressLink + (order.expressName == 'KERRY' ? '=' + order.tracking : '')} target="_blank">
+                        <a className={`button is-link is-${color}`}
+                          href={(order.expressName == 'KERRY' ? order.expressLink + '=' + order.tracking :
+                            (order.expressName == 'EMS' ? 'http://emsbot.com/#/?s=' + order.tracking : order.expressLink))} target="_blank">
                           {!order.expressName ?
                             (order.cutoff ? 'จัดส่งแล้ว' : 'ยังไม่ได้จัดส่ง')
-                            : order.expressName}
+                            : 'คลิกปุ่มนี้เพื่อตรวจสอบพัสดุ'} {/* + order.expressName}*/}
                         </a>
-                        <span className="tag is-medium">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</span>
+                        {order.tracking == '' && (
+                          <span className="tag is-medium">
+                            {order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า'}
+                          </span>
+                        )}
+                        {order.tracking != '' && (
+                          <span className="tag is-medium">
+                            เลขพัสดุ: {order.tracking}
+                          </span>
+
+                        )}
                       </h3>
                       <h4>{order.name}</h4>
 
