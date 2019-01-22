@@ -255,6 +255,26 @@ app.post('/api/boardcast', jsonParser, (req, res) => {
     return;
 })
 
+app.post('/api/notice', jsonParser, (req, res) => {
+    firestore.collection('groups').get()
+        .then(snapShot => {
+            async function notice() {
+                snapShot.forEach(group => {
+                    await push({
+                        to: group.id,
+                        messages: [
+                            {
+                                "type": "text",
+                                "text": req.body.notice
+                            }
+                        ]
+                    })
+                })
+            }
+            return notice;
+        })
+})
+
 app.use(express.static(publicPath));
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'))
