@@ -94,7 +94,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
         adminRef.get()
             .then(user => {
                 if (user.exists) {
-                    if (request.source.type == 'group') {
+                    if (request.source.type == 'group' && user.data().active == true) {
                         const groupId = request.source.groupId;
                         if (msg.indexOf('@@ยกเลิก:') > -1 && msg.split(':').length == 2) {
                             const orderId = msg.split(':')[1];
@@ -246,6 +246,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             })
     }
 })
+
 app.post('/api/boardcast', jsonParser, (req, res) => {
     const boardcasts = req.body.boardcasts;
     for (var bc = 0; bc < boardcasts.length; bc++) {
@@ -290,16 +291,11 @@ const initMsgOrder = (txt) => {
             snapShotPages.forEach(page => {
                 pages.push(page.id)
             })
-            // return db.collection('products').get()
-            //     .then(snapShot => {
             let orders = [];
-            // snapShot.forEach(product => {
-            //     products.push({ id: product.id, ...product.data() })
-            // })
             let data = Object.assign(...txt.split('#').filter(f => f != "")
                 .map(m => {
                     if (m.split(':').length == 2) {
-                        const dontReplces = ["name", "fb", "bank", "addr"];
+                        const dontReplces = ["name", "fb", "addr"];
                         let key = m.split(':')[0].toLowerCase();
                         switch (key) {
                             case 'n': key = 'name'; break;
@@ -307,6 +303,7 @@ const initMsgOrder = (txt) => {
                             case 'a': key = 'addr'; break;
                             case 'o': key = 'product'; break;
                             case 'b': key = 'bank'; break;
+                            case 'bs': key = 'banks'; break;
                             case 'p': key = 'price'; break;
                             case 'f': key = 'fb'; break;
                             case 'l': key = 'fb'; break;
@@ -390,6 +387,43 @@ const initMsgOrder = (txt) => {
                                 if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM'].indexOf(value) == -1) {
                                     value = `${emoji(0x1000A6)}undefined`;
                                 }
+                            } else if (key == 'banks') {
+
+                                const str = value;
+                                let arr = str.split(',');
+                                let banks = [];
+                                for (var a in arr) {
+                                    if (arr[a].split('=').length == 2) {
+                                        const bank1 = arr[a].split('=')[0].toUpperCase();
+                                        let price = Number(arr[a].split('=')[1].replace(/\D/g, ''));
+                                        let name = '';
+                                        let time = '00.00';
+                                        if (bank1.match(/[a-zA-Z]+/g, '') == null) {
+                                            name = `${emoji(0x1000A6)}ธนาคารundefined`;
+                                            time = 'undefined';
+                                        }
+                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM'].indexOf(bank1) == -1) {
+                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            time = `${emoji(0x1000A6)}เวลาโอนundefined`;
+                                            price = 'undefined';
+                                        }
+                                        if (time != 'undefined' && price != 'undefined') {
+                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            time = ['COD', 'CM'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
+                                        }
+                                        banks.push({
+                                            name,
+                                            time,
+                                            price
+                                        })
+                                    } else {
+                                        banks.push({
+                                            name: 'ธนาคาร',
+                                            price: 'undefined'
+                                        })
+                                    }
+                                }
+                                value = banks
                             }
                         } else {
                             value = Number(value.replace(/\D/g, ''));
@@ -397,6 +431,8 @@ const initMsgOrder = (txt) => {
                         return { [key]: value };
                     }
                 }));
+
+            // data.sum = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) : 0
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
@@ -453,6 +489,35 @@ const formatOrder = (data) => {
 FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
 เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
 }
+// const formatOrder = (data) => {
+//     if (data.banks) {
+//         return `
+//         ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
+//         เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
+//         ที่อยู่: ${data.addr} 
+//         รายการสินค้า: ${data.product
+//                 ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+//                 : `${emoji(0x1000A6)}undefined`} 
+//         ธนาคาร: ${data.banks.map(bank => {
+//                     return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(bank.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}${bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + bank.price
+//                 })} 
+//         ยอดชำระ: ${data.sum || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+//         FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
+//         เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
+//     } else {
+//         return `
+//         ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
+//         เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
+//         ที่อยู่: ${data.addr} 
+//         รายการสินค้า: ${data.product
+//                 ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+//                 : `${emoji(0x1000A6)}undefined`} 
+//         ธนาคาร: ${data.bank.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6)}undefined` : data.bank} 
+//         ยอดชำระ: ${data.price || data.bank == 'CM' ? formatMoney(data.price, 0) + ' บาท' : `${emoji(0x1000A6)}undefined`} ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+//         FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
+//         เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
+//     }
+// }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
     try {
         decimalCount = Math.abs(decimalCount);
