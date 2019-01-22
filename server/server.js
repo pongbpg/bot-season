@@ -251,7 +251,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     } else {
                         obj.messages.push({
                             type: 'text',
-                            text: `คุยในกลุ่มดีกว่านะคะ`
+                            text: `ขณะนี้บอทไม่สามารถใช้งานได้ค่ะ`
                         })
                         reply(obj);
                     }
