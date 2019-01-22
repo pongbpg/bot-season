@@ -90,7 +90,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 })
                 reply(obj);
             })
-    } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length == 2) {
+    } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
         db.collection('groups').get()
             .then(snapShot => {
                 snapShot.forEach(group => {
@@ -99,7 +99,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                         messages: [
                             {
                                 "type": "text",
-                                "text": msg.split(':')[1]
+                                "text": msg.substring(msg.indexOf(':') + 1)
                             }
                         ]
                     })
