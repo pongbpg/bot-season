@@ -251,7 +251,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     } else {
                         obj.messages.push({
                             type: 'text',
-                            text: `ขณะนี้บอทไม่สามารถใช้งานได้ค่ะ`
+                            text: `คุณไม่มีสิทธิ์ใช้บอท หรือบอทปิดไม่ให้ใช้งานตอนนี้ค่ะ`
                         })
                         reply(obj);
                     }
