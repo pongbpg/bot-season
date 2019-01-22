@@ -90,6 +90,21 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 })
                 reply(obj);
             })
+    } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length == 2) {
+        db.collection('groups').get()
+            .then(snapShot => {
+                snapShot.forEach(group => {
+                    push({
+                        to: group.id,
+                        messages: [
+                            {
+                                "type": "text",
+                                "text": msg.split(':')[1]
+                            }
+                        ]
+                    })
+                })
+            })
     } else {
         adminRef.get()
             .then(user => {
@@ -256,7 +271,7 @@ app.post('/api/boardcast', jsonParser, (req, res) => {
 })
 
 app.post('/api/notice', jsonParser, (req, res) => {
-    firestore.collection('groups').get()
+    db.collection('groups').get()
         .then(snapShot => {
             snapShot.forEach(group => {
                 push({
@@ -269,7 +284,6 @@ app.post('/api/notice', jsonParser, (req, res) => {
                     ]
                 })
             })
-            return;
         })
 })
 
