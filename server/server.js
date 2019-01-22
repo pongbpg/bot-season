@@ -258,20 +258,18 @@ app.post('/api/boardcast', jsonParser, (req, res) => {
 app.post('/api/notice', jsonParser, (req, res) => {
     firestore.collection('groups').get()
         .then(snapShot => {
-            async function notice() {
-                snapShot.forEach(group => {
-                    await push({
-                        to: group.id,
-                        messages: [
-                            {
-                                "type": "text",
-                                "text": req.body.notice
-                            }
-                        ]
-                    })
+            snapShot.forEach(group => {
+                push({
+                    to: group.id,
+                    messages: [
+                        {
+                            "type": "text",
+                            "text": req.body.notice
+                        }
+                    ]
                 })
-            }
-            return notice;
+            })
+            return;
         })
 })
 
