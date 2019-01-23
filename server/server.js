@@ -466,7 +466,7 @@ const initMsgOrder = (txt) => {
 
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
             data.bank = data.banks ? data.banks.map(bank => {
-                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6) + bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + bank.price
+                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6) + bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price,0)
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
