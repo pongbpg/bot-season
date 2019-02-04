@@ -117,12 +117,12 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     const track = order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking;
                     obj.messages.push({
                         type: 'text',
-                        text: `รหัสสั่งซื้อ: ${id}\nเลขพัสดุ: ${track}\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}`
+                        text: `รหัสสั่งซื้อ: ${id}\nเลขพัสดุ: ${track}${link ? `\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}` : ''}`
                     })
                 } else {
                     obj.messages.push({
                         type: 'text',
-                        text: `(ตรวจเลขพัสดุ) ไม่มีรหัสสั่งซื้อนี้จ้า ${id}`
+                        text: `(ตรวจเลขพัสดุ) ไม่มีรหัสสั่งซื้อนี้จ้า ${ id }`
                     })
                 }
                 reply(obj);
@@ -143,7 +143,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                         if (order.data().cutoff && user.data().role == 'admin') {
                                             obj.messages.push({
                                                 type: 'text',
-                                                text: `${emoji(0x100035)}ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ${emoji(0x1000AE)}`
+                                                text: `${ emoji(0x100035) }ไม่สามารถยกเลิกรายการสั่งซื้อ ${ orderId }\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ${ emoji(0x1000AE) }`
                                             })
                                             reply(obj);
                                         } else {
@@ -160,127 +160,127 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     .then(cancel => {
                                                         obj.messages.push({
                                                             type: 'text',
-                                                            text: `${emoji(0x100035)}ยกเลิกรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${emoji(0x100018)}`//${formatOrder(order.data())}`
+                                                            text: `${ emoji(0x100035) }ยกเลิกรายการสั่งซื้อ ${ orderId } เรียบร้อยค่ะ${ emoji(0x100018) }`//${formatOrder(order.data())}`
                                                         })
-                                                        reply(obj);
-                                                    })
+        reply(obj);
+    })
                                             }
-                                            callback();
+callback();
 
                                         }
                                     } else {
-                                        obj.messages.push({
-                                            type: 'text',
-                                            text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
-                                        })
-                                    }
-                                    reply(obj);
+    obj.messages.push({
+        type: 'text',
+        text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+    })
+}
+reply(obj);
                                 })
                         } else if (msg.indexOf('#') > -1) {
-                            initMsgOrder(msg)
-                                .then(resultOrder => {
-                                    if (resultOrder.success) {
-                                        db.collection('counter').doc('orders').get()
-                                            .then(counts => {
-                                                const countsData = counts.data();
-                                                let no = 1;
-                                                let cutoff = countsData.cutoff;
-                                                if (countsData.date == yyyymmdd()) {
-                                                    no = countsData.no + 1;
-                                                } else {
-                                                    if (cutoff == true) cutoff = false;
-                                                }
-                                                let orderId = yyyymmdd() + '-' + fourDigit(no);
-                                                let orderDate = yyyymmdd();
-                                                let cutoffDate = countsData.cutoffDate;
-                                                let cutoffOk = true;
-                                                if (resultOrder.data.id && user.data().role == 'owner') { //edit with id
-                                                    orderId = resultOrder.data.id;
-                                                    orderDate = resultOrder.data.id.split('-')[0];
-                                                    cutoff = true;
-                                                    if (resultOrder.data.cutoffDate) {
-                                                        cutoffDate = resultOrder.data.cutoffDate;
-                                                    } else {
-                                                        cutoffOk = false;
-                                                    }
-                                                } else {
-                                                    db.collection('counter').doc('orders').set({ date: orderDate, no, cutoff }, { merge: true })
-                                                    cutoff = false;
-                                                }
-                                                if (cutoffOk == true) {
-                                                    db.collection('orders').doc(orderId)
-                                                        .set(Object.assign({
-                                                            userId, groupId,
-                                                            admin: user.data().name,
-                                                            cutoffDate,
-                                                            cutoff,
-                                                            tracking: '',
-                                                            timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                                                            orderDate
-                                                        }, resultOrder.data))
-                                                        .then(order => {
-                                                            db.collection('groups').doc(groupId).set({})
-                                                            async function callback() {
-                                                                for (var p = 0; p < resultOrder.data.product.length; p++) {
-                                                                    await db.collection('products').doc(resultOrder.data.product[p].code).get()
-                                                                        .then(product => {
-                                                                            const balance = product.data().amount - resultOrder.data.product[p].amount;
-                                                                            if (balance <= product.data().alert) {
-                                                                                db.collection('admins').get()
-                                                                                    .then(snapShot => {
-                                                                                        snapShot.forEach(admin => {
-                                                                                            push({
-                                                                                                to: admin.id,
-                                                                                                messages: [
-                                                                                                    {
-                                                                                                        "type": "text",
-                                                                                                        "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
-                                                                                                    }
-                                                                                                ]
-                                                                                            })
-                                                                                        })
-                                                                                    })
-                                                                            }
-                                                                            db.collection('products').doc(resultOrder.data.product[p].code)
-                                                                                .set({ amount: balance }, { merge: true })
-                                                                        })
-                                                                }
-                                                                await obj.messages.push({
-                                                                    type: 'text',
-                                                                    text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น\n🙏ขอบคุณนะคะที่อุดหนุนสินค้า😊`
-                                                                })
-                                                                await obj.messages.push({
-                                                                    type: 'text',
-                                                                    text: `@@ยกเลิก:${orderId}`
-                                                                })
-                                                                await reply(obj);
-                                                            }
-                                                            callback();
-                                                        })
-                                                } else {
-                                                    obj.messages.push({ type: `text`, text: 'แก้ไขรหัสสั่งซื้อ: ' + resultOrder.data.id + ' ไม่สำเร็จ!\nเนื่องจากข้อมูลวันตัดรอบไม่ถูกต้อง' })
-                                                    reply(obj);
-                                                }
-
-                                            })
-
-                                    } else {
-                                        obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการสั่งซื้อไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
-                                        reply(obj);
-                                    }
-                                })
-
+    initMsgOrder(msg)
+        .then(resultOrder => {
+            if (resultOrder.success) {
+                db.collection('counter').doc('orders').get()
+                    .then(counts => {
+                        const countsData = counts.data();
+                        let no = 1;
+                        let cutoff = countsData.cutoff;
+                        if (countsData.date == yyyymmdd()) {
+                            no = countsData.no + 1;
+                        } else {
+                            if (cutoff == true) cutoff = false;
                         }
+                        let orderId = yyyymmdd() + '-' + fourDigit(no);
+                        let orderDate = yyyymmdd();
+                        let cutoffDate = countsData.cutoffDate;
+                        let cutoffOk = true;
+                        if (resultOrder.data.id && user.data().role == 'owner') { //edit with id
+                            orderId = resultOrder.data.id;
+                            orderDate = resultOrder.data.id.split('-')[0];
+                            cutoff = true;
+                            if (resultOrder.data.cutoffDate) {
+                                cutoffDate = resultOrder.data.cutoffDate;
+                            } else {
+                                cutoffOk = false;
+                            }
+                        } else {
+                            db.collection('counter').doc('orders').set({ date: orderDate, no, cutoff }, { merge: true })
+                            cutoff = false;
+                        }
+                        if (cutoffOk == true) {
+                            db.collection('orders').doc(orderId)
+                                .set(Object.assign({
+                                    userId, groupId,
+                                    admin: user.data().name,
+                                    cutoffDate,
+                                    cutoff,
+                                    tracking: '',
+                                    timestamp: admin.firestore.FieldValue.serverTimestamp(),
+                                    orderDate
+                                }, resultOrder.data))
+                                .then(order => {
+                                    db.collection('groups').doc(groupId).set({})
+                                    async function callback() {
+                                        for (var p = 0; p < resultOrder.data.product.length; p++) {
+                                            await db.collection('products').doc(resultOrder.data.product[p].code).get()
+                                                .then(product => {
+                                                    const balance = product.data().amount - resultOrder.data.product[p].amount;
+                                                    if (balance <= product.data().alert) {
+                                                        db.collection('admins').get()
+                                                            .then(snapShot => {
+                                                                snapShot.forEach(admin => {
+                                                                    push({
+                                                                        to: admin.id,
+                                                                        messages: [
+                                                                            {
+                                                                                "type": "text",
+                                                                                "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+                                                                            }
+                                                                        ]
+                                                                    })
+                                                                })
+                                                            })
+                                                    }
+                                                    db.collection('products').doc(resultOrder.data.product[p].code)
+                                                        .set({ amount: balance }, { merge: true })
+                                                })
+                                        }
+                                        await obj.messages.push({
+                                            type: 'text',
+                                            text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น\n🙏ขอบคุณนะคะที่อุดหนุนสินค้า😊`
+                                        })
+                                        await obj.messages.push({
+                                            type: 'text',
+                                            text: `@@ยกเลิก:${orderId}`
+                                        })
+                                        await reply(obj);
+                                    }
+                                    callback();
+                                })
+                        } else {
+                            obj.messages.push({ type: `text`, text: 'แก้ไขรหัสสั่งซื้อ: ' + resultOrder.data.id + ' ไม่สำเร็จ!\nเนื่องจากข้อมูลวันตัดรอบไม่ถูกต้อง' })
+                            reply(obj);
+                        }
+
+                    })
+
+            } else {
+                obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการสั่งซื้อไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
+                reply(obj);
+            }
+        })
+
+}
                     } else {
-                        obj.messages.push({
-                            type: 'text',
-                            text: `คุณไม่มีสิทธิ์ใช้บอท หรือบอทปิดไม่ให้ใช้งานตอนนี้ค่ะ`
-                        })
-                        reply(obj);
-                    }
+    obj.messages.push({
+        type: 'text',
+        text: `คุณไม่มีสิทธิ์ใช้บอท หรือบอทปิดไม่ให้ใช้งานตอนนี้ค่ะ`
+    })
+    reply(obj);
+}
                 } else {
-                    return;
-                }
+    return;
+}
             })
     }
 })
