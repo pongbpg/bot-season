@@ -121,7 +121,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     const track = order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking;
                     obj.messages.push({
                         type: 'text',
-                        text: `รหัสสั่งซื้อ: ${id}\nชื่อ: ${order.name}\nเบอร์โทร: ${order.tel}\nวันที่ส่งสินค้า:${moment(d).fotmat('ll')}\nเลขพัสดุ: ${track}${link ? `\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}` : ''}`
+                        text: `รหัสสั่งซื้อ: ${id}\nชื่อ: ${order.name}\nเบอร์โทร: ${order.tel}\nวันที่ส่งสินค้า:${moment(d, 'YYYYMMDD').fotmat('ll')}\nเลขพัสดุ: ${track}${link ? `\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}` : ''}`
                     })
                 } else {
                     obj.messages.push({
