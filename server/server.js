@@ -59,7 +59,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     } else if (msg.indexOf('@@owner:') > -1 && msg.split(':').length == 2) {
         adminRef.set({
             userId,
-            name: msg.split(':')[1],
+            name: msg.split(':')[1].replace(/\s/g, ''),
             timestamp: admin.firestore.FieldValue.serverTimestamp(),
             role: 'owner'
         })
@@ -88,6 +88,27 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     type: 'text',
                     text: pt
                 })
+                reply(obj);
+            })
+    } else if (msg.indexOf('@@ems:') > -1 && msg.split(':').length >= 2) {
+        const id = msg.split(':')[1].replace(/\s/g, '');
+        db.collection('orders').doc(id).get()
+            .then(doc => {
+                if (doc.exists) {
+                    const order = doc.data();
+                    const link = (order.expressName == 'KERRY' ? order.expressLink + '=' + order.tracking :
+                        (order.expressName == 'EMS' ? 'http://emsbot.com/#/?s=' + order.tracking : order.expressLink))
+                    const track = order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking;
+                    obj.messages.push({
+                        type: 'text',
+                        text: `รหัสสั่งซื้อ: ${id}\nเลขพัสดุ: ${track}\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}`
+                    })
+                } else {
+                    obj.messages.push({
+                        type: 'text',
+                        text: `(ตรวจเลขพัสดุ) ไม่มีรหัสสั่งซื้อนี้จ้า ${id}`
+                    })
+                }
                 reply(obj);
             })
     } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
@@ -224,7 +245,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                 }
                                                                 await obj.messages.push({
                                                                     type: 'text',
-                                                                    text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\nกรุณาตรวจสอบข้อมูลสั่งซื้อด้วยนะคะ ถ้าไม่ถูกต้องแจ้งแอดมินได้เลยค่ะ`
+                                                                    text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น🙏`
                                                                 })
                                                                 await obj.messages.push({
                                                                     type: 'text',
@@ -466,7 +487,7 @@ const initMsgOrder = (txt) => {
 
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
             data.bank = data.banks ? data.banks.map(bank => {
-                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6) + bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price,0)
+                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6) + bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
