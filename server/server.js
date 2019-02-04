@@ -114,14 +114,12 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             .then(doc => {
                 if (doc.exists) {
                     const order = doc.data();
-                    const d = order.cutoffDate.substr(0, 4) + '-' + order.cutoffDate.substr(4, 2) + '-' + order.cutoffDate.substr(6, 2);
-
                     const link = (order.expressName == 'KERRY' ? order.expressLink + '=' + order.tracking :
                         (order.expressName == 'EMS' ? 'http://emsbot.com/#/?s=' + order.tracking : order.expressLink))
                     const track = order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking;
                     obj.messages.push({
                         type: 'text',
-                        text: `รหัสสั่งซื้อ: ${id}\nชื่อ: ${order.name}\nเบอร์โทร: ${order.tel}\nวันที่ส่งสินค้า:${moment(d, 'YYYYMMDD').fotmat('ll')}\nเลขพัสดุ: ${track}${link ? `\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}` : ''}`
+                        text: `รหัสสั่งซื้อ: ${id}\nชื่อ: ${order.name}\nเบอร์โทร: ${order.tel}\nวันที่ส่งสินค้า:${moment(order.cutoffDate).format('ll')}\nเลขพัสดุ: ${track}${link ? `\nตรวจสอบได้ที่ลิ้งนี้ค่ะ: ${link}` : ''}`
                     })
                 } else {
                     obj.messages.push({
