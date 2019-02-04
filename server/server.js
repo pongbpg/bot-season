@@ -42,7 +42,22 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     };
     // if (request.message.type !== 'text' || request.source.type !== 'group') {
     //}
-    if (msg.indexOf('@@admin:') > -1 && msg.split(':').length == 2) {
+    if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
+        db.collection('groups').get()
+            .then(snapShot => {
+                snapShot.forEach(group => {
+                    push({
+                        to: group.id,
+                        messages: [
+                            {
+                                "type": "text",
+                                "text": msg.substring(msg.indexOf(':') + 1)
+                            }
+                        ]
+                    })
+                })
+            })
+    } else if (msg.indexOf('@@admin:') > -1 && msg.split(':').length == 2) {
         adminRef.set({
             userId,
             name: msg.split(':')[1].replace(/\s/g, ''),
@@ -90,6 +105,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 })
                 reply(obj);
             })
+
     } else if (msg.indexOf('@@ems:') > -1 && msg.split(':').length >= 2) {
         const id = msg.split(':')[1].replace(/\s/g, '');
         db.collection('orders').doc(id).get()
@@ -111,21 +127,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 }
                 reply(obj);
             })
-    } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
-        db.collection('groups').get()
-            .then(snapShot => {
-                snapShot.forEach(group => {
-                    push({
-                        to: group.id,
-                        messages: [
-                            {
-                                "type": "text",
-                                "text": msg.substring(msg.indexOf(':') + 1)
-                            }
-                        ]
-                    })
-                })
-            })
+
     } else {
         adminRef.get()
             .then(user => {
