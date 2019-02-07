@@ -449,7 +449,7 @@ const initMsgOrder = (txt) => {
                                 if (value.match(/[a-zA-Z]+/g, '') == null) {
                                     value = `${emoji(0x1000A6)}undefined`;
                                 }
-                                if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM'].indexOf(value) == -1) {
+                                if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM','XX'].indexOf(value) == -1) {
                                     value = `${emoji(0x1000A6)}undefined`;
                                 }
                             } else if (key == 'banks') {
@@ -467,14 +467,14 @@ const initMsgOrder = (txt) => {
                                             name = `${emoji(0x1000A6)}ธนาคารundefined`;
                                             time = 'undefined';
                                         }
-                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM'].indexOf(bank1) == -1) {
+                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM','XX'].indexOf(bank1) == -1) {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             time = `${emoji(0x1000A6)}เวลาโอนundefined`;
                                             price = 'undefined';
                                         }
                                         if (time != 'undefined' && price != 'undefined') {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
-                                            time = ['COD', 'CM'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
+                                            time = ['COD', 'CM','XX'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
                                         banks.push({
                                             name,
