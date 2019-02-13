@@ -82,9 +82,18 @@ export class Header extends React.Component {
                 <Link className="navbar-item" to="/report">
                   <span className="icon"><FaFileTextO /></span>รายงาน
                   </Link>
+                {/*  */}
+                <div className="navbar-item has-dropdown is-hoverable">
+                  <a className="navbar-link">อื่นๆ</a>
+                  <div className="navbar-dropdown">
+                    <Link className="navbar-item" to="/votes">
+                      <span className="icon"><MdPanTool /></span>เลือกตั้ง
+                  </Link>
+                  </div>
+                </div>
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   ออกจากระบบ
-                    </a>
+                </a>
               </div>
               <div className="navbar-end is-hidden-touch">
                 <div className={this.state.isMenu === true ? "navbar-item has-dropdown is-active" : "navbar-item has-dropdown"}>

@@ -10,6 +10,7 @@ import TrackingPage from '../components/TrackingPage';
 import TrackEditPage from '../components/TrackEditPage';
 import SayHiPage from '../components/SayHiPage';
 import CostPage from '../components/CostPage';
+import VotesPage from '../components/games/Votes';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -29,6 +30,7 @@ const AppRouter = () => (
         <PrivateRoute path="/report" component={ReportPage} exact={true} />
         <PrivateRoute path="/sayhi" component={SayHiPage} exact={true} />
         <PrivateRoute path="/cost" component={CostPage} exact={true} />
+        <PrivateRoute path="/votes" component={VotesPage} exact={true} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>
