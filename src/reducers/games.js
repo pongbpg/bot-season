@@ -1,4 +1,4 @@
-export default (state = {}, action) => {
+export default (state = { votes: [], random: false }, action) => {
     switch (action.type) {
         case 'SET_GAME_VOTES':
             return {

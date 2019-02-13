@@ -19,19 +19,17 @@ export class VotesPage extends React.Component {
     componentWillReceiveProps(nextProps) {
 
         if ((nextProps.random != this.state.random) || (nextProps.votes != this.state.votes)) {
-            // console.log(nextProps.random)
-            if (nextProps.votes.length > 0)
-                this.setState({
-                    votes: nextProps.random ? this.shuffle(nextProps.votes) : nextProps.votes.map(vote => {
-                        return {
-                            ...vote,
-                            sort: vote.scores.length > 0 ? vote.scores.map(m => m.score || 0).reduce((a, b) => a + b) : 0
-                        }
-                    }).sort((a, b) => {
-                        return a.sort > b.sort ? -1 : 1;
-                    }),
-                    random: nextProps.random
-                });
+            this.setState({
+                votes: nextProps.random ? this.shuffle(nextProps.votes) : nextProps.votes.map(vote => {
+                    return {
+                        ...vote,
+                        sort: vote.scores.length > 0 ? vote.scores.map(m => m.score || 0).reduce((a, b) => a + b) : 0
+                    }
+                }).sort((a, b) => {
+                    return a.sort > b.sort ? -1 : 1;
+                }),
+                random: nextProps.random
+            });
         }
 
     }
