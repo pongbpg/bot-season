@@ -77,7 +77,7 @@ export class VotesPage extends React.Component {
             <section className="hero">
                 <div className="hero-body">
                     <div className="container">
-                        <h1 className="title">14 มีนาเข้าคูหาเลือกตั้ง</h1>
+                        <h1 className="title">ระบบโหวต TOPSLIM</h1>
                     </div>
                 </div>
                 {this.state.auth.role == 'owner' && (<div className="column"><AddItemVote /></div>)}
@@ -102,11 +102,11 @@ export class VotesPage extends React.Component {
                             <thead>
                                 <tr>
                                     <th className="has-text-centered">อันดับ</th>
-                                    <th className="has-text-centered">ชื่อผู้สมัคร</th>
+                                    <th className="has-text-centered">ชื่อ</th>
                                     {this.state.auth.role == 'owner' && <th className="has-text-centered">คะแนนที่ได้</th>}
                                     <th className="has-text-centered">ลงคะแนน</th>
-                                    <th className="has-text-centered">จำนวนผู้ใช้สิทธิ</th>
-                                    {(this.state.auth.role == 'owner' && this.state.votes.length > 0) && <th className="has-text-centered">Active</th>}
+                                    <th className="has-text-centered">จำนวนผู้ลงคะแนน</th>
+                                    {(this.state.auth.role == 'owner' && this.state.votes.length > 0) && <th className="has-text-centered">สถานะ</th>}
                                 </tr>
                             </thead>
                             <tbody>
@@ -142,7 +142,7 @@ export class VotesPage extends React.Component {
                                                                 <button className={`button ${vote.active && 'is-info'}`}
                                                                     id={vote.id}
                                                                     onClick={this.onActiveClick}>
-                                                                    {vote.active ? 'active' : 'inactive'}
+                                                                    {vote.active ? 'Active' : 'Inactive'}
                                                                 </button>
                                                             </td>
                                                         }
