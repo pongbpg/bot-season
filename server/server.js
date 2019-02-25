@@ -201,7 +201,10 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                     orderDate = resultOrder.data.id.split('-')[0];
                                                     cutoff = true;
                                                     if (resultOrder.data.cutoffDate) {
-                                                        cutoffDate = resultOrder.data.cutoffDate;
+                                                        if (resultOrder.data.cutoffDate.length == 8)
+                                                            cutoffDate = resultOrder.data.cutoffDate;
+                                                        else
+                                                            cutoffOk = false;
                                                     } else {
                                                         cutoffOk = false;
                                                     }
@@ -370,6 +373,7 @@ const initMsgOrder = (txt) => {
                             // case 'b': key = 'bank'; break;
                             case 'b': key = 'banks'; break;
                             // case 'p': key = 'price'; break;
+                            case 'e': key = 'edit'; break;
                             case 'f': key = 'fb'; break;
                             case 'l': key = 'fb'; break;
                             case 'z': key = 'page'; break;
@@ -418,23 +422,6 @@ const initMsgOrder = (txt) => {
                                         }
                                     }
                                 }
-                                // for (var order in orders) {
-                                //     const code = orders[order]['code'];
-                                //     const amount = orders[order]['amount'];
-                                //     const product = products.find(f => f.id === orders[order]['code'])
-                                //     if (product) {
-                                //         if (product.amount >= amount) {
-                                //             orders[order]['name'] = product.name;
-                                //             orders[order]['cost'] = product.cost;
-                                //         } else {
-                                //             orders[order]['code'] = code + `เหลือเพียง${product.amount}ชิ้น${emoji(0x10001C)}`;
-                                //             orders[order]['amount'] = 'undefined';
-                                //         }
-                                //     } else {
-                                //         orders[order]['code'] = ' รหัส' + code + 'ไม่มีในรายการสินค้า';
-                                //         orders[order]['amount'] = 'undefined';
-                                //     }
-                                // }
                                 value = orders;
                             } else if (key == 'page') {
                                 if (pages.indexOf(value) == -1) {
@@ -449,7 +436,7 @@ const initMsgOrder = (txt) => {
                                 if (value.match(/[a-zA-Z]+/g, '') == null) {
                                     value = `${emoji(0x1000A6)}undefined`;
                                 }
-                                if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM','XX','CP'].indexOf(value) == -1) {
+                                if (value.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(value) == -1) {
                                     value = `${emoji(0x1000A6)}undefined`;
                                 }
                             } else if (key == 'banks') {
@@ -467,14 +454,14 @@ const initMsgOrder = (txt) => {
                                             name = `${emoji(0x1000A6)}ธนาคารundefined`;
                                             time = 'undefined';
                                         }
-                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM','XX','CP'].indexOf(bank1) == -1) {
+                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             time = `${emoji(0x1000A6)}เวลาโอนundefined`;
                                             price = 'undefined';
                                         }
                                         if (time != 'undefined' && price != 'undefined') {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
-                                            time = ['COD', 'CM','XX','CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
+                                            time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
                                         banks.push({
                                             name,
@@ -489,6 +476,14 @@ const initMsgOrder = (txt) => {
                                     }
                                 }
                                 value = banks
+                            } else if (key == 'edit') {
+                                if (value == 'Y') {
+                                    value = true;
+                                } else if (value == 'N') {
+                                    value = false
+                                } else {
+                                    value = `${emoji(0x1000A6)}แก้ไขต้องเป็น Y หรือ N เท่านั้นจ้าundefined`
+                                }
                             }
                         } else {
                             value = Number(value.replace(/\D/g, ''));
@@ -501,6 +496,7 @@ const initMsgOrder = (txt) => {
             data.bank = data.banks ? data.banks.map(bank => {
                 return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6) + bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
+            data.edit = data.edit ? data.edit : false;
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
@@ -509,14 +505,18 @@ const initMsgOrder = (txt) => {
                         if (doc.exists)
                             products.push({ id: doc.id, ...doc.data() })
                     })
+                    data.costs = 0;
                     for (var order in data.product) {
                         const code = data.product[order]['code'];
                         const amount = data.product[order]['amount'];
                         const product = products.find(f => f.id === data.product[order]['code'])
                         if (product) {
                             if (product.amount >= amount) {
+                                const thisCost = (product.cost || 0) * amount;
+                                data.costs += thisCost;
                                 data.product[order]['name'] = product.name;
                                 data.product[order]['cost'] = product.cost || 0;
+                                data.product[order]['costs'] = thisCost;
                                 data.product[order]['unit'] = product.unit;
                             } else {
                                 data.product[order]['code'] = `${emoji(0x1000A6)}undefined` + code;
@@ -528,6 +528,11 @@ const initMsgOrder = (txt) => {
                             data.product[order]['code'] = `${emoji(0x1000A6)}รหัส` + code;
                             data.product[order]['name'] = 'ไม่มีในรายการสินค้า';
                             data.product[order]['amount'] = 'undefined';
+                        }
+                    }
+                    if (data.bank.match(/[a-zA-Z]+/g, '').indexOf('CM') == -1) {
+                        if (data.costs > data.price) {
+                            data.costs = `${emoji(0x1000A6)}undefinedจำนวนสินค้าหรือราคาสินค้าไม่ถูกต้อง`;
                         }
                     }
                     let text = formatOrder(data);
@@ -566,7 +571,7 @@ const formatOrder = (data) => {
 รายการสินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
-ธนาคาร: ${data.bank} 
+ธนาคาร: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
 รวมยอดชำระ: ${formatMoney(data.price, 0)}บาท ${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
 FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
 เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
