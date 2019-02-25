@@ -494,7 +494,23 @@ const initMsgOrder = (txt) => {
 
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
             data.bank = data.banks ? data.banks.map(bank => {
-                return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1 ? `${emoji(0x1000A6) + bank.name}undefined` : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
+                let checkBank = false;
+                if (bank.name.indexOf('COD') > -1) {
+                    if (['C', 'A', 'K'].indexOf(data.name.substr(0, 1)) > -1) {
+                        checkBank = true;
+                    }
+                } else {
+                    if (['A', 'K', 'M', 'R'].indexOf(data.name.substr(0, 1)) > -1) {
+                        checkBank = true;
+                    }
+                }
+                return checkBank
+                    ? bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
+                    : `${emoji(0x1000A6) + bank.name}undefined`
+                // return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1
+                //     ? `${emoji(0x1000A6) + bank.name}undefined`
+                //     : bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
+
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             data.edit = data.edit ? data.edit : false;
             const refs = orders.map(order => db.collection('products').doc(order.code));
