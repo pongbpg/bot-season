@@ -12,8 +12,8 @@ admin.initializeApp({
     credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "bot-orders",
-        "private_key_id": process.env.ADMIN_PRIVATE_KEY,
-        "private_key": process.env.ADMIN_PRIVATE_KEY_ID,
+        "private_key_id": process.env.ADMIN_PRIVATE_KEY_ID,
+        "private_key": process.env.ADMIN_PRIVATE_KEY,
         "client_email": "firebase-adminsdk-gl6fx@bot-orders.iam.gserviceaccount.com",
         "client_id": "101969765057138401575",
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
