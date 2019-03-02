@@ -21,7 +21,7 @@ admin.initializeApp({
         "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
         "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gl6fx%40bot-orders.iam.gserviceaccount.com"
     }),
-    databaseURL: 'https://bot-orders.firebaseio.com'
+    databaseURL: process.env.FIREBASE_DATABASE_URL
 });
 var db = admin.firestore();
 const settings = {/* your settings... */ timestampsInSnapshots: true };
