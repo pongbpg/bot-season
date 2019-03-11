@@ -528,18 +528,24 @@ const initMsgOrder = (txt) => {
                         const amount = data.product[order]['amount'];
                         const product = products.find(f => f.id === data.product[order]['code'])
                         if (product) {
-                            if (product.amount >= amount) {
-                                const thisCost = (product.cost || 0) * amount;
-                                data.costs += thisCost;
-                                data.product[order]['name'] = product.name;
-                                data.product[order]['cost'] = product.cost || 0;
-                                data.product[order]['costs'] = thisCost;
-                                data.product[order]['unit'] = product.unit;
+                            if (amount > 0) {
+                                if (product.amount >= amount) {
+                                    const thisCost = (product.cost || 0) * amount;
+                                    data.costs += thisCost;
+                                    data.product[order]['name'] = product.name;
+                                    data.product[order]['cost'] = product.cost || 0;
+                                    data.product[order]['costs'] = thisCost;
+                                    data.product[order]['unit'] = product.unit;
+                                } else {
+                                    data.product[order]['code'] = `${emoji(0x1000A6)}undefined` + code;
+                                    data.product[order]['name'] = 'เหลือเพียง';
+                                    data.product[order]['amount'] = product.amount;
+                                    data.product[order]['unit'] = product.unit;
+                                }
                             } else {
-                                data.product[order]['code'] = `${emoji(0x1000A6)}undefined` + code;
-                                data.product[order]['name'] = 'เหลือเพียง';
-                                data.product[order]['amount'] = product.amount;
-                                data.product[order]['unit'] = product.unit;
+                                data.product[order]['code'] = code;
+                                data.product[order]['name'] = `${emoji(0x1000A6)}จำนวนสินค้าไม่ถูกต้อง`;
+                                data.product[order]['amount'] = 'undefined';
                             }
                         } else {
                             data.product[order]['code'] = `${emoji(0x1000A6)}รหัส` + code;
