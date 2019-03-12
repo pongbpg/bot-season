@@ -14,6 +14,7 @@ export class ReportPage extends React.Component {
             sum: 'daily',
             auth: props.auth,
             pages: props.pages,
+            country: 'TH',
             page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
         }
         this.handleStartChange = this.handleStartChange.bind(this);
@@ -36,7 +37,10 @@ export class ReportPage extends React.Component {
         this.setState({
             page: e.target.value
         })
-        console.log(e.target.value)
+        // console.log(e.target.value)
+    }
+    handleCountryChange = (e) => {
+        this.setState({ country: e.target.value })
     }
     render() {
         // console.log('pages', this.state.pages)
@@ -102,19 +106,26 @@ export class ReportPage extends React.Component {
                             <tbody>
                                 <tr>
                                     <td className="has-text-centered">1</td>
-                                    <td className="has-text-centered">รายชื่อแพ็คของ (วันที่เริ่ม)</td>
+                                    <td className="has-text-centered">รายชื่อแพ็คของ (วันที่เริ่ม)
+                                    <select className="select is-info"
+                                            onChange={this.handleCountryChange}
+                                            value={this.state.country}>
+                                            <option value='TH'>ไทย</option>
+                                            <option value='KH'>กัมพูชา</option>
+                                        </select>
+                                    </td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
                                                 <a className="button is-danger is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=pdf`}
+                                                    href={`http://yaumjai.com:3000/api/report/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=pdf&country=${this.state.country}`}
                                                     target="_blank">
                                                     PDF
                                         </a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-success is-centered is-small"
-                                                    href={`http://yaumjai.com:3000/api/report/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=excel`}
+                                                    href={`http://yaumjai.com:3000/api/report/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=excel&country=${this.state.country}`}
                                                     target="_blank">
                                                     EXCEL
                                         </a>
@@ -289,7 +300,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                {[ 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">9</td>
                                     <td className="has-text-centered">กำไรขาดทุนแต่ละเพจ (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">
