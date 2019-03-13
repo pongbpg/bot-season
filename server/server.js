@@ -213,6 +213,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                 } else {
                                                     if (countsData.date == yyyymmdd()) {
                                                         no = countsData.no + 1;
+                                                        cutoff = false;
                                                         db.collection('counter').doc('orders').update({ no })
                                                     } else {
                                                         if (cutoff == true) {
@@ -487,6 +488,7 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                 } else {
                                                     if (countsData.date == yyyymmdd()) {
                                                         no = countsData.no + 1;
+                                                        cutoff = false;
                                                         db.collection('counter').doc('orders').update({ no })
                                                     } else {
                                                         if (cutoff == true) {
