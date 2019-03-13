@@ -363,7 +363,7 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
     } else if (msg.indexOf('@@format') > -1) {
         obj.messages.push({
             type: 'text',
-            text: `#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#f:ชื่อเฟสลูกค้า\n#z:ชื่อเพจหรือLine@\n#d:ค่าขนส่ง`
+            text: `#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#f:ชื่อเฟสลูกค้า\n#z:ชื่อเพจหรือLine@`
         })
         reply(obj, LINE_KH);
     } else if (msg.indexOf('@@product') > -1) {
