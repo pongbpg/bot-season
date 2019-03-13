@@ -6,6 +6,7 @@ const publicPath = path.join(__dirname, '..', 'public');
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
 const moment = require('moment');
+const shortid = require('shortid');
 moment.locale('th');
 const admin = require('firebase-admin');
 admin.initializeApp({
@@ -191,13 +192,10 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                 const countsData = counts.data();
                                                 let no = 1;
                                                 let cutoff = countsData.cutoff;
-                                                if (countsData.date == yyyymmdd()) {
-                                                    no = countsData.no + 1;
-                                                } else {
-                                                    if (cutoff == true) cutoff = false;
-                                                }
-                                                let orderId = yyyymmdd() + '-' + fourDigit(no);
+                                                let orderId = yyyymmdd() + '-' + shortid.generate();
+                                                // let orderId = yyyymmdd() + '-' + fourDigit(no);
                                                 let orderDate = yyyymmdd();
+
                                                 let cutoffDate = countsData.cutoffDate;
                                                 let cutoffOk = true;
                                                 if (resultOrder.data.id && user.data().role == 'owner') { //edit with id
@@ -213,8 +211,15 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
-                                                    db.collection('counter').doc('orders').set({ date: orderDate, no, cutoff }, { merge: true })
-                                                    cutoff = false;
+                                                    if (countsData.date == yyyymmdd()) {
+                                                        no = countsData.no + 1;
+                                                        db.collection('counter').doc('orders').update({ no })
+                                                    } else {
+                                                        if (cutoff == true) {
+                                                            cutoff = false;
+                                                        }
+                                                        db.collection('counter').doc('orders').update({ date: orderDate, no, cutoff })
+                                                    }
                                                 }
                                                 if (cutoffOk == true) {
                                                     db.collection('orders').doc(orderId).get()
@@ -232,6 +237,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                         tracking: '',
                                                                         timestamp: admin.firestore.FieldValue.serverTimestamp(),
                                                                         orderDate,
+                                                                        orderNo: no,
                                                                         country: 'TH'
                                                                     }, resultOrder.data))
                                                                     .then(order => {
@@ -363,7 +369,7 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
     } else if (msg.indexOf('@@format') > -1) {
         obj.messages.push({
             type: 'text',
-            text: `#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#f:ชื่อเฟสลูกค้า\n#z:ชื่อเพจหรือLine@`
+            text: `#f:ชื่อเฟสลูกค้า\n#t:เบอร์โทรศัพท์\n#a:ที่อยู่\n#o:รายการสินค้า\n#b:ชื่อธนาคารหรือCOD\n#d:ค่าขนส่ง\n#z:ชื่อเพจหรือLine@`
         })
         reply(obj, LINE_KH);
     } else if (msg.indexOf('@@product') > -1) {
@@ -460,13 +466,10 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                 const countsData = counts.data();
                                                 let no = 1;
                                                 let cutoff = countsData.cutoff;
-                                                if (countsData.date == yyyymmdd()) {
-                                                    no = countsData.no + 1;
-                                                } else {
-                                                    if (cutoff == true) cutoff = false;
-                                                }
-                                                let orderId = yyyymmdd() + '-' + fourDigit(no);
+                                                let orderId = yyyymmdd() + '-' + shortid.generate();
+                                                // let orderId = yyyymmdd() + '-' + fourDigit(no);
                                                 let orderDate = yyyymmdd();
+
                                                 let cutoffDate = countsData.cutoffDate;
                                                 let cutoffOk = true;
                                                 if (resultOrder.data.id && user.data().role == 'owner') { //edit with id
@@ -482,8 +485,15 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
-                                                    db.collection('counter').doc('orders').set({ date: orderDate, no, cutoff }, { merge: true })
-                                                    cutoff = false;
+                                                    if (countsData.date == yyyymmdd()) {
+                                                        no = countsData.no + 1;
+                                                        db.collection('counter').doc('orders').update({ no })
+                                                    } else {
+                                                        if (cutoff == true) {
+                                                            cutoff = false;
+                                                        }
+                                                        db.collection('counter').doc('orders').update({ date: yyyymmdd(), no, cutoff })
+                                                    }
                                                 }
                                                 if (cutoffOk == true) {
                                                     db.collection('orders').doc(orderId).get()
@@ -500,9 +510,10 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                                         cutoffDate: orderDate,
                                                                         cutoff: true,
                                                                         tracking: 'CAMBODIA',
-                                                                        country: 'KH',
                                                                         timestamp: admin.firestore.FieldValue.serverTimestamp(),
-                                                                        orderDate
+                                                                        orderDate,
+                                                                        orderNo: no,
+                                                                        country: 'KH'
                                                                     }, resultOrder.data))
                                                                     .then(order => {
                                                                         // db.collection('groups').doc(groupId).set({})
@@ -1084,7 +1095,7 @@ Products: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
 Transfer Transactions: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
-Amount: ${formatMoney(data.price, 0)}$
+Amount: ${formatMoney(data.price, 0)}$  ${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
 Page: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
 }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
