@@ -16,12 +16,12 @@ export const startGetCutOff = () => {
 }
 export const startCutOff = () => {
     return (dispatch) => {
-        return firestore.collection('counter').doc('orders').set({ cutoffDate: tomorrow(), cutoff: true }, { merge: true })
+        return firestore.collection('counter').doc('orders').update({ cutoffDate: tomorrow(), cutoff: true })
             .then(() => {
                 return firestore.collection('orders').where('cutoff', '==', false).get()
                     .then(querySnapshot => {
                         querySnapshot.forEach(function (doc) {
-                            firestore.collection('orders').doc(doc.id).set({ ...doc.data(), cutoff: true })
+                            firestore.collection('orders').doc(doc.id).update({ cutoff: true })
                         })
                         dispatch(setCutOff(true))
                         dispatch(startListOrders())
