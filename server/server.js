@@ -909,9 +909,9 @@ const initMsgOrderKH = (txt) => {
                                 let arr = str.split(',');
                                 for (var a in arr) {
                                     if (arr[a].split('=').length == 2) {
-                                        const code = arr[a].split('=')[0].toUpperCase();
+                                        const code = 'KH-' + arr[a].split('=')[0].toUpperCase();
                                         const amount = Number(arr[a].split('=')[1].replace(/\D/g, ''));
-                                        const orderIndex = orders.findIndex(f => f.code == 'KH-' + code);
+                                        const orderIndex = orders.findIndex(f => f.code == code);
                                         if (orderIndex > -1 && amount > 0) {
                                             orders[orderIndex]['amount'] = orders[orderIndex]['amount'] + amount
                                         } else {
