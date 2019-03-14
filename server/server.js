@@ -1097,7 +1097,7 @@ Products: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
 Transfer Transactions: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
-Amount: ${formatMoney(data.price, 0)}$  ${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+Amount: ${formatMoney(data.price, 0)}$  ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
 Page: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
 }
 const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") => {
