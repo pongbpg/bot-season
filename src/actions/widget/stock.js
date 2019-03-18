@@ -22,7 +22,29 @@ export const startChangeStock = (stock) => {
             })
     }
 }
+
+
+export const startGetProductType = () => {
+    return (dispatch) => {
+        // console.log(product)
+        return firestore.collection('productType').get()
+            .then(snapShot => {
+                let types = [];
+                snapShot.forEach(doc => {
+                    types.push({ typeId: doc.id, typeName: doc.data().name })
+                })
+                return dispatch(setTypes(types))
+            })
+    }
+}
+
+
 export const setStock = (stock) => ({
     type: 'SET_STOCK',
     stock
+});
+
+export const setTypes = (types) => ({
+    type: 'SET_TYPES',
+    types
 });

@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startAddProduct } from '../../actions/widget/product';
+import { startAddProduct, startGetProductType } from '../../actions/widget/product';
 import Money from '../../selectors/money';
 export class AddProduct extends React.Component {
     constructor(props) {
@@ -12,7 +12,15 @@ export class AddProduct extends React.Component {
             cost: '',
             alert: '',
             unit: '',
-            isLoading: ''
+            isLoading: '',
+            types: props.types || [],
+            typeId: '',
+            typeName: ''
+        }
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.types != this.state.types) {
+            this.setState({ types: nextProps.types });
         }
     }
     onIDChange = (e) => {
@@ -63,7 +71,9 @@ export class AddProduct extends React.Component {
                 unit: this.state.unit,
                 amount: this.state.amount == '' ? 0 : this.state.amount,
                 alert: this.state.alert == '' ? 0 : this.state.alert,
-                cost: this.state.cost == '' ? 0 : this.state.cost
+                cost: this.state.cost == '' ? 0 : this.state.cost,
+                typeId: this.state.typeId,
+                typeName: this.state.typeName
             }).then((msg) => {
                 this.setState({ isLoading: '' })
                 if (msg == 'no') {
@@ -79,6 +89,11 @@ export class AddProduct extends React.Component {
             this.onAddClick();
         }
     }
+    handleTypeChange = (e) => {
+        const typeId = e.target.value;
+        const type = this.state.types.find(f => f.typeId == typeId)
+        this.setState({ typeId, id: e.target.value, typeName: type ? type.typeName : '' })
+    }
     render() {
         return (
             <section className="hero">
@@ -89,7 +104,28 @@ export class AddProduct extends React.Component {
                 </div>
                 <div className="hero-body">
                     <div className="columns">
-                        <div className="column is-3">
+                        <div className="column is-2">
+                            <div className="field-body">
+                                <div className="field">
+                                    <div className="control">
+                                        <div className="select">
+                                            <select className="input"
+                                                onChange={this.handleTypeChange}
+                                                value={this.state.typeId}>
+                                                <option value="">ไม่มี</option>
+                                                {this.state.types.length > 0 &&
+                                                    this.state.types.map(type => {
+                                                        return <option key={type.typeId} value={type.typeId}>{type.typeId + ' : ' + type.typeName}</option>
+                                                    })
+                                                }
+                                            </select>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div className="column is-2">
                             <div className="field">
                                 <div className="control">
                                     <input className="input" type="text" placeholder="รหัสสินค้า"
@@ -99,7 +135,7 @@ export class AddProduct extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="column is-6">
+                        <div className="column is-5">
                             <div className="field">
                                 <div className="control">
                                     <input className="input" type="text" placeholder="ชื่อสินค้า"

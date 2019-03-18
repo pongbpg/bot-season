@@ -25,6 +25,8 @@ export const startDeleteProduct = (product) => {
         return firestore.collection('products').doc(product.id).delete()
     }
 }
+
+
 const threeDigit = (n) => {
     if (n < 10) {
         return '00' + n.toString();

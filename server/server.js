@@ -826,6 +826,8 @@ const initMsgOrder = (txt) => {
                                     data.product[order]['cost'] = product.cost || 0;
                                     data.product[order]['costs'] = thisCost;
                                     data.product[order]['unit'] = product.unit;
+                                    data.product[order]['typeId'] = product.typeId;
+                                    data.product[order]['typeName'] = product.typeName;
                                 } else {
                                     data.product[order]['code'] = `${emoji(0x1000A6)}undefined` + code;
                                     data.product[order]['name'] = 'เหลือเพียง';
@@ -1038,6 +1040,8 @@ const initMsgOrderKH = (txt) => {
                                     data.product[order]['cost'] = product.cost || 0;
                                     data.product[order]['costs'] = thisCost;
                                     data.product[order]['unit'] = product.unit;
+                                    ata.product[order]['typeId'] = product.typeId;
+                                    ata.product[order]['typeName'] = product.typeName;
                                 } else {
                                     data.product[order]['code'] = `${emoji(0x1000A6)}undefined` + code;
                                     data.product[order]['name'] = 'เหลือเพียง';
