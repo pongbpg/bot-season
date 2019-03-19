@@ -184,28 +184,6 @@ export class ReportPage extends React.Component {
                                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
                                     <tr>
                                         <td className="has-text-centered">4</td>
-                                        <td className="has-text-centered">ยอดขายประจำวันที่สั่งซื้อ (วันที่เริ่ม-ถึงวันที่)</td>
-                                        <td className="has-text-centered">
-                                            <div className="field is-grouped is-grouped-centered">
-                                                <p className="control">
-                                                    <a className="button is-danger is-centered is-small"
-                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf&sum=${this.state.sum}`}
-                                                        target="_blank">
-                                                        PDF</a>
-                                                </p>
-                                                <p className="control">
-                                                    <a className="button is-success is-centered is-small"
-                                                        href={`http://yaumjai.com:3000/api/report/dailySale?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel&sum=${this.state.sum}`}
-                                                        target="_blank">
-                                                        EXCEL</a>
-                                                </p>
-                                            </div>
-                                        </td>
-                                    </tr>
-                                )}
-                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
-                                    <tr>
-                                        <td className="has-text-centered">5</td>
                                         <td className="has-text-centered">
                                             ยอดขายสินค้าเพจ&nbsp;
                                             <select className="select is-info"
@@ -236,6 +214,27 @@ export class ReportPage extends React.Component {
                                             </div>
                                         </td>
                                     </tr>
+                                )}
+                                {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                    <td className="has-text-centered">5</td>
+                                    <td className="has-text-centered">รายงานขายสินค้าของ Admin (วันที่เริ่ม-ถึงวันที่)</td>
+                                    <td className="has-text-centered">
+                                        <div className="field is-grouped is-grouped-centered">
+                                            <p className="control">
+                                                <a className="button is-danger is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/item/admin?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                    target="_blank">
+                                                    PDF</a>
+                                            </p>
+                                            <p className="control">
+                                                <a className="button is-success is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/item/admin?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                    target="_blank">
+                                                    EXCEL</a>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
                                 )}
                                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">6</td>
@@ -300,6 +299,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
+
                                 {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">9</td>
                                     <td className="has-text-centered">กำไรขาดทุนแต่ละเพจ (วันที่เริ่ม-ถึงวันที่)</td>
