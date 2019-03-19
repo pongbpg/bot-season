@@ -62,35 +62,75 @@ export class Header extends React.Component {
                   <span className="icon"><FaSearch /></span>ค้นหาพัสดุ
                 </Link>
                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
-                  < Link className="navbar-item" to="/cutoff">
-                    <span className="icon"><MdAlarmOn /></span>ปิดรอบ
+                  <div className="navbar-item has-dropdown is-hoverable">
+                    <a className="navbar-link">สต็อก</a>
+                    <div className="navbar-dropdown">
+                      < Link className="navbar-item" to="/cutoff">
+                        <span className="icon"><MdAlarmOn /></span>ปิดรอบ
                     </Link>
+                      <Link className="navbar-item" to="/orders">
+                        <span className="icon"><MdMailOutline /></span>เลขพัสดุ
+                  </Link>
+                    </div>
+                  </div>
                 )}
-                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
-                  <Link className="navbar-item" to="/orders">
-                    <span className="icon"><MdMailOutline /></span>เลขพัสดุ
+                {['admin', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                  <div className="navbar-item has-dropdown is-hoverable">
+                    <a className="navbar-link">แอดมิน</a>
+                    <div className="navbar-dropdown">
+                      <Link className="navbar-item" to="/sayhi">
+                        <span className="icon"><MdPanTool /></span>ยอดทัก
                   </Link>
+                    </div>
+                  </div>
                 )}
-                <Link className="navbar-item" to="/sayhi">
-                  <span className="icon"><MdPanTool /></span>ยอดทัก
+                {['owner'].indexOf(this.state.auth.role) > -1 && (
+                  <div className="navbar-item has-dropdown is-hoverable">
+                    <a className="navbar-link">บัญชี</a>
+                    <div className="navbar-dropdown">
+                      <Link className="navbar-item" to="/cost">
+                        <span className="icon"><MdAttachMoney /></span>ค่าใช้จ่าย
                   </Link>
-                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
-                  <Link className="navbar-item" to="/cost">
-                    <span className="icon"><MdAttachMoney /></span>ค่าใช้จ่าย
-                  </Link>
+                    </div>
+                  </div>
+                )}
+                {['owner'].indexOf(this.state.auth.role) > -1 && (
+                  <div className="navbar-item has-dropdown is-hoverable">
+                    <a className="navbar-link">จัดการ</a>
+                    <div className="navbar-dropdown">
+                      {/* <Link className="navbar-item" to="/manage/teams">
+                        ทีม
+                      </Link>
+                      <Link className="navbar-item" to="/manage/pages">
+                        เพจ
+                      </Link> */}
+                      <Link className="navbar-item" to="/manage/admins">
+                        แอดมินไลน์
+                      </Link>
+                      <Link className="navbar-item" to="/manage/emails">
+                        ผู้ใช้งาน
+                      </Link>
+                      {/* <Link className="navbar-item" to="/manage/product/types">
+                        ประเภทสินค้า
+                      </Link>
+                      <Link className="navbar-item" to="/manage/coms">
+                        ค่าคอมฯ
+                      </Link> */}
+                    </div>
+                  </div>
                 )}
                 <Link className="navbar-item" to="/report">
                   <span className="icon"><FaFileTextO /></span>รายงาน
                   </Link>
                 {/*  */}
-                <div className="navbar-item has-dropdown is-hoverable">
+                {/* <div className="navbar-item has-dropdown is-hoverable">
                   <a className="navbar-link">อื่นๆ</a>
                   <div className="navbar-dropdown">
                     <Link className="navbar-item" to="/votes">
                       <span className="icon"><MdPanTool /></span>เลือกตั้ง
                   </Link>
                   </div>
-                </div>
+                </div> */}
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   ออกจากระบบ
                 </a>

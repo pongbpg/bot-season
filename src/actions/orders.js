@@ -29,13 +29,15 @@ export const setListOrders = (orders) => ({
 
 export const startSaveTracking = (orders) => {
     orders = orders.filter(f => {
-        if ([5, 7, 8, 12].indexOf(f.tracking.length) > -1) {
+        if ([5, 7, 8, 12, 13].indexOf(f.tracking.length) > -1) {
             return true;
-        } else if (f.tracking.substr(0, 1).toUpperCase() == 'K' && f.tracking.length == 13) {
-            return true;
-        } else if (f.tracking.indexOf('TH') > -1 && f.tracking.length == 13) {
-            return true;
-        } else {
+        }
+        // else if (f.tracking.substr(0, 1).toUpperCase() == 'K' && f.tracking.length == 13) {
+        //     return true;
+        // } else if (f.tracking.indexOf('TH') > -1 && f.tracking.length == 13) {
+        //     return true;
+        // }
+        else {
             return false;
         }
     })
@@ -46,12 +48,12 @@ export const startSaveTracking = (orders) => {
             if ([5, 7, 8, 12].indexOf(orders[x].tracking.length) > -1) {
                 expressName = 'ALPHA FAST';
                 expressLink = 'https://www.alphafast.com/th/track-alpha';
-            } else if (orders[x].tracking.substr(0, 1).toUpperCase() == 'K' && orders[x].tracking.length == 13) {
-                expressName = 'KERRY';
-                expressLink = 'https://th.kerryexpress.com/th/track/?track';
             } else if (orders[x].tracking.indexOf('TH') > -1 && orders[x].tracking.length == 13) {
                 expressName = 'EMS';
                 expressLink = 'http://track.thailandpost.co.th/tracking/default.aspx';
+            } else {
+                expressName = 'KERRY';
+                expressLink = 'https://th.kerryexpress.com/th/track/?track';
             }
             update.doc(orders[x].id).set({
                 tracking: orders[x].tracking,

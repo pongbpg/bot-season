@@ -10,6 +10,7 @@ import sayhisReducer from '../reducers/sayhis';
 import costsReducer from '../reducers/costs';
 import gamesReducer from '../reducers/games';
 import typesReducer from '../reducers/types';
+import manageReducer from '../reducers/manage';
 const composeEnhancers = window.__REDUX_DEVTOOLS_EXTENSION_COMPOSE__ || compose;
 
 export default () => {
@@ -24,7 +25,8 @@ export default () => {
       sayhis: sayhisReducer,
       costs: costsReducer,
       games: gamesReducer,
-      types: typesReducer
+      types: typesReducer,
+      manage: manageReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
     // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()
