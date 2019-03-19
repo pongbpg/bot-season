@@ -12,7 +12,8 @@ import SayHiPage from '../components/SayHiPage';
 import CostPage from '../components/CostPage';
 import VotesPage from '../components/games/Votes';
 import AdminsPage from '../components/manage/AdminsPage';
-import EmailsPage from '../components/manage/EmailsPage';
+import EmailsPage from '../components/manage/emails/IndexPage';
+import EmailPage from '../components/manage/emails/EditPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -35,6 +36,7 @@ const AppRouter = () => (
         <PrivateRoute path="/votes" component={VotesPage} exact={true} />
         <PrivateRoute path="/manage/admins" component={AdminsPage} exact={true} />
         <PrivateRoute path="/manage/emails" component={EmailsPage} exact={true} />
+        <PrivateRoute path="/manage/email/:uid" component={EmailPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>

@@ -7,12 +7,12 @@ export const startListPages = (auth) => {
             .then(querySnapshot => {
                 let pages = [];
                 querySnapshot.forEach(function (doc) {
-                    if (doc.id.indexOf('@') == -1) {
+                    // if (doc.id.indexOf('@') == -1) {
                         pages.push({
                             id: doc.id,
                             ...doc.data()
                         })
-                    }
+                    // }
                 });
                 pages = selectPages(pages, auth)
                 return dispatch(setListPages(pages))

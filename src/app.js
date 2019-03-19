@@ -41,7 +41,7 @@ auth.onAuthStateChanged((user) => {
   // console.log(user)
   if (user) {
     store.dispatch(startGetAuth(user)).then((auth) => {
-      store.dispatch(startListOrders())
+      // store.dispatch(startListOrders())
       store.dispatch(startListPages(store.getState().auth))
         .then(() => {
           renderApp()
