@@ -19,6 +19,15 @@ export const startUpdateEmail = (email) => {
             })
     }
 }
+export const startPushEmail = (email) => {
+    return (dispatch) => {
+        return firestore.collection('emails').doc(email.uid).set({ ...email })
+            .then(() => {
+                console.log(email)
+                return dispatch(pushEmail(email))
+            })
+    }
+}
 export const startResetPassword = (email) => {
     return (dispatch) => {
         return auth.sendPasswordResetEmail(email).then(function () {
@@ -35,5 +44,10 @@ export const setEmails = (emails) => ({
 
 export const setEmail = (email) => ({
     type: 'SET_MANAGE_EMAIL',
+    email
+});
+
+export const pushEmail = (email) => ({
+    type: 'PUSH_MANAGE_EMAIL',
     email
 });

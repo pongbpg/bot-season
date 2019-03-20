@@ -1,7 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startCreateUser } from '../../../actions/auth';
-import { startGetEmails, startUpdateEmail, startResetPassword } from '../../../actions/manage/emails';
+import { startGetEmails, startUpdateEmail, startResetPassword, startPushEmail } from '../../../actions/manage/emails';
 import MdAddCircle from 'react-icons/lib/md/add-circle';
 export class EmailsPage extends React.Component {
     constructor(props) {
@@ -57,8 +56,31 @@ export class EmailsPage extends React.Component {
         if (confirm('ต้องการเพิ่ม ' + email + ' ใช่หรือไม่?')) {
             // this.props.startCreateUser(email, password)
             //     .then(() => {
-                    alert('เพิ่มผู้ใช้งานเรียบร้อย!\nUsername: ' + email + '\nPassword: ' + password)
+
             //     })
+
+            var cors_api_url = '/api/auth/create';
+            fetch(cors_api_url, {
+                body: JSON.stringify({ email, password }),
+                cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+                credentials: 'same-origin', // include, same-origin, *omit
+                headers: {
+                    'user-agent': 'Mozilla/4.0 MDN Example',
+                    'content-type': 'application/json'
+                },
+                method: 'POST', // *GET, POST, PUT, DELETE, etc.
+                mode: 'cors', // no-cors, cors, *same-origin
+                redirect: 'follow', // manual, *follow, error
+                referrer: 'no-referrer', // *client, no-referrer
+            })
+                .then(results => results.json())
+                .then(data => {
+                    this.props.startPushEmail({ email, uid: data.uid, pages: [], disabled: false, role: 'admin' })
+                        .then(() => {
+                            alert('เพิ่มผู้ใช้งานเรียบร้อย!\nUsername: ' + email + '\nPassword: ' + password)
+                            this.props.history.push('/manage/email/' + data.uid)
+                        })
+                })
         }
     }
     onDisabledClick = (e) => {
@@ -165,6 +187,6 @@ const mapDispatchToProps = (dispatch, props) => ({
     startGetEmails: () => dispatch(startGetEmails()),
     startUpdateEmail: (email) => dispatch(startUpdateEmail(email)),
     startResetPassword: (email) => dispatch(startResetPassword(email)),
-    startCreateUser: (email, password) => dispatch(startCreateUser(email, password))
+    startPushEmail: (email) => dispatch(startPushEmail(email))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(EmailsPage);

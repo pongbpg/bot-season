@@ -26,6 +26,11 @@ export default (state = { admins: [], emails: [] }, action) => {
                     return { ...email, ...action.email }
                 })
             }
+        case 'PUSH_MANAGE_EMAIL':
+            return {
+                ...state,
+                emails: [...state.emails, action.email]
+            }
         default:
             return state;
     }
