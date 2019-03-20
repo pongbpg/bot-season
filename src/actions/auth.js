@@ -22,6 +22,18 @@ export const startLoginLocal = (username, password) => {
             });
     }
 }
+export const startCreateUser = (email, password) => {
+    return (dispatch) => {
+        return auth.createUserWithEmailAndPassword(email, password)
+            .catch(function (error) {
+                // Handle Errors here.
+                var errorCode = error.code;
+                var errorMessage = error.message;
+
+                console.log(error);
+            });
+    }
+}
 export const startGetAuth = (user) => {
     return (dispatch) => {
         return database.collection('emails').doc(user.uid).get()

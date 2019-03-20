@@ -30,12 +30,11 @@ export class AdminsPage extends React.Component {
     render() {
         return (
             <section className="hero">
+
                 <div className="hero-body">
                     <div className="container">
                         <h2 className="title">รายชื่อแอดมินไลน์</h2>
                     </div>
-                </div>
-                <div className="hero-body">
                     <div className="columns is-centered">
                         <div className="column is-four-fifths">
                             <table className="table is-fullwidth is-striped is-narrow">

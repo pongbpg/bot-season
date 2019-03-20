@@ -1,12 +1,16 @@
 import React from 'react';
 import { connect } from 'react-redux';
+import { startCreateUser } from '../../../actions/auth';
 import { startGetEmails, startUpdateEmail, startResetPassword } from '../../../actions/manage/emails';
+import MdAddCircle from 'react-icons/lib/md/add-circle';
 export class EmailsPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             auth: props.auth,
-            emails: props.emails || []
+            emails: props.emails || [],
+            newEmail: '',
+            checkEmail: true
         }
         this.props.startGetEmails();
     }
@@ -30,6 +34,32 @@ export class EmailsPage extends React.Component {
                 })
         }
 
+    }
+    onNewChange = (e) => {
+        const newEmail = e.target.value.replace(/\s/g, '');
+        let checkEmail = true;
+        if (this.validateEmail(newEmail)) {
+            checkEmail = false;
+        }
+        this.setState({ newEmail, checkEmail })
+    }
+    validateEmail(email) {
+        var re = /^(([^<>()\[\]\\.,;:\s@"]+(\.[^<>()\[\]\\.,;:\s@"]+)*)|(".+"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$/;
+        return re.test(String(email).toLowerCase());
+    }
+    onNewClick = () => {
+        const email = this.state.newEmail;
+        const password = Math.floor(100000 + Math.random() * 900000).toString();
+        if (this.state.emails.find(f => f.email == email)) {
+            alert(email + ' มีใช้งานแล้ว!')
+            return;
+        }
+        if (confirm('ต้องการเพิ่ม ' + email + ' ใช่หรือไม่?')) {
+            // this.props.startCreateUser(email, password)
+            //     .then(() => {
+                    alert('เพิ่มผู้ใช้งานเรียบร้อย!\nUsername: ' + email + '\nPassword: ' + password)
+            //     })
+        }
     }
     onDisabledClick = (e) => {
         if (confirm('คุณต้องการยืนยันที่ปิดใช้งานอีเมลล์นี้?')) {
@@ -65,26 +95,27 @@ export class EmailsPage extends React.Component {
                     <div className="container">
                         <h2 className="title">รายชื่อผู้ใช้งาน</h2>
                     </div>
-                    <div className="columns is-centered">
-                        <div className="column is-four-fifths">
-                            <div className="level">
-                                <div className="level-left"></div>
-                                <div className="level-right">
-                                    <button className="button">เพิ่ม</button>
-                                </div>
+                    <div className="column is-4 is-offset-8">
+                        <div className="field has-addons ">
+                            <div className="control is-expanded">
+                                <input className="input" type="text" value={this.state.newEmail} placeholder="Enter Email Address"
+                                    onChange={this.onNewChange} />
+                            </div>
+                            <div className="control">
+                                <a className="button is-info" disabled={this.state.checkEmail} onClick={this.onNewClick}><MdAddCircle /> ผู้ใช้งาน</a>
                             </div>
                         </div>
                     </div>
-                    <div className="columns is-centered">
-                        <div className="column is-full">
+                    <div className="columns">
+                        <div className="column">
                             <table className="table is-fullwidth is-striped is-narrow">
                                 <thead>
                                     <tr>
-                                        <th className="has-text-centered" width="10%">ลำดับ</th>
-                                        <th className="has-text-left" width="20%">อีเมลล์</th>
-                                        <th className="has-text-centered" width="10%">ประเภท</th>
-                                        <th className="has-text-centered" width="20%">เพจ</th>
-                                        <th className="has-text-centered" width="40%">จัดการ</th>
+                                        <th className="has-text-centered">ลำดับ</th>
+                                        <th className="has-text-left">อีเมลล์</th>
+                                        <th className="has-text-centered">ประเภท</th>
+                                        <th className="has-text-centered">เพจ</th>
+                                        <th className="has-text-centered" >จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -133,6 +164,7 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch, props) => ({
     startGetEmails: () => dispatch(startGetEmails()),
     startUpdateEmail: (email) => dispatch(startUpdateEmail(email)),
-    startResetPassword: (email) => dispatch(startResetPassword(email))
+    startResetPassword: (email) => dispatch(startResetPassword(email)),
+    startCreateUser: (email, password) => dispatch(startCreateUser(email, password))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(EmailsPage);
