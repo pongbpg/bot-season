@@ -21,25 +21,57 @@ export class EmailsPage extends React.Component {
     onEditClick = (e) => {
         this.props.history.push('/manage/email/' + e.target.value)
     }
+    onDisabledClick = (e) => {
+        console.log(e.target.name)
+        var cors_api_url = '/api/auth/disabled';
+        fetch(cors_api_url, {
+            body: JSON.stringify({ uid: e.target.name, disabled: !e.target.value }),
+            cache: 'no-cache', // *default, no-cache, reload, force-cache, only-if-cached
+            credentials: 'same-origin', // include, same-origin, *omit
+            headers: {
+                'user-agent': 'Mozilla/4.0 MDN Example',
+                'content-type': 'application/json'
+            },
+            method: 'POST', // *GET, POST, PUT, DELETE, etc.
+            mode: 'cors', // no-cors, cors, *same-origin
+            redirect: 'follow', // manual, *follow, error
+            referrer: 'no-referrer', // *client, no-referrer
+        })
+            .then(results => results.json())
+            .then(data => {
+                console.log(data)
+            })
+    }
     render() {
         return (
             <section className="hero">
+                {/* <div className="hero-body"> */}
+
+                {/* </div> */}
                 <div className="hero-body">
                     <div className="container">
                         <h2 className="title">รายชื่อผู้ใช้งาน</h2>
                     </div>
-                </div>
-                <div className="hero-body">
                     <div className="columns is-centered">
                         <div className="column is-four-fifths">
+                            <div className="level">
+                                <div className="level-left"></div>
+                                <div className="level-right">
+                                    <button className="button">เพิ่ม</button>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div className="columns is-centered">
+                        <div className="column is-full">
                             <table className="table is-fullwidth is-striped is-narrow">
                                 <thead>
                                     <tr>
                                         <th className="has-text-centered" width="10%">ลำดับ</th>
-                                        <th className="has-text-left" width="30%">อีเมลล์</th>
-                                        <th className="has-text-centered" width="20%">ประเภท</th>
+                                        <th className="has-text-left" width="20%">อีเมลล์</th>
+                                        <th className="has-text-centered" width="10%">ประเภท</th>
                                         <th className="has-text-centered" width="20%">เพจ</th>
-                                        <th className="has-text-centered" width="20%">จัดการ</th>
+                                        <th className="has-text-centered" width="40%">จัดการ</th>
                                     </tr>
                                 </thead>
                                 <tbody>
@@ -52,8 +84,21 @@ export class EmailsPage extends React.Component {
                                                     <td className="has-text-centered">{email.role}</td>
                                                     <td className="has-text-centered">{email.pages.join()}</td>
                                                     <td className="has-text-centered">
-                                                        <button className="button" value={email.uid}
-                                                            onClick={this.onEditClick}>แก้ไข</button>
+                                                        <button className="button"
+                                                            value={email.uid}
+                                                            onClick={this.onEditClick}>
+                                                            แก้ไข</button>
+                                                        &nbsp;
+                                                        <button className="button"
+                                                            value={email.uid}
+                                                            onClick={this.onEditClick}>
+                                                            รีเซ็ต</button>
+                                                        &nbsp;
+                                                        <button className="button"
+                                                            name={email.uid}
+                                                            value={email.disabled}
+                                                            onClick={this.onDisabledClick}>
+                                                            {email.disabled ? 'เปิด' : 'ปิด'}ใช้งาน</button>
                                                     </td>
                                                 </tr>)
                                             }) : (

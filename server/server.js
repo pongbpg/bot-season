@@ -610,7 +610,18 @@ app.post('/api/notice', jsonParser, (req, res) => {
             })
         })
 })
-
+app.post('/api/auth/disabled', jsonParser, (req, res) => {
+    admin.auth().updateUser(req.body.uid, {
+        disabled: req.body.disabled
+    }).then(function (userRecord) {
+        // See the UserRecord reference doc for the contents of userRecord.
+        console.log("Successfully updated user", userRecord.toJSON());
+        res.json(userRecord.toJSON())
+    })
+        .catch(function (error) {
+            console.log("Error updating user:", error);
+        });
+})
 app.use(express.static(publicPath));
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'))

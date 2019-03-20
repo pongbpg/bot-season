@@ -98,12 +98,9 @@ export class Header extends React.Component {
                   <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">จัดการ</a>
                     <div className="navbar-dropdown">
-                      {/* <Link className="navbar-item" to="/manage/teams">
-                        ทีม
+                      <Link className="navbar-item" to="/manage/teams">
+                        ทีม/เพจ
                       </Link>
-                      <Link className="navbar-item" to="/manage/pages">
-                        เพจ
-                      </Link> */}
                       <Link className="navbar-item" to="/manage/admins">
                         แอดมินไลน์
                       </Link>

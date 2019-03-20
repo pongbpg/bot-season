@@ -39,7 +39,7 @@ export const startUpdateScores = (id, scores) => {
 }
 export const startGetRandom = () => {
     return (dispatch) => {
-        return firestore.collection('counter').doc('votes')
+        return firestore.collection('setting').doc('votes')
             .onSnapshot(doc => {
                 return dispatch(setRandom(doc.data().random))
             })
@@ -52,6 +52,6 @@ export const setRandom = (random) => ({
 
 export const startSetRandom = (random) => {
     return (dispatch) => {
-        return firestore.collection('counter').doc('votes').update({ random })
+        return firestore.collection('setting').doc('votes').update({ random })
     }
 }

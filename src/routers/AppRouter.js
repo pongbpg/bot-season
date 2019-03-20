@@ -34,6 +34,7 @@ const AppRouter = () => (
         <PrivateRoute path="/sayhi" component={SayHiPage} exact={true} />
         <PrivateRoute path="/cost" component={CostPage} exact={true} />
         <PrivateRoute path="/votes" component={VotesPage} exact={true} />
+        <PrivateRoute path="/manage/teams" component={AdminsPage} exact={true} />
         <PrivateRoute path="/manage/admins" component={AdminsPage} exact={true} />
         <PrivateRoute path="/manage/emails" component={EmailsPage} exact={true} />
         <PrivateRoute path="/manage/email/:uid" component={EmailPage} />

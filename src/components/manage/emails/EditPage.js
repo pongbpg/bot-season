@@ -92,12 +92,12 @@ export class EditPage extends React.Component {
                                     </div>
                                 </div>
                             </div>
-                            <div className="field">
+                            {/* <div className="field">
                                 <label className={`checkbox ${this.state.email.active ? 'has-text-success' : 'has-text-danger'}`}>
                                     <input type="checkbox" checked={this.state.email.active}
                                         onChange={this.onActiveChange} /> {this.state.email.active ? 'เปิดใช้งาน' : 'ปิดใช้งาน'}
                                 </label>
-                            </div>
+                            </div> */}
                         </div>
 
                         <div className="column is-4-offset-4">
