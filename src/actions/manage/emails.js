@@ -1,4 +1,4 @@
-import firestore from '../../firebase/firebase';
+import firestore, { auth } from '../../firebase/firebase';
 export const startGetEmails = () => {
     return (dispatch) => {
         return firestore.collection('emails').get()
@@ -17,6 +17,15 @@ export const startUpdateEmail = (email) => {
             .then(() => {
                 return dispatch(setEmail(email))
             })
+    }
+}
+export const startResetPassword = (email) => {
+    return (dispatch) => {
+        return auth.sendPasswordResetEmail(email).then(function () {
+            return email
+        }).catch(function (error) {
+            // An error happened.
+        });
     }
 }
 export const setEmails = (emails) => ({

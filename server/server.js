@@ -615,12 +615,11 @@ app.post('/api/auth/disabled', jsonParser, (req, res) => {
         disabled: req.body.disabled
     }).then(function (userRecord) {
         // See the UserRecord reference doc for the contents of userRecord.
-        console.log("Successfully updated user", userRecord.toJSON());
+        // console.log("Successfully updated user", userRecord.toJSON());
         res.json(userRecord.toJSON())
-    })
-        .catch(function (error) {
-            console.log("Error updating user:", error);
-        });
+    }).catch(function (error) {
+        // console.log("Error updating user:", error);
+    });
 })
 app.use(express.static(publicPath));
 app.get('*', (req, res) => {
