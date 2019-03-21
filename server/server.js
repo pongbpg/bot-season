@@ -1117,7 +1117,7 @@ const formatOrder = (data) => {
     return `
 ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
 เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
-ที่อยู่: ${data.addr} 
+ที่อยู่: ${data.addr ? data.addr : `${emoji(0x1000A6)}undefined`} 
 รายการสินค้า: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
@@ -1130,7 +1130,7 @@ const formatOrderKH = (data) => {
     return `
 Name: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
 Tel: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
-Address: ${data.addr} 
+Address: ${data.addr ? data.addr : `${emoji(0x1000A6)}undefined`} 
 Products: ${data.product
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
