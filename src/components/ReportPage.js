@@ -130,6 +130,13 @@ export class ReportPage extends React.Component {
                                                     EXCEL
                                         </a>
                                             </p>
+                                            <p className="control">
+                                                <a className="button is-warning is-centered is-small"
+                                                    href={`http://yaumjai.com:3000/api/report/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=flash&country=${this.state.country}`}
+                                                    target="_blank">
+                                                    FLASH
+                                        </a>
+                                            </p>
                                         </div>
                                     </td>
                                 </tr>
