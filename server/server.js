@@ -7,6 +7,7 @@ const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
 const moment = require('moment');
 const shortid = require('shortid');
+const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
 admin.initializeApp({
@@ -800,7 +801,13 @@ const initMsgOrder = (txt) => {
                                 value = value.replace(/\n/g, ' ');
                                 const postcode = value.match(/[0-9]{5}/g);
                                 if (postcode == null) {
-                                    value = `${value + ' ' + emoji(0x1000A6)}ตรวจสอบรหัสไปรษณีย์undefined`
+                                    value = `${value + ' ' + emoji(0x1000A6)}ไม่มีรหัสไปรษณีย์undefined`
+                                } else {
+                                    const rawdata = fs.readFileSync('./postcode.json');
+                                    const postcodes = JSON.parse(rawdata)
+                                    if (postcodes.indexOf(postcode) == -1) {
+                                        value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
+                                    }
                                 }
                             }
                         } else {
