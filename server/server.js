@@ -805,7 +805,7 @@ const initMsgOrder = (txt) => {
                                 } else {
                                     const rawdata = fs.readFileSync('/postcode.json');
                                     const postcodes = JSON.parse(rawdata)
-                                    if (postcodes.indexOf(postcode) == -1) {
+                                    if (postcodes.indexOf(Number(postcode[0])) == -1) {
                                         value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
                                     }
                                 }
