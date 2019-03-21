@@ -803,7 +803,7 @@ const initMsgOrder = (txt) => {
                                 if (postcode == null) {
                                     value = `${value + ' ' + emoji(0x1000A6)}ไม่มีรหัสไปรษณีย์undefined`
                                 } else {
-                                    const rawdata = fs.readFileSync('./postcode.json');
+                                    const rawdata = fs.readFileSync('/postcode.json');
                                     const postcodes = JSON.parse(rawdata)
                                     if (postcodes.indexOf(postcode) == -1) {
                                         value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
