@@ -64,3 +64,31 @@ export const startSaveTracking = (orders) => {
         dispatch(startListOrders())
     }
 }
+
+export const startUploadTracks = (tracks) => {
+    return (dispatch) => {
+        let errors = [];
+        // async function callback() {
+        let update = firestore.collection('orders');
+        for (let x = 0; x < tracks.length; x++) {
+            update.doc(tracks[x].id)
+                .update({
+                    tracking: tracks[x].tracking,
+                    expressName: 'FLASH',
+                    expressLink: 'https://www.flashexpress.co.th/tracking/'
+                })
+            // .get()
+            // .then((doc) => {
+            //     errors.push({ ...tracks[x], error: false })
+
+            // })
+            // .catch(error => {
+            //     errors.push({ ...tracks[x], error: true })
+            // })
+            // }
+            // console.log(errors)
+        }
+        dispatch(startListOrders())
+        // return dispatch(() => errors);
+    }
+}

@@ -1,11 +1,12 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
-import { startListOrders, startSaveTracking } from '../actions/orders';
+import { startListOrders, startSaveTracking, startUploadTracks } from '../actions/orders';
 import filterOrders from '../selectors/orders';
 import FaSearch from 'react-icons/lib/fa/search';
 import MdEdit from 'react-icons/lib/md/edit';
 import Money from '../selectors/money';
+import readXlsxFile from 'read-excel-file'
 import moment from 'moment';
 moment.locale('th');
 export class OrderPage extends React.Component {
@@ -13,7 +14,8 @@ export class OrderPage extends React.Component {
         super(props);
         this.state = {
             orders: props.orders || [],
-            search: ''
+            search: '',
+            tracks: []
         }
         this.props.startListOrders();
     }
@@ -41,6 +43,57 @@ export class OrderPage extends React.Component {
         // console.log(e.target.value)
         this.setState({ search: e.target.value })
     }
+    onFileChange = (e) => {
+        // console.log(e.target.id);
+        // console.log(e.target.files)
+        readXlsxFile(e.target.files[0])
+            .then((rows) => {
+                // console.log(rows)
+                let tracks = [];
+                const colId = rows[0].findIndex(f => f == 'Order No.') || 2;
+                const colTack = rows[0].findIndex(f => f == 'Tracking No.') || 3;
+                console.log(colId, colTack)
+                if (rows.length > 0) {
+                    for (var row in rows) {
+                        // console.log(row, rows[row][colTack], rows[row][colTack].length)
+                        if (rows[row][colTack] != null)
+                            if (rows[row][colTack].length == 12 && rows[row][colId] != '' && rows[row][colId] != 'Order No.') {
+                                tracks.push({
+                                    tracking: rows[row][colTack],
+                                    id: rows[row][colId]
+                                })
+                            }
+                    }
+                }
+                if (tracks.length == 0) {
+                    alert('ไม่มีข้อมูล กรุณาตรวจสอบไฟล์ Excel')
+                }
+                this.setState({ tracks })
+
+            })
+            .catch((errors) => {
+                console.log('upload file', errors)
+                alert('ไฟล์ที่อัพไม่ถูกต้อง กรุณาตรวจสอบต้องเป็น Excel เท่านั้น!')
+                this.setState({ tracks: [] })
+            })
+    }
+    onUploadClick = (e) => {
+        if (confirm('คุณยืนยันที่จะอัพโหลดไฟล์เลขพัสดุ?')) {
+            if (this.state.tracks.length > 0) {
+                this.props.startUploadTracks(this.state.tracks)
+                this.setState({ tracks: [] })
+                // .then((res) => {
+                //     // alert('อัพโหลดเรียบร้อย^^')
+                //     console.log(res)
+                // })
+            } else {
+                alert('ไม่มีข้อมูล! กรุณาตรวจสอบไฟล์ Excel')
+            }
+        }
+    }
+    onCancelClick = (e) => {
+        this.setState({ tracks: [] })
+    }
     render() {
         return (
             <section className="hero">
@@ -56,6 +109,27 @@ export class OrderPage extends React.Component {
                         <div className="level-item">
                             <Link to="/orders/edit" className="button"><h1 className="sub-title"><MdEdit />แก้ไข</h1></Link>
                         </div>
+                        {this.state.tracks.length == 0
+                            ? <input type="file" onChange={this.onFileChange} />
+                            : <div className="level">
+                                <div className="level-item">
+                                    <h3 className="subtitle">
+                                        เลขพัสดุจำนวน {this.state.tracks.length} รายการ
+                                </h3>
+                                </div>
+                                <div className="level-item">
+                                    <div className="field is-grouped is-grouped-centered">
+                                        <div className="control">
+                                            <button className="button is-link" onClick={this.onUploadClick}>อัพโหลด</button>
+                                        </div>
+                                        <div className="control">
+                                            <button className="button is-text" onClick={this.onCancelClick}>ยกเลิก</button>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+
+                        }
                     </div>
                     <div className="level-right">
                         <div className="level-item">
@@ -135,6 +209,7 @@ const mapStateToProps = (state, props) => ({
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startSaveTracking: (orders) => dispatch(startSaveTracking(orders)),
-    startListOrders: () => dispatch(startListOrders())
+    startListOrders: () => dispatch(startListOrders()),
+    startUploadTracks: (tracks) => dispatch(startUploadTracks(tracks))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(OrderPage);
