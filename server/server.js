@@ -11,7 +11,7 @@ const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
 admin.initializeApp({
-    credential: admin.initializeApp({
+    credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "bot-orders",
         "private_key_id": process.env.ADMIN_PRIVATE_KEY_ID,
@@ -19,6 +19,8 @@ admin.initializeApp({
         "client_email": process.env.CLIENT_EMAIL,
         "client_id": process.env.CLIENT_ID,
         "auth_uri": "https://accounts.google.com/o/oauth2/auth",
+        "token_uri": "https://oauth2.googleapis.com/token",
+        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
     })
 });
 var db = admin.firestore();
