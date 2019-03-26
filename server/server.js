@@ -12,7 +12,7 @@ moment.locale('th');
 const admin = require('firebase-admin');
 admin.initializeApp({
     privateKeyId: process.env.ADMIN_PRIVATE_KEY_ID,
-    privateKey: process.env.ADMIN_PRIVATE_KEY,
+    privateKey: process.env.ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
     clientEmail: process.env.CLIENT_EMAIL
 });
 var db = admin.firestore();
