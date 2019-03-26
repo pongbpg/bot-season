@@ -11,19 +11,9 @@ const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
 admin.initializeApp({
-    credential: admin.credential.cert({
-        "type": "service_account",
-        "project_id": "bot-orders",
-        "private_key_id": process.env.ADMIN_PRIVATE_KEY_ID,
-        "private_key": process.env.ADMIN_PRIVATE_KEY.replace(/\\n/g, '\n'),
-        "client_email": "firebase-adminsdk-gl6fx@bot-orders.iam.gserviceaccount.com",
-        "client_id": process.env.CLIENT_ID,
-        "auth_uri": "https://accounts.google.com/o/oauth2/auth",
-        "token_uri": "https://oauth2.googleapis.com/token",
-        "auth_provider_x509_cert_url": "https://www.googleapis.com/oauth2/v1/certs",
-        "client_x509_cert_url": "https://www.googleapis.com/robot/v1/metadata/x509/firebase-adminsdk-gl6fx%40bot-orders.iam.gserviceaccount.com"
-    }),
-    databaseURL: process.env.FIREBASE_DATABASE_URL
+    privateKeyId: process.env.ADMIN_PRIVATE_KEY_ID,
+    privateKey: process.env.ADMIN_PRIVATE_KEY,
+    clientEmail: process.env.CLIENT_EMAIL
 });
 var db = admin.firestore();
 const settings = {/* your settings... */ timestampsInSnapshots: true };
@@ -136,6 +126,49 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 reply(obj, LINE_TH);
             })
 
+    } else if (msg.indexOf('@@zip+:') > -1 && msg.split(':').length == 2) {
+        const fs = require('fs');
+        const rawdata = fs.readFileSync('./server/postcode.json');
+        let postcodes = JSON.parse(rawdata);
+        const newcode = Number(msg.split(':')[1].replace(/\D/g, ''));
+        if (!isNaN(newcode) && newcode.toString().length == 5) {
+            postcodes.push(newcode);
+            const data = [...new Set(postcodes)];
+            fs.writeFile('./server/postcode.json', JSON.stringify(data), function (err) {
+                obj.messages.push({
+                    type: 'text',
+                    text: `รหัสไปรษณีย์ ${newcode} ถูกเพิ่มแล้ว!`
+                })
+                reply(obj, LINE_TH);
+            });
+        } else {
+            obj.messages.push({
+                type: 'text',
+                text: `รหัสไปรษณีย์ไม่ถูกต้องจ้า`
+            })
+            reply(obj, LINE_TH);
+        }
+    } else if (msg.indexOf('@@zip-:') > -1 && msg.split(':').length == 2) {
+        const fs = require('fs');
+        const rawdata = fs.readFileSync('./server/postcode.json');
+        const postcodes = JSON.parse(rawdata);
+        const newcode = Number(msg.split(':')[1].replace(/\D/g, ''));
+        if (!isNaN(newcode) && newcode.toString().length == 5) {
+            const data = postcodes.filter(f => f != newcode);
+            fs.writeFile('./server/postcode.json', JSON.stringify(data), function (err) {
+                obj.messages.push({
+                    type: 'text',
+                    text: `รหัสไปรษณีย์ ${newcode} ถูกลบแล้ว!`
+                })
+                reply(obj, LINE_TH);
+            });
+        } else {
+            obj.messages.push({
+                type: 'text',
+                text: `รหัสไปรษณีย์ไม่ถูกต้องจ้า`
+            })
+            reply(obj, LINE_TH);
+        }
     } else {
         adminRef.get()
             .then(user => {

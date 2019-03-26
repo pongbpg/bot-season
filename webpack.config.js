@@ -82,7 +82,9 @@ module.exports = (env) => {
                 'process.env.FIREBASE_STORAGE_BUCKET': JSON.stringify(process.env.FIREBASE_STORAGE_BUCKET),
                 'process.env.FIREBASE_MESSAGING_SENDER_ID': JSON.stringify(process.env.FIREBASE_MESSAGING_SENDER_ID),
                 'process.env.ADMIN_PRIVATE_KEY_ID': JSON.stringify(process.env.ADMIN_PRIVATE_KEY_ID),
-                'process.env.ADMIN_PRIVATE_KEY': JSON.stringify(process.env.ADMIN_PRIVATE_KEY)
+                'process.env.ADMIN_PRIVATE_KEY': JSON.stringify(process.env.ADMIN_PRIVATE_KEY),
+                'process.env.CLIENT_ID': JSON.stringify(process.env.CLIENT_ID),
+                'process.env.CLIENT_EMAIL': JSON.stringify(process.env.CLIENT_EMAIL)
             })
         ],
         devtool: isProduction ? 'source-map' : 'cheap-module-eval-source-map',
