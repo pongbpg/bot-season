@@ -701,6 +701,10 @@ const initMsgOrder = (txt) => {
                             value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
                             if (value.length != 10) {
                                 value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
+                            } else {
+                                if (value.substr(0, 2) == '00') {
+                                    value = value.substr(1, 10)
+                                }
                             }
                         }
                         if (key !== 'price' && key !== 'delivery') {
