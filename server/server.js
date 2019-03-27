@@ -978,7 +978,7 @@ const initMsgOrderKH = (txt) => {
                         }
                         let value = m.split(':')[1];
                         if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
-                        if (key !== 'addr' && key !== 'fb') value = value.replace(/\n/g, '').toUpperCase();
+                        if (key !== 'addr' && key !== 'fb' && key !== 'id') value = value.replace(/\n/g, '').toUpperCase();
                         if (key == 'tel') {
                             value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
                             if (value.length < 9 || value.length > 10) {
