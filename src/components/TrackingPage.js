@@ -215,7 +215,7 @@ export class TrackingPage extends React.Component {
 
                       <div className="media">
                         <div className="media-left">
-                          <p className="has-text-grey-light">{order.id}</p>
+                          <p className="has-text-grey-light">{order.id + order.page}</p>
                         </div>
                         <div className="media-content">
                           <div className="content">
