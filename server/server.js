@@ -10,7 +10,9 @@ const shortid = require('shortid');
 const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
+// const serviceAccount = require('./admin.json');
 admin.initializeApp({
+    // credential: admin.credential.cert(serviceAccount)
     credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "bot-orders",
@@ -1160,6 +1162,7 @@ const initMsgOrderKH = (txt) => {
 }
 
 const formatOrder = (data) => {
+    //${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
     return `
 ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
 เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
@@ -1168,7 +1171,7 @@ const formatOrder = (data) => {
             ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
 ธนาคาร: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
-รวมยอดชำระ: ${formatMoney(data.price, 0)}บาท ${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+รวมยอดชำระ: ${formatMoney(data.price, 0)}บาท 
 FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
 เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
 }

@@ -159,7 +159,7 @@ export class PostsPage extends React.Component {
                                     <th className="has-text-centered">วันที่</th>
                                     <th className="has-text-centered">06.30-08.30</th>
                                     <th className="has-text-centered">16.00-18.00</th>
-                                    {/* <th className="has-text-centered">เวลาอื่นๆ</th> */}
+                                    <th className="has-text-centered">เวลาอื่นๆ</th>
                                     <th className="has-text-centered">หักค่าคอมฯ</th>
                                 </tr>
                             </thead>
@@ -173,15 +173,15 @@ export class PostsPage extends React.Component {
                                         return <tr key={post.date}>
                                             {/* <td className="has-text-centered">{++i}</td> */}
                                             <td className="has-text-centered">{post.date}</td>
-                                            <td className="has-text-centered">{post.time1 ? post.time1.substr(0, 50) : <p className="has-text-grey-lighter has-text-weight-bold">No Posted.</p>}</td>
-                                            <td className="has-text-centered">{post.time2 ? post.time2.substr(0, 50) : <p className="has-text-grey-lighter has-text-weight-bold">No Posted.</p>}</td>
-                                            {/* <td className="has-text-centered">{post.detail.sort((a, b) => a > b ? 1 : -1).join(',')}</td> */}
+                                            <td className="has-text-centered">{post.time1 ? post.time1.substr(0, 30) : <p className="has-text-grey-lighter has-text-weight-bold">No Posted.</p>}</td>
+                                            <td className="has-text-centered">{post.time2 ? post.time2.substr(0, 30) : <p className="has-text-grey-lighter has-text-weight-bold">No Posted.</p>}</td>
+                                            <td className="has-text-centered">{post.detail.sort((a, b) => a > b ? 1 : -1).join(',')}</td>
                                             <td className={`has-text-right has-text-weight-bold has-text-${fine == 0 ? 'success' : (fine == 12.5 ? 'warning' : 'danger')}`}>{Money(fine)}</td>
                                         </tr>;
                                     })
                                 }
                                 <tr>
-                                    <td colSpan={3} className="has-text-centered has-text-weight-bold">รวม</td>
+                                    <td colSpan={4} className="has-text-centered has-text-weight-bold">รวม</td>
                                     <td className="has-text-right has-text-weight-bold">{Money(sumFine)}</td>
                                 </tr>
                             </tbody>
