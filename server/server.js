@@ -887,20 +887,23 @@ const initMsgOrder = (txt) => {
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             data.edit = data.edit ? data.edit : false;
-            if (data.channel.length != 1) {
-                data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
-            } else {
-                if (data.page.indexOf('@') > -1) {
-                    if (['O', 'N', 'F'].indexOf(data.channel) == -1) {
-                        data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F เท่านั้นundefined`
-                    }
+            if (data.channel) {
+                if (data.channel.length != 1) {
+                    data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
                 } else {
-                    if (['O', 'N'].indexOf(data.channel) == -1) {
-                        data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N เท่านั้นundefined`
+                    if (data.page.indexOf('@') > -1) {
+                        if (['O', 'N', 'F'].indexOf(data.channel) == -1) {
+                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F เท่านั้นundefined`
+                        }
+                    } else {
+                        if (['O', 'N'].indexOf(data.channel) == -1) {
+                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N เท่านั้นundefined`
+                        }
                     }
                 }
+            } else {
+                data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
             }
-
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
