@@ -902,7 +902,11 @@ const initMsgOrder = (txt) => {
                     }
                 }
             } else {
-                data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
+                if (['CM'].indexOf(data.bank.match(/[a-zA-Z]+/g, '')) > -1) {
+                    data.channel = 'O';
+                } else {
+                    data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
+                }
             }
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
