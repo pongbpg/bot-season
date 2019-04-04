@@ -735,21 +735,13 @@ const initMsgOrder = (txt) => {
                             case 'z': key = 'page'; break;
                             case 'd': key = 'delivery'; break;
                             case 'cutoffdate': key = 'cutoffDate'; break;
+                            case 'c': key = 'channel'; break;
                             default: key;
                         }
                         let value = m.split(':')[1];
                         if (!dontReplces.includes(key)) value = value.replace(/\s/g, '');
                         if (key !== 'addr' && key !== 'fb' && key !== 'id') value = value.replace(/\n/g, '').toUpperCase();
-                        if (key == 'tel') {
-                            value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
-                            if (value.length != 10) {
-                                value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
-                            } else {
-                                if (value.substr(0, 2) == '00') {
-                                    value = value.substr(1, 10)
-                                }
-                            }
-                        }
+
                         if (key !== 'price' && key !== 'delivery') {
                             value = value.trim();
                             if (key == 'product') {
@@ -857,6 +849,15 @@ const initMsgOrder = (txt) => {
                                         value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
                                     }
                                 }
+                            } else if (key == 'tel') {
+                                value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
+                                if (value.length != 10) {
+                                    value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
+                                } else {
+                                    if (value.substr(0, 2) == '00') {
+                                        value = value.substr(1, 10)
+                                    }
+                                }
                             }
                         } else {
                             value = Number(value.replace(/\D/g, ''));
@@ -873,7 +874,7 @@ const initMsgOrder = (txt) => {
                         checkBank = true;
                     }
                 } else {
-                    if (['K', 'F'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'F', 'M'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 }
@@ -886,6 +887,20 @@ const initMsgOrder = (txt) => {
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             data.edit = data.edit ? data.edit : false;
+            if (data.channel.length != 1) {
+                data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
+            } else {
+                if (data.page.indexOf('@') > -1) {
+                    if (['O', 'N', 'F'].indexOf(data.channel) == -1) {
+                        data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F เท่านั้นundefined`
+                    }
+                } else {
+                    if (['O', 'N'].indexOf(data.channel) == -1) {
+                        data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N เท่านั้นundefined`
+                    }
+                }
+            }
+
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
@@ -1172,7 +1187,7 @@ const formatOrder = (data) => {
             : `${emoji(0x1000A6)}undefined`} 
 ธนาคาร: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
 รวมยอดชำระ: ${formatMoney(data.price, 0)}บาท 
-FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
+FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`} ${data.channel.length == 1 ? '' : data.channel}
 เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
 }
 const formatOrderKH = (data) => {
