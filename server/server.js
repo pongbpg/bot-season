@@ -870,11 +870,11 @@ const initMsgOrder = (txt) => {
             data.bank = data.banks ? data.banks.map(bank => {
                 let checkBank = false;
                 if (bank.name.indexOf('COD') > -1) {
-                    if (['K', 'F'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'A'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 } else {
-                    if (['K', 'F', 'M'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'A'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 }
