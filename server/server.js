@@ -887,23 +887,23 @@ const initMsgOrder = (txt) => {
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             data.edit = data.edit ? data.edit : false;
-            if (data.channel) {
-                if (data.channel.length != 1) {
-                    data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
-                } else {
-                    if (data.page.indexOf('@') > -1) {
-                        if (['O', 'N', 'F'].indexOf(data.channel) == -1) {
-                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F เท่านั้นundefined`
-                        }
-                    } else {
-                        if (['O', 'N'].indexOf(data.channel) == -1) {
-                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N เท่านั้นundefined`
-                        }
-                    }
-                }
-            } else {
-                data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
-            }
+            // if (data.channel) {
+            //     if (data.channel.length != 1) {
+            //         data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
+            //     } else {
+            //         if (data.page.indexOf('@') > -1) {
+            //             if (['O', 'N', 'F'].indexOf(data.channel) == -1) {
+            //                 data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F เท่านั้นundefined`
+            //             }
+            //         } else {
+            //             if (['O', 'N'].indexOf(data.channel) == -1) {
+            //                 data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N เท่านั้นundefined`
+            //             }
+            //         }
+            //     }
+            // } else {
+            //     data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
+            // }
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
                 .then(snapShot => {
@@ -1181,6 +1181,7 @@ const initMsgOrderKH = (txt) => {
 
 const formatOrder = (data) => {
     //${data.delivery > 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
+    //${data.channel.length == 1 ? '' : data.channel}
     return `
 ชื่อ: ${data.name ? data.name : `${emoji(0x1000A6)}undefined`} 
 เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
@@ -1190,7 +1191,7 @@ const formatOrder = (data) => {
             : `${emoji(0x1000A6)}undefined`} 
 ธนาคาร: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
 รวมยอดชำระ: ${formatMoney(data.price, 0)}บาท 
-FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`} ${data.channel.length == 1 ? '' : data.channel}
+FB/Line: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`} 
 เพจ: ${data.page ? data.page : `${emoji(0x1000A6)}undefined`}`;
 }
 const formatOrderKH = (data) => {
