@@ -704,7 +704,7 @@ const push = (obj, LINE_HEADER) => {
     });
 };
 const initMsgOrder = (txt) => {
-    const express = ["K", 'F'];
+    const express = ["K", 'A'];
     // const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST", "TPF01"];
     return db.collection('pages')
         .where('country', '==', 'TH')
