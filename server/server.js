@@ -13,7 +13,7 @@ const admin = require('firebase-admin');
 // const serviceAccount = require('./admin.json');
 admin.initializeApp({
     // credential: admin.credential.cert(serviceAccount)
-    credential: admin.credential.cert({
+    // credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "bot-orders",
         "private_key_id": process.env.ADMIN_PRIVATE_KEY_ID,

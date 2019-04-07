@@ -15,7 +15,15 @@ export class OrderPage extends React.Component {
         this.state = {
             orders: props.orders || [],
             search: '',
-            tracks: []
+            tracks: [],
+            expressName: '',
+            expressLink: '',
+            expresses: [
+                { expressName: 'ALPHA FAST', expressLink: 'https://www.alphafast.com/th/track-alpha' },
+                { expressName: 'EMS', expressLink: 'http://track.thailandpost.co.th/tracking/default.aspx' },
+                { expressName: 'FLASH', expressLink: 'https://www.flashexpress.co.th/tracking/' },
+                { expressName: 'KERRY', expressLink: 'https://th.kerryexpress.com/th/track/?track' }
+            ]
         }
         this.props.startListOrders();
     }
@@ -24,71 +32,95 @@ export class OrderPage extends React.Component {
             this.setState({ orders: nextProps.orders });
         }
     }
+    onExpressChange = (e) => {
+        const expressName = e.target.value;
+        let expressLink = '';
+        // console.log(expressName)
+        if (expressName != "") {
+            expressLink = this.state.expresses.find(f => f.expressName === expressName).expressLink
+        }
+        this.setState({ expressName, expressLink })
+    }
     onTrackingChange = (e) => {
-        const index = this.state.orders.findIndex(f => f.id === e.target.name);
-        const tracking = e.target.value.toUpperCase();
-        if (index === -1) {
+        if (this.state.expressName != "") {
+            const index = this.state.orders.findIndex(f => f.id === e.target.name);
+            const tracking = e.target.value.toUpperCase();
+            if (index === -1) {
 
+            } else {
+                let orders = this.state.orders.slice();
+                orders[index] = { ...orders[index], tracking, expressName: this.state.expressName, expressLink: this.state.expressLink };
+                this.setState({ orders })
+            }
         } else {
-            let orders = this.state.orders.slice();
-            orders[index] = { ...orders[index], tracking };
-            this.setState({ orders })
+            alert('กรุณาเลือกขนส่งก่อนครับ')
         }
     }
     onSaveTracking = () => {
-        const orders = this.state.orders.filter(f => f.tracking !== '');
-        this.props.startSaveTracking(orders);
+        if (this.state.expressName != "") {
+            const orders = this.state.orders.filter(f => f.tracking !== '');
+            this.props.startSaveTracking(orders);
+        } else {
+            alert('กรุณาเลือกขนส่งก่อนครับ')
+        }
     }
     onSearchChange = (e) => {
         // console.log(e.target.value)
         this.setState({ search: e.target.value })
     }
     onFileChange = (e) => {
-        // console.log(e.target.id);
-        // console.log(e.target.files)
-        readXlsxFile(e.target.files[0])
-            .then((rows) => {
-                // console.log(rows)
-                let tracks = [];
-                const colId = rows[0].findIndex(f => f == 'Order No.') || 2;
-                const colTack = rows[0].findIndex(f => f == 'Tracking No.') || 3;
-                console.log(colId, colTack)
-                if (rows.length > 0) {
-                    for (var row in rows) {
-                        // console.log(row, rows[row][colTack], rows[row][colTack].length)
-                        if (rows[row][colTack] != null)
-                            if (rows[row][colTack].length == 12 && rows[row][colId] != '' && rows[row][colId] != 'Order No.') {
-                                tracks.push({
-                                    tracking: rows[row][colTack],
-                                    id: rows[row][colId]
-                                })
-                            }
+        if (this.state.expressName != "") {
+            readXlsxFile(e.target.files[0])
+                .then((rows) => {
+                    // console.log(rows)
+                    let tracks = [];
+                    const colId = rows[0].findIndex(f => f == 'Order No.');
+                    const colTack = rows[0].findIndex(f => f == 'Tracking No.');
+                    // console.log(colId, colTack)
+                    if (rows.length > 0) {
+                        for (var row in rows) {
+                            if (rows[row][colTack] != null)
+                                if (rows[row][colId] != '' && rows[row][colId].length == 18) {
+                                    tracks.push({
+                                        tracking: rows[row][colTack].replace(/\s/g, ''),
+                                        id: rows[row][colId].replace(/\s/g, ''),
+                                        expressName: this.state.expressName,
+                                        expressLink: this.state.expressLink
+                                    })
+                                }
+                        }
                     }
-                }
-                if (tracks.length == 0) {
-                    alert('ไม่มีข้อมูล กรุณาตรวจสอบไฟล์ Excel')
-                }
-                this.setState({ tracks })
-
-            })
-            .catch((errors) => {
-                console.log('upload file', errors)
-                alert('ไฟล์ที่อัพไม่ถูกต้อง กรุณาตรวจสอบต้องเป็น Excel เท่านั้น!')
-                this.setState({ tracks: [] })
-            })
+                    if (tracks.length == 0) {
+                        alert('ไม่มีข้อมูล กรุณาตรวจสอบไฟล์ Excel')
+                    }
+                    this.setState({ tracks })
+                    // console.log(tracks)
+                })
+                .catch((errors) => {
+                    console.log('upload file', errors)
+                    alert('ไฟล์ที่อัพไม่ถูกต้อง กรุณาตรวจสอบต้องเป็น Excel เท่านั้น!')
+                    this.setState({ tracks: [] })
+                })
+        } else {
+            alert('กรุณาเลือกขนส่งก่อนครับ')
+        }
     }
     onUploadClick = (e) => {
-        if (confirm('คุณยืนยันที่จะอัพโหลดไฟล์เลขพัสดุ?')) {
-            if (this.state.tracks.length > 0) {
-                this.props.startUploadTracks(this.state.tracks)
-                this.setState({ tracks: [] })
-                // .then((res) => {
-                //     // alert('อัพโหลดเรียบร้อย^^')
-                //     console.log(res)
-                // })
-            } else {
-                alert('ไม่มีข้อมูล! กรุณาตรวจสอบไฟล์ Excel')
+        if (this.state.expressName != "") {
+            if (confirm('คุณยืนยันที่จะอัพโหลดไฟล์เลขพัสดุ?')) {
+                if (this.state.tracks.length > 0) {
+                    this.props.startUploadTracks(this.state.tracks)
+                    this.setState({ tracks: [] })
+                    // .then((res) => {
+                    //     // alert('อัพโหลดเรียบร้อย^^')
+                    //     console.log(res)
+                    // })
+                } else {
+                    alert('ไม่มีข้อมูล! กรุณาตรวจสอบไฟล์ Excel')
+                }
             }
+        } else {
+            alert('กรุณาเลือกขนส่งก่อนครับ')
         }
     }
     onCancelClick = (e) => {
@@ -132,6 +164,17 @@ export class OrderPage extends React.Component {
                         }
                     </div>
                     <div className="level-right">
+                        <div className="level-item">
+                            <div className="select">
+                                <select selected={this.state.express} onChange={this.onExpressChange}>
+                                    <option value="">เลือกขนส่ง</option>
+                                    <option value="ALPHA FAST">ALPHA</option>
+                                    <option value="EMS">EMS</option>
+                                    <option value="FLASH">FLASH</option>
+                                    <option value="KERRY">KERRY</option>
+                                </select>
+                            </div>
+                        </div>
                         <div className="level-item">
                             <div className="control has-icons-right">
                                 <input className="input" type="text" placeholder="ค้นหา"
@@ -198,6 +241,7 @@ export class OrderPage extends React.Component {
                             onClick={this.onSaveTracking}>
                             บันทึก
                                         </button>
+
                     </div>
                 </nav>
             </section>
