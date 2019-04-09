@@ -63,7 +63,7 @@ export class PostsPage extends React.Component {
                         const findIndex = data.findIndex(f => f.date == moment(m.created_time).format('YYYY-MM-DD'));
                         const thisTime = moment(m.created_time).format('HHmm');
                         const thisData = data[findIndex];
-                        if (thisTime >= '0630' && thisTime <= '0830' && thisData.time1 == false) {
+                        if (thisTime >= '0630' && thisTime <= '0900' && thisData.time1 == false) {
                             data[findIndex].time1 = '(' + moment(m.created_time).format('HH:mm') + ') ' + m.message;
                         } else if (thisTime >= '1600' && thisTime <= '1800' && thisData.time2 == false) {
                             data[findIndex].time2 = '(' + moment(m.created_time).format('HH:mm') + ') ' + m.message;
