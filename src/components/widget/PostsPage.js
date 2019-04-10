@@ -157,7 +157,7 @@ export class PostsPage extends React.Component {
                                 <tr>
                                     {/* <th className="has-text-centered">ลำดับ</th> */}
                                     <th className="has-text-centered">วันที่</th>
-                                    <th className="has-text-centered">06.30-08.30</th>
+                                    <th className="has-text-centered">06.30-09.00</th>
                                     <th className="has-text-centered">16.00-18.00</th>
                                     <th className="has-text-centered">เวลาอื่นๆ</th>
                                     <th className="has-text-centered">หักค่าคอมฯ</th>
