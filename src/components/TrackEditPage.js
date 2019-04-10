@@ -17,7 +17,15 @@ export class TrackEditPage extends React.Component {
       orders: props.orders,
       alert: false,
       isLoading: false,
-      isSave: true
+      isSave: true,
+      expressName: '',
+      expressLink: '',
+      expresses: [
+        { expressName: 'ALPHA FAST', expressLink: 'https://www.alphafast.com/th/track-alpha' },
+        { expressName: 'EMS', expressLink: 'http://track.thailandpost.co.th/tracking/default.aspx' },
+        { expressName: 'FLASH', expressLink: 'https://www.flashexpress.co.th/tracking/' },
+        { expressName: 'KERRY', expressLink: 'https://th.kerryexpress.com/th/track/?track' }
+      ]
     };
   }
   componentWillReceiveProps(nextProps) {
@@ -53,24 +61,40 @@ export class TrackEditPage extends React.Component {
         })
     }
   }
+  onExpressChange = (e) => {
+    const expressName = e.target.value;
+    let expressLink = '';
+    // console.log(expressName)
+    if (expressName != "") {
+      expressLink = this.state.expresses.find(f => f.expressName === expressName).expressLink
+    }
+    this.setState({ expressName, expressLink })
+  }
   onAlertCloseClick = () => {
     this.setState({ alert: false })
   }
   onTrackingChange = (e) => {
-    const index = this.state.orders.findIndex(f => f.id === e.target.name);
-    const tracking = e.target.value.toUpperCase();
-    if (index === -1) {
+    if (this.state.expressName != "") {
+      const index = this.state.orders.findIndex(f => f.id === e.target.name);
+      const tracking = e.target.value.toUpperCase();
+      if (index === -1) {
 
+      } else {
+        let orders = this.state.orders.slice();
+        orders[index] = { ...orders[index], tracking, expressName: this.state.expressName, expressLink: this.state.expressLink };
+        this.setState({ orders })
+      }
     } else {
-      let orders = this.state.orders.slice();
-      orders[index] = { ...orders[index], tracking };
-      this.setState({ orders })
+      alert('กรุณาเลือกขนส่งก่อนครับ')
     }
   }
   onSaveTracking = () => {
-    const orders = this.state.orders.filter(f => f.tracking !== '');
-    this.props.startSaveTracking(orders);
-    this.setState({ isSave: true })
+    if (this.state.expressName != "") {
+      const orders = this.state.orders.filter(f => f.tracking !== '');
+      this.props.startSaveTracking(orders);
+    } else {
+      alert('กรุณาเลือกขนส่งก่อนครับ')
+    }
   }
   render() {
     // console.log(this.state.orders)
@@ -122,6 +146,7 @@ export class TrackEditPage extends React.Component {
                     <th className="has-text-centered">วันที่ปิดรอบ</th>
                     <th className="has-text-centered">เพจ</th>
                     <th className="has-text-right">ยอดโอน</th>
+                    <th className="has-text-centered">ขนส่ง</th>
                     <th className="has-text-centered">เลขพัสดุ</th>
                   </tr>
                 </thead>
@@ -136,6 +161,17 @@ export class TrackEditPage extends React.Component {
                       <td className="has-text-centered">{order.page}</td>
                       <td className="has-text-right">{Money(order.price)}</td>
                       <td className="has-text-centered">
+                        <div className="select">
+                          <select selected={this.state.express} onChange={this.onExpressChange}>
+                            <option value="">เลือกขนส่ง</option>
+                            <option value="ALPHA FAST">ALPHA</option>
+                            <option value="EMS">EMS</option>
+                            <option value="FLASH">FLASH</option>
+                            <option value="KERRY">KERRY</option>
+                          </select>
+                        </div>
+                      </td>
+                      <td className="has-text-centered">
                         <div className="field">
                           <div className="control">
                             <input type="text" name={order.id}
@@ -146,6 +182,7 @@ export class TrackEditPage extends React.Component {
                           </div>
                         </div>
                       </td>
+
                     </tr>;
                   })
                   }
