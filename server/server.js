@@ -262,7 +262,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                     }
                                     reply(obj, LINE_TH);
                                 })
-                        } else if (msg.indexOf('@@resent:') > -1 && msg.split(':').length == 2) {
+                        } else if (msg.indexOf('@@resend:') > -1 && msg.split(':').length == 2) {
                             const orderId = msg.split(':')[1].replace(/\s/g, '');;
                             const orderRef = db.collection('orders').doc(orderId);
                             orderRef.get()
