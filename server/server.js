@@ -227,6 +227,76 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                     }
                                     reply(obj, LINE_TH);
                                 })
+                        } else if (msg.indexOf('@@return:') > -1 && msg.split(':').length == 2) {
+                            const orderId = msg.split(':')[1].replace(/\s/g, '');;
+                            const orderRef = db.collection('orders').doc(orderId);
+                            orderRef.get()
+                                .then(order => {
+                                    if (order.exists) {
+                                        if (user.data().role == 'owner') {
+                                            async function callback() {
+                                                for (var p = 0; p < order.data().product.length; p++) {
+                                                    await db.collection('products').doc(order.data().product[p].code).get()
+                                                        .then(product => {
+                                                            const balance = product.data().amount + order.data().product[p].amount;
+                                                            db.collection('products').doc(order.data().product[p].code)
+                                                                .update({ amount: balance })
+                                                        })
+                                                }
+                                                await orderRef.update({ return: true })
+                                                    .then(cancel => {
+                                                        obj.messages.push({
+                                                            type: 'text',
+                                                            text: `${emoji(0x100035)}คืนรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${emoji(0x100018)}`//${formatOrder(order.data())}`
+                                                        })
+                                                        reply(obj, LINE_TH);
+                                                    })
+                                            }
+                                            callback();
+                                        }
+                                    } else {
+                                        obj.messages.push({
+                                            type: 'text',
+                                            text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+                                        })
+                                    }
+                                    reply(obj, LINE_TH);
+                                })
+                        } else if (msg.indexOf('@@resent:') > -1 && msg.split(':').length == 2) {
+                            const orderId = msg.split(':')[1].replace(/\s/g, '');;
+                            const orderRef = db.collection('orders').doc(orderId);
+                            orderRef.get()
+                                .then(order => {
+                                    if (order.exists) {
+                                        if (user.data().role == 'owner') {
+                                            async function callback() {
+                                                for (var p = 0; p < order.data().product.length; p++) {
+                                                    await db.collection('products').doc(order.data().product[p].code).get()
+                                                        .then(product => {
+                                                            const balance = product.data().amount - order.data().product[p].amount;
+                                                            db.collection('products').doc(order.data().product[p].code)
+                                                                .update({ amount: balance })
+                                                        })
+                                                }
+                                                await orderRef.update({ return: false })
+                                                    .then(cancel => {
+                                                        obj.messages.push({
+                                                            type: 'text',
+                                                            text: `${emoji(0x100035)}คืนรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${emoji(0x100018)}`//${formatOrder(order.data())}`
+                                                        })
+                                                        reply(obj, LINE_TH);
+                                                    })
+                                            }
+                                            callback();
+                                        }
+                                    } else {
+                                        obj.messages.push({
+                                            type: 'text',
+                                            text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+                                        })
+                                    }
+                                    reply(obj, LINE_TH);
+                                })
                         } else if (msg.indexOf('#') > -1) {
                             initMsgOrder(msg)
                                 .then(resultOrder => {
@@ -283,7 +353,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                         timestamp: admin.firestore.FieldValue.serverTimestamp(),
                                                                         orderDate,
                                                                         orderNo: no,
-                                                                        country: 'TH'
+                                                                        country: 'TH',
+                                                                        return: false
                                                                     }, resultOrder.data))
                                                                     .then(order => {
                                                                         db.collection('groups').doc(groupId).set({})
