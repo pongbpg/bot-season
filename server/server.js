@@ -630,7 +630,8 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                                         timestamp: admin.firestore.FieldValue.serverTimestamp(),
                                                                         orderDate,
                                                                         orderNo: no,
-                                                                        country: 'KH'
+                                                                        country: 'KH',
+                                                                        return: false
                                                                     }, resultOrder.data))
                                                                     .then(order => {
                                                                         // db.collection('groups').doc(groupId).set({})
