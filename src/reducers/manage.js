@@ -1,4 +1,4 @@
-export default (state = { admins: [], emails: [] }, action) => {
+export default (state = { admins: [], emails: [], teams: [] }, action) => {
     switch (action.type) {
         case 'SET_MANAGE_ADMINS':
             return {
@@ -30,6 +30,24 @@ export default (state = { admins: [], emails: [] }, action) => {
             return {
                 ...state,
                 emails: [...state.emails, action.email]
+            }
+        case 'SET_MANAGE_TEAMS':
+            return {
+                ...state,
+                teams: action.teams
+            }
+        case 'SET_MANAGE_TEAM':
+            return {
+                ...state,
+                teams: state.teams.map(team => {
+                    if (team.id !== action.team.id) return team
+                    return { ...team, ...action.team }
+                })
+            }
+        case 'PUSH_MANAGE_TEAM':
+            return {
+                ...state,
+                teams: [...state.teams, action.team]
             }
         default:
             return state;
