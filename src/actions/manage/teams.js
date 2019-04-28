@@ -23,18 +23,17 @@ export const startPushTeam = (team) => {
     return (dispatch) => {
         return firestore.collection('teams').doc(team.id).set({ ...team })
             .then(() => {
-                console.log(team)
+                // console.log(team)
                 return dispatch(pushTeam(team))
             })
     }
 }
-export const startResetPassword = (team) => {
+export const startDeleteTeam = (team) => {
     return (dispatch) => {
-        return auth.sendPasswordResetTeam(team).then(function () {
-            return team
-        }).catch(function (error) {
-            // An error happened.
-        });
+        return firestore.collection('teams').doc(team.id).delete()
+            .then(() => {
+                return dispatch(deleteTeam(team))
+            })
     }
 }
 export const setTeams = (teams) => ({
@@ -49,5 +48,10 @@ export const setTeam = (team) => ({
 
 export const pushTeam = (team) => ({
     type: 'PUSH_MANAGE_TEAM',
+    team
+});
+
+export const deleteTeam = (team) => ({
+    type: 'REMOVE_MANAGE_TEAM',
     team
 });

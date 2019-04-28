@@ -1,4 +1,9 @@
-export default (state = { admins: [], emails: [], teams: [] }, action) => {
+export default (state = {
+    admins: [],
+    emails: [],
+    teams: [],
+    coms: [{ comId: '1', salary: 9800 }, { comId: '2', salary: 12000 }]
+}, action) => {
     switch (action.type) {
         case 'SET_MANAGE_ADMINS':
             return {
@@ -48,6 +53,11 @@ export default (state = { admins: [], emails: [], teams: [] }, action) => {
             return {
                 ...state,
                 teams: [...state.teams, action.team]
+            }
+        case 'REMOVE_MANAGE_TEAM':
+            return {
+                ...state,
+                teams: state.teams.filter(team => team.id != action.team.id)
             }
         default:
             return state;
