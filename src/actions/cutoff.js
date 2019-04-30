@@ -10,7 +10,7 @@ export const startGetCutOff = () => {
     return (dispatch) => {
         return firestore.collection('counter').doc('orders').get()
             .then(cutoff => {
-                dispatch(setCutOff(cutoff.data().cutoff))
+                dispatch(setCutOff({ ...cutoff.data() }))
             })
     }
 }
