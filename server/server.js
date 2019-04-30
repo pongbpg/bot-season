@@ -105,7 +105,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
             .then(snapShot => {
                 let pt = `${emoji(0x10005C)}รายการสินค้า${emoji(0x100060)}\n`;
                 snapShot.forEach(product => {
-                    pt += `${product.id} เหลือ ${formatMoney(product.data().amount, 0)} ${product.data().unit}\n`;
+                    pt += `${product.id}:${product.data().name} เหลือ ${formatMoney(product.data().amount, 0)} ${product.data().unit}\n`;
                 })
                 const l = Math.ceil(pt.length / 2000) * 2000;
                 for (var i = 0; i < l; i += 2000) {
