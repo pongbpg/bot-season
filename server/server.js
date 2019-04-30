@@ -107,10 +107,17 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 snapShot.forEach(product => {
                     pt += `${product.id} เหลือ ${formatMoney(product.data().amount, 0)} ${product.data().unit}\n`;
                 })
-                obj.messages.push({
-                    type: 'text',
-                    text: pt
-                })
+                const l = Math.ceil(pt.length / 2000) * 2000;
+                for (var i = 0; i < l; i += 2000) {
+                    obj.messages.push({
+                        type: 'text',
+                        text: pt.substr(i, 2000)
+                    })
+                }
+                // obj.messages.push({
+                //     type: 'text',
+                //     text: pt
+                // })
                 reply(obj, LINE_TH);
             })
 
