@@ -179,7 +179,8 @@ export class StockPage extends React.Component {
                                             name={this.state.id}
                                             onChange={this.onFilterTypeChange}
                                             value={this.state.filterType}>
-                                            <option value="">ทั้งหมด</option>
+                                            <option value="ALL">ทั้งหมด</option>
+                                            <option value="">ไม่มีประเภท</option>
                                             {this.state.types.length > 0 &&
                                                 this.state.types.map(type => {
                                                     return <option key={type.typeId} value={type.typeId}>{type.typeId + ' : ' + type.typeName}</option>
@@ -216,7 +217,7 @@ export class StockPage extends React.Component {
                             </tr>
                         </thead>
                         <tbody>
-                            {this.state.stock.filter(f => (f.amount <= Number(this.state.filter) || this.state.filter == '') && (f.typeId == this.state.filterType || this.state.filterType == ''))
+                            {this.state.stock.filter(f => (f.amount <= Number(this.state.filter) || this.state.filter == '') && (f.typeId == this.state.filterType || this.state.filterType == 'ALL'))
                                 .map((st, i) => {
                                     sumAmount += st.amount
                                     // if (this.state.id !== st.id) {
@@ -507,7 +508,7 @@ export class StockPage extends React.Component {
                             }
                             <tr>
                                 <td colSpan={7}>รวม</td>
-                                <td className="has-text-right">{Money(sumAmount,0)}</td>
+                                <td className="has-text-right">{Money(sumAmount, 0)}</td>
                                 <td></td>
                             </tr>
                         </tbody>
