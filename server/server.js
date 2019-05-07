@@ -408,27 +408,29 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                 text: `@@ยกเลิก:${orderId}`
                                                                             })
                                                                             for (var b = 0; b < resultOrder.data.banks.length; b++) {
-                                                                                await db.collection('payments')
-                                                                                    .where('name', '==', resultOrder.data.banks[b].name)
-                                                                                    .where('date', '==', resultOrder.data.banks[b].date)
-                                                                                    .where('time', '==', resultOrder.data.banks[b].time)
-                                                                                    .where('price', '==', resultOrder.data.banks[b].price)
-                                                                                    .get()
-                                                                                    .then(snapShot => {
-                                                                                        snapShot.forEach(doc => {
-                                                                                            obj.messages.push({
-                                                                                                type: 'text',
-                                                                                                text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
+                                                                                if (['COD', 'CM', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
+                                                                                    await db.collection('payments')
+                                                                                        .where('name', '==', resultOrder.data.banks[b].name)
+                                                                                        .where('date', '==', resultOrder.data.banks[b].date)
+                                                                                        .where('time', '==', resultOrder.data.banks[b].time)
+                                                                                        .where('price', '==', resultOrder.data.banks[b].price)
+                                                                                        .get()
+                                                                                        .then(snapShot => {
+                                                                                            snapShot.forEach(doc => {
+                                                                                                obj.messages.push({
+                                                                                                    type: 'text',
+                                                                                                    text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
                                                                                                 รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page}
                                                                                                 รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
+                                                                                                })
+                                                                                            })
+                                                                                            db.collection('payments').add({
+                                                                                                orderId,
+                                                                                                ...resultOrder.data.banks[b],
+                                                                                                page: resultOrder.data.page
                                                                                             })
                                                                                         })
-                                                                                        db.collection('payments').add({
-                                                                                            orderId,
-                                                                                            ...resultOrder.data.banks[b],
-                                                                                            page: resultOrder.data.page
-                                                                                        })
-                                                                                    })
+                                                                                }
                                                                             }
                                                                             await reply(obj, LINE_TH);
                                                                         }
@@ -717,27 +719,29 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                                                 text: `@@ยกเลิก:${orderId}`
                                                                             })
                                                                             for (var b = 0; b < resultOrder.data.banks.length; b++) {
-                                                                                await db.collection('payments')
-                                                                                    .where('name', '==', resultOrder.data.banks[b].name)
-                                                                                    .where('date', '==', resultOrder.data.banks[b].date)
-                                                                                    .where('time', '==', resultOrder.data.banks[b].time)
-                                                                                    .where('price', '==', resultOrder.data.banks[b].price)
-                                                                                    .get()
-                                                                                    .then(snapShot => {
-                                                                                        snapShot.forEach(doc => {
-                                                                                            obj.messages.push({
-                                                                                                type: 'text',
-                                                                                                text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
+                                                                                if (['COD', 'CM', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
+                                                                                    await db.collection('payments')
+                                                                                        .where('name', '==', resultOrder.data.banks[b].name)
+                                                                                        .where('date', '==', resultOrder.data.banks[b].date)
+                                                                                        .where('time', '==', resultOrder.data.banks[b].time)
+                                                                                        .where('price', '==', resultOrder.data.banks[b].price)
+                                                                                        .get()
+                                                                                        .then(snapShot => {
+                                                                                            snapShot.forEach(doc => {
+                                                                                                obj.messages.push({
+                                                                                                    type: 'text',
+                                                                                                    text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
                                                                                                 รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page}
                                                                                                 รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
+                                                                                                })
+                                                                                            })
+                                                                                            db.collection('payments').add({
+                                                                                                orderId,
+                                                                                                ...resultOrder.data.banks[b],
+                                                                                                page: resultOrder.data.page
                                                                                             })
                                                                                         })
-                                                                                        db.collection('payments').add({
-                                                                                            orderId,
-                                                                                            ...resultOrder.data.banks[b],
-                                                                                            page: resultOrder.data.page
-                                                                                        })
-                                                                                    })
+                                                                                }
                                                                             }
                                                                             await reply(obj, LINE_KH);
                                                                         }
