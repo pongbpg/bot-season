@@ -945,29 +945,38 @@ const initMsgOrder = (txt) => {
                                         let price = Number(arr[a].split('=')[1].replace(/\D/g, ''));
                                         let name = '';
                                         let time = '00.00';
-                                        let date = '000000';
+                                        let date = moment().format('YYYYMMDD');
                                         if (bank1.match(/[a-zA-Z]+/g, '') == null) {
                                             name = `${emoji(0x1000A6)}ธนาคารundefined`;
-                                            time = 'undefined';
+                                            // price = 'undefined';
+                                        } else {
+                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                         }
                                         if (bank1.match(/\d{6}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
-                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            // name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             date = `${emoji(0x1000A6)}วันที่โอนundefined`;
-                                            price = 'undefined';
-                                        }
-                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
-                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
-                                            time = `${emoji(0x1000A6)}เวลาโอนundefined`;
-                                            price = 'undefined';
-                                        }
-                                        if (price != 'undefined') {
-                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            // price = 'undefined';
+                                        } else {
                                             date = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ?
                                                 moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
                                                     moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
                                                 : date;
+                                        }
+                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
+                                            // name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            time = `${emoji(0x1000A6)}เวลาโอนundefined`;
+                                            // price = 'undefined';
+                                        } else {
                                             time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
+                                        // if (price != 'undefined') {
+                                        //     name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                        //     date = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ?
+                                        //         moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
+                                        //             moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
+                                        //         : date;
+                                        //     time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
+                                        // }
                                         banks.push({
                                             name,
                                             date,
@@ -977,6 +986,7 @@ const initMsgOrder = (txt) => {
                                     } else {
                                         banks.push({
                                             name: arr[a].toUpperCase(),
+                                            time: '00.00',
                                             price: `${emoji(0x1000A6)}ยอดเงินundefined`
                                         })
                                     }
@@ -1033,7 +1043,7 @@ const initMsgOrder = (txt) => {
                     }
                 }
                 return checkBank
-                    ? bank.name + ' ' + (bank.date == '000000' ? '' : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY')) + ' ' + (bank.time == '00.00' ? '' : bank.time + 'น.') + '=' + formatMoney(bank.price, 0)
+                    ? bank.name + ' ' + (bank.time == '00.00' ? '' : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY')) + ' ' + (bank.time == '00.00' ? '' : bank.time + 'น.') + '=' + formatMoney(bank.price, 0)
                     : `${emoji(0x1000A6) + bank.name}undefined`
                 // return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1
                 //     ? `${emoji(0x1000A6) + bank.name}undefined`
@@ -1216,29 +1226,38 @@ const initMsgOrderKH = (txt) => {
                                         let price = Number(arr[a].split('=')[1].replace(/\D/g, ''));
                                         let name = '';
                                         let time = '00.00';
-                                        let date = '000000';
+                                        let date = moment().format('YYYYMMDD');
                                         if (bank1.match(/[a-zA-Z]+/g, '') == null) {
                                             name = `${emoji(0x1000A6)}ธนาคารundefined`;
-                                            time = 'undefined';
+                                            // price = 'undefined';
+                                        } else {
+                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                         }
                                         if (bank1.match(/\d{6}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
-                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            // name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             date = `${emoji(0x1000A6)}วันที่โอนundefined`;
-                                            price = 'undefined';
-                                        }
-                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
-                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
-                                            time = `${emoji(0x1000A6)}เวลาโอนundefined`;
-                                            price = 'undefined';
-                                        }
-                                        if (price != 'undefined') {
-                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            // price = 'undefined';
+                                        } else {
                                             date = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ?
                                                 moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
                                                     moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
                                                 : date;
+                                        }
+                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
+                                            // name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            time = `${emoji(0x1000A6)}เวลาโอนundefined`;
+                                            // price = 'undefined';
+                                        } else {
                                             time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
+                                        // if (price != 'undefined') {
+                                        //     name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                        //     date = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ?
+                                        //         moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
+                                        //             moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
+                                        //         : date;
+                                        //     time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
+                                        // }
                                         banks.push({
                                             name,
                                             date,
@@ -1248,6 +1267,7 @@ const initMsgOrderKH = (txt) => {
                                     } else {
                                         banks.push({
                                             name: arr[a].toUpperCase(),
+                                            time: '00.00',
                                             price: `${emoji(0x1000A6)}ยอดเงินundefined`
                                         })
                                     }
@@ -1282,7 +1302,7 @@ const initMsgOrderKH = (txt) => {
                 //     }
                 // }
                 return checkBank
-                    ? bank.name + ' ' + (bank.date == '000000' ? '' : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY')) + ' ' + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
+                    ? bank.name + ' ' + (bank.time == '00.00' ? '' : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY')) + ' ' + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
                     : `${emoji(0x1000A6) + bank.name}undefined`
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
