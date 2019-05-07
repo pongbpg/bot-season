@@ -390,6 +390,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                             .set({ amount: balance }, { merge: true })
                                                                                     })
                                                                             }
+
                                                                             await obj.messages.push({
                                                                                 type: 'text',
                                                                                 text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น\n🙏ขอบคุณนะคะที่อุดหนุนสินค้า😊`
@@ -881,21 +882,32 @@ const initMsgOrder = (txt) => {
                                         let price = Number(arr[a].split('=')[1].replace(/\D/g, ''));
                                         let name = '';
                                         let time = '00.00';
+                                        let date = '000000';
                                         if (bank1.match(/[a-zA-Z]+/g, '') == null) {
                                             name = `${emoji(0x1000A6)}ธนาคารundefined`;
                                             time = 'undefined';
+                                        }
+                                        if (bank1.match(/\d{6}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
+                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            date = `${emoji(0x1000A6)}วันที่โอนundefined`;
+                                            price = 'undefined';
                                         }
                                         if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             time = `${emoji(0x1000A6)}เวลาโอนundefined`;
                                             price = 'undefined';
                                         }
-                                        if (time != 'undefined' && price != 'undefined') {
+                                        if (price != 'undefined') {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            date = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ?
+                                                moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
+                                                    moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
+                                                : date;
                                             time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
                                         banks.push({
                                             name,
+                                            date,
                                             time,
                                             price
                                         })
@@ -958,7 +970,7 @@ const initMsgOrder = (txt) => {
                     }
                 }
                 return checkBank
-                    ? bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
+                    ? bank.name + ' ' + (bank.date == '000000' ? '' : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY')) + ' ' + (bank.time == '00.00' ? '' : bank.time+'น.') + '=' + formatMoney(bank.price, 0)
                     : `${emoji(0x1000A6) + bank.name}undefined`
                 // return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1
                 //     ? `${emoji(0x1000A6) + bank.name}undefined`
@@ -1141,21 +1153,32 @@ const initMsgOrderKH = (txt) => {
                                         let price = Number(arr[a].split('=')[1].replace(/\D/g, ''));
                                         let name = '';
                                         let time = '00.00';
+                                        let date = '000000';
                                         if (bank1.match(/[a-zA-Z]+/g, '') == null) {
                                             name = `${emoji(0x1000A6)}ธนาคารundefined`;
                                             time = 'undefined';
+                                        }
+                                        if (bank1.match(/\d{6}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
+                                            name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            date = `${emoji(0x1000A6)}วันที่โอนundefined`;
+                                            price = 'undefined';
                                         }
                                         if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1) {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             time = `${emoji(0x1000A6)}เวลาโอนundefined`;
                                             price = 'undefined';
                                         }
-                                        if (time != 'undefined' && price != 'undefined') {
+                                        if (price != 'undefined') {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
+                                            date = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ?
+                                                moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
+                                                    moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
+                                                : date;
                                             time = ['COD', 'CM', 'XX', 'CP'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
                                         banks.push({
                                             name,
+                                            date,
                                             time,
                                             price
                                         })
@@ -1196,7 +1219,7 @@ const initMsgOrderKH = (txt) => {
                 //     }
                 // }
                 return checkBank
-                    ? bank.name + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
+                    ? bank.name + ' ' + (bank.date == '000000' ? '' : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY')) + ' ' + (bank.time == '00.00' ? '' : bank.time) + '=' + formatMoney(bank.price, 0)
                     : `${emoji(0x1000A6) + bank.name}undefined`
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
@@ -1270,7 +1293,7 @@ const formatOrder = (data) => {
 เบอร์โทร: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
 ที่อยู่: ${data.addr ? data.addr : `${emoji(0x1000A6)}undefined`} 
 รายการสินค้า: ${data.product
-            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + '=' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
 ธนาคาร: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
 รวมยอดชำระ: ${formatMoney(data.price, 0)}บาท 
@@ -1283,7 +1306,7 @@ Name: ${data.fb ? data.fb : `${emoji(0x1000A6)}undefined`}
 Tel: ${data.tel ? data.tel : `${emoji(0x1000A6)}undefined`}  
 Address: ${data.addr ? data.addr : `${emoji(0x1000A6)}undefined`} 
 Products: ${data.product
-            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + ' ' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
+            ? data.product.map((p, i) => '\n' + p.code + ':' + p.name + '=' + p.amount + (p.amount == 'undefined' ? '' : ' ' + p.unit))
             : `${emoji(0x1000A6)}undefined`} 
 Transfer Transactions: ${data.bank} ${isNaN(data.costs) ? data.costs : ''}
 Amount: ${formatMoney(data.price, 0)}$  ${data.delivery >= 0 ? '' : `ค่าจัดส่ง: ${emoji(0x1000A6)}undefined`} 
