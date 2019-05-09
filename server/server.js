@@ -1047,7 +1047,7 @@ const initMsgOrder = (txt) => {
                     }
                 }
                 return checkBank && !isNaN(bank.price)
-                    ? bank.name + ' ' + (bank.time == '00.00' ? '' : (bank.date.indexOf('undefined') > -1 ? bank.date : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY'))) + ' ' + (bank.time == '00.00' ? '' : bank.time + 'น.') + '=' + formatMoney(bank.price, 0)
+                    ? bank.name + ' ' + (bank.time == '00.00' ? '' : (bank.date.indexOf('undefined') > -1 ? bank.date : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY'))) + (bank.time == '00.00' ? '' : ' ' + bank.time + 'น.') + '=' + formatMoney(bank.price, 0)
                     : `${emoji(0x1000A6) + bank.name}undefined`
                 // return bank.name.indexOf('COD') > -1 && ['A', 'K', 'C'].indexOf(data.name.substr(0, 1)) == -1
                 //     ? `${emoji(0x1000A6) + bank.name}undefined`
@@ -1306,7 +1306,7 @@ const initMsgOrderKH = (txt) => {
                 //     }
                 // }
                 return checkBank
-                    ? bank.name + ' ' + (bank.time == '00.00' ? '' : (bank.date.indexOf('undefined') > -1 ? bank.date : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY'))) + ' ' + (bank.time == '00.00' ? '' : bank.time + 'น.') + '=' + formatMoney(bank.price, 0)
+                    ? bank.name + ' ' + (bank.time == '00.00' ? '' : (bank.date.indexOf('undefined') > -1 ? bank.date : moment(bank.date, 'YYYYMMDD').format('DD/MM/YY'))) + (bank.time == '00.00' ? '' : ' ' + bank.time + 'น.') + '=' + formatMoney(bank.price, 0)
                     : `${emoji(0x1000A6) + bank.name}undefined`
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
