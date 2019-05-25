@@ -76,7 +76,10 @@ export class OrderPage extends React.Component {
                     let tracks = [];
                     const colId = rows[0].findIndex(f => f == 'Order No.');
                     const colTack = rows[0].findIndex(f => f == 'Tracking No.');
-                    const colCharge = rows[0].findIndex(f => f == 'Total charge');
+                    const colFreight = rows[0].findIndex(f => f == 'Freight');
+                    const colCodFee = rows[0].findIndex(f => f == 'COD fee');
+                    const colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
+                    const colCodAmt = rows[0].findIndex(f => f == 'COD Amt');
                     // console.log(colId, colTack)
                     if (rows.length > 0) {
                         for (var row in rows) {
@@ -87,7 +90,10 @@ export class OrderPage extends React.Component {
                                         id: rows[row][colId].replace(/\s/g, ''),
                                         expressName: this.state.expressName,
                                         expressLink: this.state.expressLink,
-                                        freight: Number(rows[row][colCharge])
+                                        freight: Number(rows[row][colFreight]),
+                                        codFee: Number(rows[row][colCodFee]),
+                                        totalFreight: Number(rows[row][colTotalCharge]),
+                                        codAmount: Number(rows[row][colCodAmt])
                                     })
                             }
                         }

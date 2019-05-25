@@ -53,7 +53,10 @@ export const startUploadTracks = (tracks) => {
                     tracking: tracks[x].tracking,
                     expressName: tracks[x].expressName,
                     expressLink: tracks[x].expressLink,
-                    freight: tracks[x].freight
+                    freight: tracks[x].freight,
+                    codFee: tracks[x].codFee,
+                    totalFreight: tracks[x].totalFreight,
+                    codAmount: tracks[x].codAmount
                 })
             // console.log(tracks[x].tracking, { ...tracks[x] })
         }
