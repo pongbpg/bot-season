@@ -76,25 +76,27 @@ export class OrderPage extends React.Component {
                     let tracks = [];
                     const colId = rows[0].findIndex(f => f == 'Order No.');
                     const colTack = rows[0].findIndex(f => f == 'Tracking No.');
+                    const colCharge = rows[0].findIndex(f => f == 'Total charge');
                     // console.log(colId, colTack)
                     if (rows.length > 0) {
                         for (var row in rows) {
-                            if (rows[row][colTack] != null)
-                                if (rows[row][colId] != '' && rows[row][colId].length == 18) {
+                            if (rows[row][colId] != '' && rows[row][colId] != null && rows[row][colTack] != null) {
+                                if (rows[row][colId].replace(/\s/g, '').length == 18)
                                     tracks.push({
                                         tracking: rows[row][colTack].replace(/\s/g, ''),
                                         id: rows[row][colId].replace(/\s/g, ''),
                                         expressName: this.state.expressName,
-                                        expressLink: this.state.expressLink
+                                        expressLink: this.state.expressLink,
+                                        freight: Number(rows[row][colCharge])
                                     })
-                                }
+                            }
                         }
                     }
                     if (tracks.length == 0) {
                         alert('ไม่มีข้อมูล กรุณาตรวจสอบไฟล์ Excel')
                     }
                     this.setState({ tracks })
-                    // console.log(tracks)
+                    console.log(tracks)
                 })
                 .catch((errors) => {
                     console.log('upload file', errors)
