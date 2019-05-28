@@ -1096,6 +1096,7 @@ const initMsgOrder = (txt) => {
                                     data.costs += thisCost;
                                     data.product[order]['name'] = product.name;
                                     data.product[order]['cost'] = product.cost || 0;
+                                    data.product[order]['sale'] = product.sale || 0;
                                     data.product[order]['costs'] = thisCost;
                                     data.product[order]['unit'] = product.unit;
                                     data.product[order]['typeId'] = product.typeId;
@@ -1330,6 +1331,7 @@ const initMsgOrderKH = (txt) => {
                                     const thisCost = (product.cost || 0) * amount;
                                     data.costs += thisCost;
                                     data.product[order]['name'] = product.name;
+                                    data.product[order]['sale'] = product.sale || 0;
                                     data.product[order]['cost'] = product.cost || 0;
                                     data.product[order]['costs'] = thisCost;
                                     data.product[order]['unit'] = product.unit;
