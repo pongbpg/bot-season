@@ -12,6 +12,7 @@ export class AddProduct extends React.Component {
             cost: '',
             alert: '',
             unit: '',
+            sale: '',
             isLoading: '',
             types: props.types || [],
             typeId: '',
@@ -37,6 +38,14 @@ export class AddProduct extends React.Component {
         if (!isNaN(amount)) {
             this.setState({
                 amount: Number(amount)
+            })
+        }
+    }
+    onSaleChange = (e) => {
+        const sale = e.target.value.replace(/\D/g, '');
+        if (!isNaN(sale)) {
+            this.setState({
+                sale: Number(sale)
             })
         }
     }
@@ -70,6 +79,7 @@ export class AddProduct extends React.Component {
                 name: this.state.name,
                 unit: this.state.unit,
                 amount: this.state.amount == '' ? 0 : this.state.amount,
+                sale: this.state.sale == '' ? 0 : this.state.sale,
                 alert: this.state.alert == '' ? 0 : this.state.alert,
                 cost: this.state.cost == '' ? 0 : this.state.cost,
                 typeId: this.state.typeId,
@@ -79,7 +89,7 @@ export class AddProduct extends React.Component {
                 if (msg == 'no') {
                     alert('กรุณาตรวจสอบรหัสสินค้านี้มีแล้ว')
                 } else {
-                    this.setState({ id: '', name: '', unit: '', amount: '', cost: '', alert: '' })
+                    this.setState({ id: '', name: '', unit: '', amount: '', cost: '', alert: '', sale: '' })
                 }
             })
         }
@@ -157,7 +167,7 @@ export class AddProduct extends React.Component {
                         </div>
                     </div>
                     <div className="columns">
-                        <div className="column is-3">
+                        <div className="column is-2">
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
@@ -169,7 +179,7 @@ export class AddProduct extends React.Component {
                                 </div>
                             </div>
                         </div>
-                        <div className="column is-3">
+                        <div className="column is-2">
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
@@ -177,6 +187,18 @@ export class AddProduct extends React.Component {
                                             value={this.state.alert == '' ? '' : Money(this.state.alert, 0)}
                                             onKeyPress={this.onHandleKeyPress}
                                             onChange={this.onAlertChange} />
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        <div className="column is-2">
+                            <div className="field-body">
+                                <div className="field">
+                                    <div className="control">
+                                        <input className="input" type="text" placeholder="ราคาขาย"
+                                            value={this.state.sale == '' ? '' : Money(this.state.sale, 0)}
+                                            onKeyPress={this.onHandleKeyPress}
+                                            onChange={this.onSaleChange} />
                                     </div>
                                 </div>
                             </div>
