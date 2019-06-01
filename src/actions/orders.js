@@ -14,7 +14,9 @@ export const startListOrders = () => {
                 querySnapshot.forEach(function (doc) {
                     orders.push({
                         id: doc.id,
-                        ...doc.data()
+                        ...doc.data(),
+                        freight: 0,
+                        codFee: doc.data().bank.indexOf('COD') > -1 ? Number((doc.data().price * 0.03).toFixed(2)) : 0
                     })
                 });
                 dispatch(setListOrders(orders))
@@ -34,6 +36,10 @@ export const startSaveTracking = (orders) => {
         for (let x = 0; x < orders.length; x++) {
             update.doc(orders[x].id).update({
                 tracking: orders[x].tracking,
+                freight: Number(orders[x].freight),
+                codFee: Number(tracks[x].codFee),
+                totalFreight: Number(orders[x].freight) + Number(tracks[x].codFee),
+                codAmount: tracks[x].codFee > 0 ? Number(tracks[x].price) : 0,
                 expressName: orders[x].expressName,
                 expressLink: orders[x].expressLink
             })

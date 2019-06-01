@@ -56,6 +56,38 @@ export class OrderPage extends React.Component {
             alert('กรุณาเลือกขนส่งก่อนครับ')
         }
     }
+    onFreightChange = (e) => {
+        if (this.state.expressName != "") {
+            const index = this.state.orders.findIndex(f => f.id === e.target.name);
+            const freight = Number(e.target.value);
+            if (index === -1) {
+
+            } else {
+                let orders = this.state.orders.slice();
+                orders[index] = { ...orders[index], freight, expressName: this.state.expressName, expressLink: this.state.expressLink };
+                this.setState({ orders })
+
+                console.log({ ...orders[index] })
+            }
+        } else {
+            alert('กรุณาเลือกขนส่งก่อนครับ')
+        }
+    }
+    onFeeChange = (e) => {
+        if (this.state.expressName != "") {
+            const index = this.state.orders.findIndex(f => f.id === e.target.name);
+            const codFee = Number(e.target.value);
+            if (index === -1) {
+
+            } else {
+                let orders = this.state.orders.slice();
+                orders[index] = { ...orders[index], codFee, expressName: this.state.expressName, expressLink: this.state.expressLink };
+                this.setState({ orders })
+            }
+        } else {
+            alert('กรุณาเลือกขนส่งก่อนครับ')
+        }
+    }
     onSaveTracking = () => {
         if (this.state.expressName != "") {
             const orders = this.state.orders.filter(f => f.tracking !== '');
@@ -207,8 +239,10 @@ export class OrderPage extends React.Component {
                                 <th className="has-text-centered">ชื่อลูกค้า</th>
                                 <th className="has-text-centered">เพจ</th>
                                 <th className="has-text-right">ยอดโอน</th>
-                                <th className="has-text-centered">Admin</th>
+                                {/* <th className="has-text-centered">Admin</th> */}
                                 <th className="has-text-centered">เลขพัสดุ</th>
+                                <th className="has-text-centered">ค่าส่ง</th>
+                                <th className="has-text-centered">3%</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -218,10 +252,10 @@ export class OrderPage extends React.Component {
                                         <td className="has-text-centered">{++i}</td>
                                         <td className="has-text-centered">{order.id}</td>
                                         <td className="has-text-centered">{moment(order.cutoffDate).format('Do MMM YY')}</td>
-                                        <td className="has-text-centered">{order.name}</td>
+                                        <td className="has-text-centered">{order.name.substr(0, 20)}</td>
                                         <td className="has-text-centered">{order.page}</td>
                                         <td className="has-text-right">{Money(order.price)}</td>
-                                        <td className="has-text-centered">{order.admin}</td>
+                                        {/* <td className="has-text-centered">{order.admin}</td> */}
                                         <td className="has-text-centered">
                                             <div className="field">
                                                 <div className="control">
@@ -232,11 +266,31 @@ export class OrderPage extends React.Component {
                                                 </div>
                                             </div>
                                         </td>
+                                        <td className="has-text-centered">
+                                            <div className="field">
+                                                <div className="control">
+                                                    <input type="text" name={order.id}
+                                                        className="input is-rounded is-small has-text-centered"
+                                                        value={order.freight}
+                                                        onChange={this.onFreightChange} />
+                                                </div>
+                                            </div>
+                                        </td>
+                                        <td className="has-text-centered">
+                                            <div className="field">
+                                                <div className="control">
+                                                    <input type="text" name={order.id}
+                                                        className="input is-rounded is-small has-text-centered"
+                                                        value={order.codFee}
+                                                        onChange={this.onFeeChange} />
+                                                </div>
+                                            </div>
+                                        </td>
                                     </tr>;
                                 })
                                 : (
                                     <tr>
-                                        <td colSpan="8" className="has-text-centered"><Link to="/cutoff">ยังไม่ได้ปิดรอบ/บันทึกครบแล้ว</Link></td>
+                                        <td colSpan="10" className="has-text-centered"><Link to="/cutoff">ยังไม่ได้ปิดรอบ/บันทึกครบแล้ว</Link></td>
                                     </tr>
                                 )
                             }
