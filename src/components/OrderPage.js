@@ -67,7 +67,7 @@ export class OrderPage extends React.Component {
                 orders[index] = { ...orders[index], freight, expressName: this.state.expressName, expressLink: this.state.expressLink };
                 this.setState({ orders })
 
-                console.log({ ...orders[index] })
+                // console.log({ ...orders[index] })
             }
         } else {
             alert('กรุณาเลือกขนส่งก่อนครับ')
@@ -90,7 +90,7 @@ export class OrderPage extends React.Component {
     }
     onSaveTracking = () => {
         if (this.state.expressName != "") {
-            const orders = this.state.orders.filter(f => f.tracking !== '');
+            const orders = this.state.orders.filter(f => f.tracking !== '' && f.freight <= 0);
             this.props.startSaveTracking(orders);
         } else {
             alert('กรุณาเลือกขนส่งก่อนครับ')
