@@ -851,7 +851,7 @@ const push = (obj, LINE_HEADER) => {
     });
 };
 const initMsgOrder = (txt) => {
-    const express = ["K", 'F'];
+    const express = ["K", 'F', 'M'];
     // const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST", "TPF01"];
     return db.collection('pages')
         .where('country', '==', 'TH')
@@ -1017,6 +1017,7 @@ const initMsgOrder = (txt) => {
                                         value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
                                     }
                                 }
+                                value = value.replace('99999', '')
                             } else if (key == 'tel') {
                                 value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
                                 if (value.length != 10) {
@@ -1042,7 +1043,7 @@ const initMsgOrder = (txt) => {
                         checkBank = true;
                     }
                 } else {
-                    if (['K', 'F'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'F', 'M'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 }
