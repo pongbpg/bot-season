@@ -63,9 +63,9 @@ export class PostsPage extends React.Component {
                         const findIndex = data.findIndex(f => f.date == moment(m.created_time).format('YYYY-MM-DD'));
                         const thisTime = moment(m.created_time).format('HHmm');
                         const thisData = data[findIndex];
-                        if (thisTime >= '0630' && thisTime <= '0900' && thisData.time1 == false) {
+                        if (thisTime >= '0600' && thisTime <= '1000' && thisData.time1 == false) {
                             data[findIndex].time1 = '(' + moment(m.created_time).format('HH:mm') + ') ' + m.message;
-                        } else if (thisTime >= '1600' && thisTime <= '1800' && thisData.time2 == false) {
+                        } else if (thisTime >= '1600' && thisTime <= '2000' && thisData.time2 == false) {
                             data[findIndex].time2 = '(' + moment(m.created_time).format('HH:mm') + ') ' + m.message;
                         } else {
                             data[findIndex].detail.push(moment(m.created_time).format('HH:mm'));
@@ -157,8 +157,8 @@ export class PostsPage extends React.Component {
                                 <tr>
                                     {/* <th className="has-text-centered">ลำดับ</th> */}
                                     <th className="has-text-centered">วันที่</th>
-                                    <th className="has-text-centered">06.30-09.00</th>
-                                    <th className="has-text-centered">16.00-18.00</th>
+                                    <th className="has-text-centered">06.00-10.00</th>
+                                    <th className="has-text-centered">16.00-20.00</th>
                                     <th className="has-text-centered">เวลาอื่นๆ</th>
                                     <th className="has-text-centered">หักค่าคอมฯ</th>
                                 </tr>
