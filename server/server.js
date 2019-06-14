@@ -477,22 +477,23 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
     };
     // if (request.message.type !== 'text' || request.source.type !== 'group') {
     //}
-    if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
-        db.collection('groups').get()
-            .then(snapShot => {
-                snapShot.forEach(group => {
-                    push({
-                        to: group.id,
-                        messages: [
-                            {
-                                "type": "text",
-                                "text": msg.substring(msg.indexOf(':') + 1)
-                            }
-                        ]
-                    }, LINE_KH)
-                })
-            })
-    } else if (msg.indexOf('@@admin:') > -1 && msg.split(':').length == 2) {
+    // if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
+    //     db.collection('groups').get()
+    //         .then(snapShot => {
+    //             snapShot.forEach(group => {
+    //                 push({
+    //                     to: group.id,
+    //                     messages: [
+    //                         {
+    //                             "type": "text",
+    //                             "text": msg.substring(msg.indexOf(':') + 1)
+    //                         }
+    //                     ]
+    //                 }, LINE_KH)
+    //             })
+    //         })
+    // } else 
+    if (msg.indexOf('@@admin:') > -1 && msg.split(':').length == 2) {
         adminRef.set({
             userId,
             name: msg.split(':')[1].replace(/\s/g, ''),
@@ -690,22 +691,22 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                                                 await db.collection('products').doc(resultOrder.data.product[p].code).get()
                                                                                     .then(product => {
                                                                                         const balance = product.data().amount - resultOrder.data.product[p].amount;
-                                                                                        if (balance <= product.data().alert) {
-                                                                                            db.collection('admins').get()
-                                                                                                .then(snapShot => {
-                                                                                                    snapShot.forEach(admin => {
-                                                                                                        push({
-                                                                                                            to: admin.id,
-                                                                                                            messages: [
-                                                                                                                {
-                                                                                                                    "type": "text",
-                                                                                                                    "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
-                                                                                                                }
-                                                                                                            ]
-                                                                                                        }, LINE_KH)
-                                                                                                    })
-                                                                                                })
-                                                                                        }
+                                                                                        // if (balance <= product.data().alert) {
+                                                                                        //     db.collection('admins').get()
+                                                                                        //         .then(snapShot => {
+                                                                                        //             snapShot.forEach(admin => {
+                                                                                        //                 push({
+                                                                                        //                     to: admin.id,
+                                                                                        //                     messages: [
+                                                                                        //                         {
+                                                                                        //                             "type": "text",
+                                                                                        //                             "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+                                                                                        //                         }
+                                                                                        //                     ]
+                                                                                        //                 }, LINE_KH)
+                                                                                        //             })
+                                                                                        //         })
+                                                                                        // }
                                                                                         db.collection('products').doc(resultOrder.data.product[p].code)
                                                                                             .set({ amount: balance }, { merge: true })
                                                                                     })
