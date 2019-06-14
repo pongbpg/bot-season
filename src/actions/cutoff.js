@@ -25,33 +25,33 @@ export const startCutOff = () => {
                         })
                         dispatch(setCutOff(true))
                         dispatch(startListOrders())
-                        return firestore.collection('groups').get()
-                            .then(snapShot => {
-                                let boardcasts = [];
-                                snapShot.forEach(group => {
-                                    boardcasts.push({
-                                        to: group.id,
-                                        messages: [
-                                            {
-                                                "type": "text",
-                                                "text": `>>>วันที่ ${moment(new Date()).format('ll')} ปิดรอบแล้วจ้า<<<`
-                                            }
-                                        ]
-                                    })
-                                })
-                                fetch('./api/boardcast', {
-                                    body: JSON.stringify({ boardcasts }),
-                                    headers: {
-                                        // 'user-agent': 'Mozilla/4.0 MDN Example',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    method: 'post'
-                                })
-                                    .then(response => response.json())
-                                    .then(result => {
-                                        console.log(result);
-                                    })
-                            })
+                        // return firestore.collection('groups').get()
+                        //     .then(snapShot => {
+                        //         let boardcasts = [];
+                        //         snapShot.forEach(group => {
+                        //             boardcasts.push({
+                        //                 to: group.id,
+                        //                 messages: [
+                        //                     {
+                        //                         "type": "text",
+                        //                         "text": `>>>วันที่ ${moment(new Date()).format('ll')} ปิดรอบแล้วจ้า<<<`
+                        //                     }
+                        //                 ]
+                        //             })
+                        //         })
+                        //         fetch('./api/boardcast', {
+                        //             body: JSON.stringify({ boardcasts }),
+                        //             headers: {
+                        //                 // 'user-agent': 'Mozilla/4.0 MDN Example',
+                        //                 'Content-Type': 'application/json'
+                        //             },
+                        //             method: 'post'
+                        //         })
+                        //             .then(response => response.json())
+                        //             .then(result => {
+                        //                 console.log(result);
+                        //             })
+                        //     })
 
                     });
             })

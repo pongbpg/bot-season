@@ -378,22 +378,22 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                 await db.collection('products').doc(resultOrder.data.product[p].code).get()
                                                                                     .then(product => {
                                                                                         const balance = product.data().amount - resultOrder.data.product[p].amount;
-                                                                                        if (balance <= product.data().alert) {
-                                                                                            db.collection('admins').get()
-                                                                                                .then(snapShot => {
-                                                                                                    snapShot.forEach(admin => {
-                                                                                                        push({
-                                                                                                            to: admin.id,
-                                                                                                            messages: [
-                                                                                                                {
-                                                                                                                    "type": "text",
-                                                                                                                    "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
-                                                                                                                }
-                                                                                                            ]
-                                                                                                        }, LINE_TH)
-                                                                                                    })
-                                                                                                })
-                                                                                        }
+                                                                                        // if (balance <= product.data().alert) {
+                                                                                        //     db.collection('admins').get()
+                                                                                        //         .then(snapShot => {
+                                                                                        //             snapShot.forEach(admin => {
+                                                                                        //                 push({
+                                                                                        //                     to: admin.id,
+                                                                                        //                     messages: [
+                                                                                        //                         {
+                                                                                        //                             "type": "text",
+                                                                                        //                             "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+                                                                                        //                         }
+                                                                                        //                     ]
+                                                                                        //                 }, LINE_TH)
+                                                                                        //             })
+                                                                                        //         })
+                                                                                        // }
                                                                                         db.collection('products').doc(resultOrder.data.product[p].code)
                                                                                             .set({ amount: balance }, { merge: true })
                                                                                     })
