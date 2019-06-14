@@ -851,7 +851,7 @@ const push = (obj, LINE_HEADER) => {
     });
 };
 const initMsgOrder = (txt) => {
-    const express = ["K", 'F', 'M'];
+    const express = ["K", 'F', 'M', 'A'];
     // const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST", "TPF01"];
     return db.collection('pages')
         .where('country', '==', 'TH')
@@ -1039,11 +1039,11 @@ const initMsgOrder = (txt) => {
             data.bank = data.banks ? data.banks.map(bank => {
                 let checkBank = false;
                 if (bank.name.indexOf('COD') > -1) {
-                    if (['K', 'F'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'F', 'A'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 } else {
-                    if (['K', 'F', 'M'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'F', 'M', 'A'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 }
