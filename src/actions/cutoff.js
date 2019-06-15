@@ -34,7 +34,7 @@ export const startCutOff = () => {
                                         messages: [
                                             {
                                                 "type": "text",
-                                                "text": `>>>วันที่ ${moment(new Date()).format('ll')} ปิดรอบแล้วจ้า<<<`
+                                                "text": `‼️‼️‼️‼️‼วันที่ ${moment(new Date()).format('ll')} ปิดรอบแล้วจ้า‼️‼️‼️‼️‼`
                                             }
                                         ]
                                     })
