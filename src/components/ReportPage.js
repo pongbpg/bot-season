@@ -14,7 +14,7 @@ export class ReportPage extends React.Component {
             sum: 'daily',
             auth: props.auth,
             pages: props.pages,
-            country: 'TH',
+            payment: 'BANK',
             page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
         }
         this.handleStartChange = this.handleStartChange.bind(this);
@@ -39,12 +39,12 @@ export class ReportPage extends React.Component {
         })
         // console.log(e.target.value)
     }
-    handleCountryChange = (e) => {
-        this.setState({ country: e.target.value })
+    handlePaymentChange = (e) => {
+        this.setState({ payment: e.target.value })
     }
     render() {
         // console.log('pages', this.state.pages)
-        const rptUri='http://rpt.topslimstore.com';
+        const rptUri = 'http://rpt.topslimstore.com';
         return (
             <section className="hero">
                 <div className="hero-body">
@@ -109,31 +109,31 @@ export class ReportPage extends React.Component {
                                     <td className="has-text-centered">1</td>
                                     <td className="has-text-centered">รายชื่อแพ็คของ (วันที่เริ่ม)
                                     <select className="select is-info"
-                                            onChange={this.handleCountryChange}
-                                            value={this.state.country}>
-                                            <option value='TH'>ไทย</option>
-                                            <option value='KH'>กัมพูชา</option>
+                                            onChange={this.handlePaymentChange}
+                                            value={this.state.payment}>
+                                            <option value='BANK'>โอนเงิน</option>
+                                            <option value='COD'>COD</option>
                                         </select>
                                     </td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
                                                 <a className="button is-danger is-centered is-small"
-                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=pdf&country=${this.state.country}`}
+                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=pdf&country=TH`}
                                                     target="_blank">
                                                     PDF
                                         </a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-success is-centered is-small"
-                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=excel&country=${this.state.country}`}
+                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=excel&country=TH`}
                                                     target="_blank">
                                                     EXCEL
                                         </a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-warning is-centered is-small"
-                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=flash&country=${this.state.country}`}
+                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=flash&country=TH&payment=${this.state.payment}`}
                                                     target="_blank">
                                                     FLASH
                                         </a>
