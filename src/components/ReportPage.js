@@ -14,7 +14,7 @@ export class ReportPage extends React.Component {
             sum: 'daily',
             auth: props.auth,
             pages: props.pages,
-            payment: 'BANK',
+            payment: 'ALL',
             page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
         }
         this.handleStartChange = this.handleStartChange.bind(this);
@@ -111,6 +111,7 @@ export class ReportPage extends React.Component {
                                     <select className="select is-info"
                                             onChange={this.handlePaymentChange}
                                             value={this.state.payment}>
+                                            <option value='ALL'>ทั้งหมด</option>
                                             <option value='BANK'>โอนเงิน</option>
                                             <option value='COD'>COD</option>
                                         </select>
