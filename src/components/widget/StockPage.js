@@ -24,7 +24,8 @@ export class StockPage extends React.Component {
             filterType: '',
             types: props.types,
             typeId: '',
-            typeName: ''
+            typeName: '',
+            showCost: false && props.auth.role == 'owner'
         }
         this.props.startGetStock();
     }
@@ -172,6 +173,10 @@ export class StockPage extends React.Component {
         const type = this.state.types.find(f => f.typeId == typeId)
         this.setState({ typeId, typeName: type ? type.typeName : '' })
     }
+    onShowCostChange = (e) => {
+        const showCost = !!e.target.checked && this.state.auth.role == 'owner'
+        this.setState({ showCost })
+    }
     render() {
         let sumAmount = 0;
         return (
@@ -204,13 +209,21 @@ export class StockPage extends React.Component {
                             </div>
                         </div>
                         <div className="leve-right">
-                            <div className="field">
-                                <div className="control">
+                            <span className="level">
+                                {this.state.auth.role == 'owner' &&
+                                    <span className="level-item">
+                                        <label className="checkbox"><input type="checkbox" onChange={this.onShowCostChange} />
+                                            {/* {this.state.showCost.toString()} */}
+                                            ต้นทุน
+                                        </label>
+                                    </span>
+                                }
+                                <span className="level-item">
                                     <input className="input has-text-centered" type="text" placeholder="จำนวน"
                                         value={this.state.filter}
                                         onChange={this.onFilterChange} />
-                                </div>
-                            </div>
+                                </span>
+                            </span>
                         </div>
                     </div>
 
@@ -223,7 +236,7 @@ export class StockPage extends React.Component {
                                 <th className="has-text-left">ชื่อสินค้า</th>
                                 <th className="has-text-left">หน่วยนับ</th>
                                 <th className="has-text-right">ราคาขาย</th>
-                                {this.state.auth.role == 'owner' && (<th className="has-text-right">ต้นทุน</th>)}
+                                {this.state.showCost && (<th className="has-text-right">ต้นทุน</th>)}
                                 {this.state.auth.role == 'owner' && (<th className="has-text-right">แจ้งเตือน</th>)}
                                 <th className="has-text-right">คงเหลือ</th>
                                 {this.state.auth.role == 'owner' && (< th className="has-text-right">จัดการ</th>)}
@@ -304,7 +317,7 @@ export class StockPage extends React.Component {
                                                 )
                                             }
                                         </td>
-                                        {this.state.auth.role == 'owner' && (
+                                        {this.state.showCost && (
                                             < td className="has-text-right">
                                                 {this.state.id !== st.id || this.state.action == 'stock' ? Money(st.cost, 0)
                                                     : (this.state.action == 'edit' &&
@@ -415,7 +428,7 @@ export class StockPage extends React.Component {
                                 })
                             }
                             <tr>
-                                <td colSpan={this.state.auth.role == 'owner'?8:5}>รวม</td>
+                                <td colSpan={this.state.auth.role == 'owner' ? (this.state.showCost ? 8 : 7) : 5}>รวม</td>
                                 <td className="has-text-right">{Money(sumAmount, 0)}</td>
                                 <td></td>
                             </tr>
