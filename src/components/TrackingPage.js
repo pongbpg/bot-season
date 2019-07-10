@@ -6,6 +6,8 @@ import { startSearchTracking } from '../actions/search';
 import FaSearch from 'react-icons/lib/fa/search';
 import Money from '../selectors/money';
 import moment from 'moment';
+import ReactPixel from 'react-facebook-pixel';
+ReactPixel.init('431559141020670');
 moment.locale('th');
 export class TrackingPage extends React.Component {
   constructor(props) {
@@ -47,6 +49,14 @@ export class TrackingPage extends React.Component {
             this.setState({ alert: this.state.search })
           } else {
             this.setState({ alert: false })
+            result.search[0].product.map(p => {
+              ReactPixel.trackCustom('purchase', {
+                product: p.code,
+                productType: p.typeId,
+                amount: p.amount
+              })
+            })
+            ReactPixel.trackCustom('price', result.search[0].price)
           }
         })
     }
