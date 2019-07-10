@@ -56,7 +56,7 @@ export class TrackingPage extends React.Component {
                 amount: p.amount
               })
             })
-            ReactPixel.trackCustom('price', result.search[0].price)
+            ReactPixel.trackCustom('price', {price:result.search[0].price})
           }
         })
     }
