@@ -193,7 +193,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     if (request.source.type == 'group' && user.data().active == true) {
                         const groupId = request.source.groupId;
                         if (msg.indexOf('@@ยกเลิก:') > -1 && msg.split(':').length == 2) {
-                            const orderId = msg.split(':')[1].replace(/\s/g, '');;
+                            const orderId = msg.split(':')[1].replace(/\s/g, '');
                             const orderRef = db.collection('orders').doc(orderId);
                             orderRef.get()
                                 .then(order => {
@@ -202,6 +202,12 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                             obj.messages.push({
                                                 type: 'text',
                                                 text: `${emoji(0x100035)}ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการตัดรอบไปแล้วค่ะ${emoji(0x1000AE)}`
+                                            })
+                                            reply(obj, LINE_TH);
+                                        } else if (order.data().freight > 0) {
+                                            obj.messages.push({
+                                                type: 'text',
+                                                text: `${emoji(0x100035)}ไม่สามารถยกเลิกรายการสั่งซื้อ ${orderId}\nเนื่องจากได้ทำการส่งของไปแล้วค่ะ${emoji(0x1000AE)}`
                                             })
                                             reply(obj, LINE_TH);
                                         } else {
@@ -242,8 +248,54 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                     }
                                     reply(obj, LINE_TH);
                                 })
+
+                        } else if (msg.indexOf('@@edit:') > -1) {
+                            const msg = msg.split('@@edit:')[1];
+                            initMsgOrder(msg)
+                                .then(resultOrder => {
+                                    if (resultOrder.success) {
+                                        const orderRef = db.collection('orders').doc(resultOrder.data.id);
+                                        orderRef.get()
+                                            .then(order => {
+                                                if (order.exists) {
+                                                    if (user.data().role == 'owner') {
+                                                        async function callback() {
+                                                            for (var p = 0; p < order.data().product.length; p++) {
+                                                                await db.collection('products').doc(order.data().product[p].code).get()
+                                                                    .then(product => {
+                                                                        const balance = product.data().amount + order.data().product[p].amount;
+                                                                        db.collection('products').doc(order.data().product[p].code)
+                                                                            .set({ amount: balance }, { merge: true })
+                                                                    })
+                                                            }
+                                                            await db.collection('payments')
+                                                                .where('orderId', '==', resultOrder.data.id)
+                                                                .get()
+                                                                .then(snapShot => {
+                                                                    snapShot.forEach(pay => {
+                                                                        pay.ref.delete();
+                                                                    })
+                                                                })
+                                                            
+                                                        }
+                                                        callback();
+                                                    }
+                                                } else {
+                                                    obj.messages.push({
+                                                        type: 'text',
+                                                        text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+                                                    })
+                                                }
+                                                reply(obj, LINE_TH);
+                                            })
+                                    } else {
+                                        obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการแก้ไขไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
+                                        reply(obj, LINE_TH);
+                                    }
+                                })
+
                         } else if (msg.indexOf('@@return:') > -1 && msg.split(':').length == 2) {
-                            const orderId = msg.split(':')[1].replace(/\s/g, '');;
+                            const orderId = msg.split(':')[1].replace(/\s/g, '');
                             const orderRef = db.collection('orders').doc(orderId);
                             orderRef.get()
                                 .then(order => {
@@ -278,7 +330,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                     reply(obj, LINE_TH);
                                 })
                         } else if (msg.indexOf('@@resend:') > -1 && msg.split(':').length == 2) {
-                            const orderId = msg.split(':')[1].replace(/\s/g, '');;
+                            const orderId = msg.split(':')[1].replace(/\s/g, '');
                             const orderRef = db.collection('orders').doc(orderId);
                             orderRef.get()
                                 .then(order => {
@@ -1092,7 +1144,7 @@ const initMsgOrder = (txt) => {
                         const amount = data.product[order]['amount'];
                         const product = products.find(f => f.id === data.product[order]['code'])
                         if (product) {
-                            if (amount > 0) {
+                            if (amount >= 0) {
                                 if (product.amount >= amount) {
                                     const thisCost = (product.cost || 0) * amount;
                                     data.costs += thisCost;
