@@ -135,6 +135,7 @@ export class EmailsPage extends React.Component {
                                     <tr>
                                         <th className="has-text-centered">ลำดับ</th>
                                         <th className="has-text-left">อีเมลล์</th>
+                                        <th className="has-text-centered">Line</th>
                                         <th className="has-text-centered">ประเภท</th>
                                         <th className="has-text-centered">เพจ</th>
                                         <th className="has-text-centered" >จัดการ</th>
@@ -147,6 +148,7 @@ export class EmailsPage extends React.Component {
                                                 return (<tr key={email.uid}>
                                                     <td className={`has-text-centered ${email.disabled ? 'has-text-grey-light' : ''}`}>{index + 1}</td>
                                                     <td className={email.disabled ? 'has-text-grey-light' : ''}>{email.email}</td>
+                                                    <td className={email.disabled ? 'has-text-grey-light' : ''}>{email.admin}</td>
                                                     <td className={`has-text-centered ${email.disabled ? 'has-text-grey-light' : ''}`}>{email.role}</td>
                                                     <td className={`has-text-centered ${email.disabled ? 'has-text-grey-light' : ''}`}>{email.pages.join()}</td>
                                                     <td className="has-text-centered">
@@ -168,7 +170,7 @@ export class EmailsPage extends React.Component {
                                                     </td>
                                                 </tr>)
                                             }) : (
-                                            <tr><td className="has-text-centered" colSpan={5}>กำลังโหลดข้อมูล...</td></tr>
+                                            <tr><td className="has-text-centered" colSpan={6}>กำลังโหลดข้อมูล...</td></tr>
                                         )}
                                 </tbody>
                             </table>
@@ -181,7 +183,7 @@ export class EmailsPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
-    emails: state.manage.emails
+    emails: state.manage.emails.sort((a, b) => a.email.toLowerCase() > b.email.toLowerCase() ? 1 : -1)
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startGetEmails: () => dispatch(startGetEmails()),

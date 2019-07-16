@@ -2,16 +2,20 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { startUpdateEmail } from '../../../actions/manage/emails';
+import { startGetAdmins } from '../../../actions/manage/admins';
 export class EditPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
             auth: props.auth,
-            email: props.email || { email: '', role: '', pages: [] },
+            email: props.email || { email: '', role: '', pages: [], adminId: '' },
             pages: props.pages || [],
+            admins: props.admins || [],
             datas: []
         }
         if (!props.email) props.history.push('/manage/emails')
+        else this.props.startGetAdmins();
+
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -19,6 +23,9 @@ export class EditPage extends React.Component {
         }
         if (nextProps.email != this.state.email) {
             this.setState({ email: nextProps.email });
+        }
+        if (nextProps.admins != this.state.admins) {
+            this.setState({ admins: nextProps.admins });
         }
     }
     componentWillMount = () => {
@@ -40,6 +47,16 @@ export class EditPage extends React.Component {
     onRoleChange = (e) => {
         this.setState({ email: { ...this.state.email, role: e.target.value } })
     }
+    onAdminChange = (e) => {
+        const adminId = e.target.value;
+        this.setState({
+            email: {
+                ...this.state.email,
+                adminId,
+                admin: adminId == "" ? "" : this.state.admins.find(f => f.userId == adminId).name
+            }
+        })
+    }
     onPageChange = (e) => {
         const action = e.target.checked;
         const page = e.target.name;
@@ -55,6 +72,7 @@ export class EditPage extends React.Component {
     onActiveChange = (e) => {
         this.setState({ email: { ...this.state.email, active: e.target.checked } })
     }
+
     onSubmit = () => {
         if (confirm('คุณยืนยันที่จะบันทึกข้อมูลนี้?')) {
             this.props.startUpdateEmail(this.state.email).then(() => {
@@ -88,6 +106,19 @@ export class EditPage extends React.Component {
                                             <option value="owner">ผู้ดูแล</option>
                                             <option value="admin">แอดมิน</option>
                                             <option value="stock">สต็อกสินค้า</option>
+                                        </select>
+                                    </div>
+                                </div>
+                            </div>
+                            <div className="field">
+                                <label className="label">Line:</label>
+                                <div className="control">
+                                    <div className="select">
+                                        <select value={this.state.email.adminId} onChange={this.onAdminChange}>
+                                            <option value="">ไม่มี</option>
+                                            {this.state.admins.map((admin, key) => {
+                                                return <option value={admin.userId} key={key}>{admin.name}</option>
+                                            })}
                                         </select>
                                     </div>
                                 </div>
@@ -148,9 +179,11 @@ export class EditPage extends React.Component {
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
     email: state.manage.emails.find(f => f.uid == props.match.params.uid),
-    pages: state.pages
+    pages: state.pages,
+    admins: state.manage.admins.filter(f => f.active).sort((a, b) => a.name.toLowerCase() > b.name.toLowerCase() ? 1 : -1)
 });
 const mapDispatchToProps = (dispatch, props) => ({
-    startUpdateEmail: (email) => dispatch(startUpdateEmail(email))
+    startUpdateEmail: (email) => dispatch(startUpdateEmail(email)),
+    startGetAdmins: () => dispatch(startGetAdmins())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(EditPage);
