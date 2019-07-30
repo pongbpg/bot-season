@@ -6,6 +6,7 @@ export class AdminsPage extends React.Component {
         super(props);
         this.state = {
             auth: props.auth,
+            coms: props.coms,
             admins: props.admins || []
         }
         this.props.startGetAdmins();
@@ -17,6 +18,11 @@ export class AdminsPage extends React.Component {
         if (nextProps.admins != this.state.admins) {
             this.setState({ admins: nextProps.admins });
         }
+    }
+    onComChange = (e) => {
+        const userId = e.target.name;
+        const comId = e.target.value;
+        this.props.startUpdateAdmin({ userId, comId })
     }
     handleInputChange = (e) => {
         const userId = e.target.name;
@@ -43,6 +49,7 @@ export class AdminsPage extends React.Component {
                                         <th className="has-text-centered" width="10%">ลำดับ</th>
                                         <th className="has-text-left" width="30%">ชื่อ</th>
                                         <th className="has-text-centered" width="20%">ประเภท</th>
+                                        <th className="has-text-centered" width="20%">คอม</th>
                                         <th className="has-text-centered" width="20%">สถานะ</th>
                                     </tr>
                                 </thead>
@@ -50,10 +57,25 @@ export class AdminsPage extends React.Component {
                                     {this.state.admins.length > 0 ?
                                         this.state.admins.sort((a, b) => a.role + a.name > b.role + b.name ? -1 : 1)
                                             .map((admin, index) => {
+                                                // console.log(admin.comId)
                                                 return (<tr key={admin.userId}>
                                                     <td className="has-text-centered">{index + 1}</td>
                                                     <td>{admin.name}</td>
                                                     <td className="has-text-centered">{admin.role}</td>
+                                                    <td className="has-text-centered">
+                                                        <div className="control select">
+                                                            <select value={admin.comId}
+                                                                name={admin.userId}
+                                                                onChange={this.onComChange}>
+                                                                <option value="0">0</option>
+                                                                {this.state.coms.length > 0 && (
+                                                                    this.state.coms.map(com => {
+                                                                        return (<option key={com.comId} value={com.comId}>{com.salary}</option>)
+                                                                    })
+                                                                )}
+                                                            </select>
+                                                        </div>
+                                                    </td>
                                                     <td className="has-text-centered">
                                                         {admin.active ? (
                                                             <label className="checkbox has-text-success">
@@ -84,7 +106,8 @@ export class AdminsPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
-    admins: state.manage.admins
+    admins: state.manage.admins,
+    coms: state.manage.coms
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startGetAdmins: () => dispatch(startGetAdmins()),
