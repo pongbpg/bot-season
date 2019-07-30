@@ -35,7 +35,8 @@ export class PagesPage extends React.Component {
         this.setState({ newPage: { ...this.state.newPage, team: e.target.value } })
     }
     onNewAdminChange = (e) => {
-        this.setState({ newPage: { ...this.state.newPage, admin: e.target.value } })
+        const admin = this.state.admins.find(f => f.userId == e.target.value)
+        this.setState({ newPage: { ...this.state.newPage, admin: admin.name, adminId: admin.userId } })
     }
     onNewComChange = (e) => {
         this.setState({ newPage: { ...this.state.newPage, comId: e.target.value } })
@@ -65,7 +66,9 @@ export class PagesPage extends React.Component {
         this.setState({ page: { ...this.state.page, team: e.target.value } })
     }
     onAdminChange = (e) => {
-        this.setState({ page: { ...this.state.page, admin: e.target.value } })
+        const admin = this.state.admins.find(f => f.userId == e.target.value)
+        // console.log(admin)
+        this.setState({ page: { ...this.state.page, admin: admin.name, adminId: admin.userId } })
     }
     onComChange = (e) => {
         this.setState({ page: { ...this.state.page, ...this.state.coms.find(com => com.comId == e.target.value) } })
@@ -75,7 +78,7 @@ export class PagesPage extends React.Component {
     }
     onEditClick = (e) => {
         this.setState({ page: this.state.pages.find(f => f.id == e.target.value) })
-        console.log(this.state.page)
+        // console.log(this.state.page)
     }
     onCancelClick = (e) => {
         this.setState({ page: { id: '' } })
@@ -135,16 +138,16 @@ export class PagesPage extends React.Component {
                                         onChange={this.onNewIdChange} />
                                 </div>
                                 <div className="control select">
-                                    <select selected={this.state.newPage.admin} onChange={this.onNewAdminChange}>
+                                    <select selected={this.state.newPage.adminId} onChange={this.onNewAdminChange}>
                                         <option value="">เลือกแอดมิน</option>
                                         {this.state.admins.length > 0 && (
                                             this.state.admins.filter(f => f.active === true).map(admin => {
-                                                return (<option key={admin.userId} value={admin.name}>{admin.name}</option>)
+                                                return (<option key={admin.userId} value={admin.userId}>{admin.name}</option>)
                                             })
                                         )}
                                     </select>
                                 </div>
-                                <div className="control select">
+                                {/* <div className="control select">
                                     <select selected={this.state.newPage.comId} onChange={this.onNewComChange}>
                                         <option value="">เลือกค่าคอม</option>
                                         {this.state.coms.length > 0 && (
@@ -153,7 +156,7 @@ export class PagesPage extends React.Component {
                                             })
                                         )}
                                     </select>
-                                </div>
+                                </div> */}
                                 <div className="control select">
                                     <select selected={this.state.newPage.country} onChange={this.onNewContryChange}>
                                         <option value="">เลือกประเทศ</option>
@@ -174,7 +177,7 @@ export class PagesPage extends React.Component {
                                 <th className="has-text-left" width="20%">Team</th>
                                 <th className="has-text-left" width="20%">Page</th>
                                 <th className="has-text-left" width="20%">Admin</th>
-                                <th className="has-text-left">Com</th>
+                                {/* <th className="has-text-left">Com</th> */}
                                 <th className="has-text-left" >Country</th>
                                 <th className="has-text-centered" width="50%">จัดการ</th>
                             </tr>
@@ -189,7 +192,7 @@ export class PagesPage extends React.Component {
                                                 <td>{page.team}</td>
                                                 <td>{page.id}</td>
                                                 <td>{page.admin}</td>
-                                                <td>{page.comId}</td>
+                                                {/* <td>{page.comId}</td> */}
                                                 <td>{page.country}</td>
                                                 <td className="has-text-centered">
                                                     <button className="button"
@@ -213,17 +216,17 @@ export class PagesPage extends React.Component {
                                                     </div></td>
                                                     <td>{page.id}</td>
                                                     <td><div className="control select">
-                                                        <select value={this.state.page.admin} onChange={this.onAdminChange}>
+                                                        <select value={this.state.page.adminId} onChange={this.onAdminChange}>
                                                             <option value="">เลือกแอดมิน</option>
                                                             {this.state.admins.length > 0 && (
                                                                 this.state.admins.filter(f => f.active === true).map(admin => {
-                                                                    return (<option key={admin.userId} value={admin.name}>{admin.name}</option>)
+                                                                    return (<option key={admin.userId} value={admin.userId}>{admin.name}</option>)
                                                                 })
                                                             )}
                                                         </select>
                                                     </div></td>
 
-                                                    <td>
+                                                    {/* <td>
                                                         <div className="control select">
                                                             <select value={this.state.page.comId} onChange={this.onComChange}>
                                                                 <option value="">เลือกค่าคอม</option>
@@ -234,7 +237,7 @@ export class PagesPage extends React.Component {
                                                                 )}
                                                             </select>
                                                         </div>
-                                                    </td>
+                                                    </td> */}
                                                     <td>
                                                         <div className="control select">
                                                             <select value={this.state.page.country} onChange={this.onContryChange}>
