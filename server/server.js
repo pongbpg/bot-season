@@ -251,15 +251,16 @@ app.post('/api/linebot', jsonParser, (req, res) => {
 
                         } else if (msg.indexOf('@@edit:') > -1) {
                             // const msg = msg.split('@@edit:')[1];
-                            initMsgOrder(msg.split('@@edit:')[1])
-                                .then(resultOrder => {
-                                    if (resultOrder.success) {
-                                        const orderId = resultOrder.data.id ? resultOrder.data.id.replace(/\s/g, '') : '99999999-9999'
-                                        const orderRef = db.collection('orders').doc(orderId);
-                                        orderRef.get()
-                                            .then(order => {
-                                                if (order.exists) {
-                                                    if (user.data().role == 'owner') {
+
+                            if (user.data().role == 'owner') {
+                                initMsgOrder(msg.split('@@edit:')[1])
+                                    .then(resultOrder => {
+                                        if (resultOrder.success) {
+                                            const orderId = resultOrder.data.id ? resultOrder.data.id.replace(/\s/g, '') : '99999999-9999'
+                                            const orderRef = db.collection('orders').doc(orderId);
+                                            orderRef.get()
+                                                .then(order => {
+                                                    if (order.exists) {
                                                         async function callback() {
                                                             for (var p = 0; p < order.data().product.length; p++) {
                                                                 await db.collection('products').doc(order.data().product[p].code).get()
@@ -286,20 +287,28 @@ app.post('/api/linebot', jsonParser, (req, res) => {
 
                                                         }
                                                         callback();
+
+                                                    } else {
+                                                        obj.messages.push({
+                                                            type: 'text',
+                                                            text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+                                                        })
                                                     }
-                                                } else {
-                                                    obj.messages.push({
-                                                        type: 'text',
-                                                        text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
-                                                    })
-                                                }
-                                                reply(obj, LINE_TH);
-                                            })
-                                    } else {
-                                        obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการแก้ไขไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
-                                        reply(obj, LINE_TH);
-                                    }
+                                                    reply(obj, LINE_TH);
+                                                })
+                                        } else {
+                                            obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการแก้ไขไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
+                                            reply(obj, LINE_TH);
+                                        }
+                                    })
+
+                            } else {
+                                obj.messages.push({
+                                    type: 'text',
+                                    text: `${emoji(0x100035)}คำสั่งนี้เฉพาะผู้ดูแลระบบค่ะ${emoji(0x10000F)}`
                                 })
+                                reply(obj, LINE_TH);
+                            }
 
                         } else if (msg.indexOf('@@return:') > -1 && msg.split(':').length == 2) {
                             const orderId = msg.split(':')[1].replace(/\s/g, '');
