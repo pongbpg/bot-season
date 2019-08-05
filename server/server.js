@@ -1116,7 +1116,7 @@ const initMsgOrder = (txt) => {
 
             }).reduce((le, ri) => le + ',' + ri) : emoji(0x1000A6) + 'undefined';
             data.edit = data.edit ? data.edit : false;
-            if (data.channel) {
+            if (data.channel && data.page) {
                 if (data.channel.length != 1) {
                     data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
                 } else {
@@ -1131,11 +1131,11 @@ const initMsgOrder = (txt) => {
                     }
                 }
             } else {
-                if (['CM'].indexOf(data.bank.match(/[a-zA-Z]+/g, '')) > -1) {
-                    data.channel = 'O';
-                } else {
-                    data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
-                }
+                // if (data.bank.match(/[a-zA-Z]+/g, '')[0].indexOf('CM') > -1) {
+                //     data.channel = 'O';
+                // } else {
+                data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
+                // }
             }
             const refs = orders.map(order => db.collection('products').doc(order.code));
             return db.getAll(...refs)
