@@ -38,13 +38,14 @@ const LINE_KH = {
     'Authorization': `Bearer QclnB8WLKaSU+oYsqIcJH/haCyu8zkC8ZVxt4dQjqMyA139YBK0Wm6E29P6Rk0xiyB12PDU5Ob2ifUmtnoFAfMeA6SUP9/cbiK9b/s3amShuBERvpDO0qWhs3UBH1HPIs4KPV0oZ0NtmG+KBBdtSTQdB04t89/1O/w1cDnyilFU=`
 };
 var jsonParser = bodyParser.json();
+let obj = {};
 app.post('/api/linebot', jsonParser, (req, res) => {
     const request = req.body.events[0];
     const msg = request.message.text;
     const userId = request.source.userId;
     const adminRef = db.collection('admins').doc(userId);
     const ownerRef = db.collection('owners').doc(userId);
-    let obj = {
+    obj = {
         replyToken: request.replyToken,
         messages: []
     };
@@ -293,11 +294,15 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                             type: 'text',
                                                             text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
                                                         })
+                                                        reply(obj, LINE_TH);
                                                     }
-                                                    reply(obj, LINE_TH);
+
                                                 })
                                         } else {
-                                            obj.messages.push({ type: `text`, text: `${emoji(0x100026)}รายการแก้ไขไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}` })
+                                            obj.messages.push({
+                                                type: `text`,
+                                                text: `${emoji(0x100026)}รายการแก้ไขไม่ถูกต้องกรุณาตรวจสอบค่ะ!!\n${resultOrder.text}`
+                                            })
                                             reply(obj, LINE_TH);
                                         }
                                     })
@@ -1563,8 +1568,8 @@ const callbackUpdateProductsAndPayments = async (orderId, resultOrder) => {
                 })
         }
     }
-    console.log(obj)
-    // await reply(obj, LINE_TH);
+    // console.log(obj)
+    await reply(obj, LINE_TH);
 }
 //  async function callbackUpdateProductsAndPayments() {
 //     for (var p = 0; p < resultOrder.data.product.length; p++) {
