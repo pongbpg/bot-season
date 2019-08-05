@@ -250,8 +250,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                 })
 
                         } else if (msg.indexOf('@@edit:') > -1) {
-                            const msg = msg.split('@@edit:')[1];
-                            initMsgOrder(msg)
+                            // const msg = msg.split('@@edit:')[1];
+                            initMsgOrder(msg.split('@@edit:')[1])
                                 .then(resultOrder => {
                                     if (resultOrder.success) {
                                         const orderId = resultOrder.data.indexOf('id') > -1 ? resultOrder.data.id.replace(/\s/g, '') : '99999999-9999'
