@@ -254,7 +254,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                             initMsgOrder(msg)
                                 .then(resultOrder => {
                                     if (resultOrder.success) {
-                                        const orderRef = db.collection('orders').doc(resultOrder.data.id);
+                                        const orderId = resultOrder.data.indexOf('id') > -1 ? resultOrder.data.id.replace(/\s/g, '') : '99999999-9999'
+                                        const orderRef = db.collection('orders').doc(orderId);
                                         orderRef.get()
                                             .then(order => {
                                                 if (order.exists) {
@@ -269,14 +270,20 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                     })
                                                             }
                                                             await db.collection('payments')
-                                                                .where('orderId', '==', resultOrder.data.id)
+                                                                .where('orderId', '==', orderId)
                                                                 .get()
                                                                 .then(snapShot => {
                                                                     snapShot.forEach(pay => {
                                                                         pay.ref.delete();
                                                                     })
                                                                 })
-                                                            
+                                                            await db.collection('orders').doc(orderId)
+                                                                .update({
+                                                                    ...resultOrder.data
+                                                                }).then(order => {
+                                                                    callbackUpdateProductsAndPayments(orderId, resultOrder)
+                                                                })
+
                                                         }
                                                         callback();
                                                     }
@@ -1009,22 +1016,22 @@ const initMsgOrder = (txt) => {
                                         } else {
                                             name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                         }
-                                        if (bank1.match(/\d{6}/g) == null && ['COD', 'CM', 'XX', 'CP','ADMIN','STOCK'].indexOf(bank1) == -1) {
+                                        if (bank1.match(/\d{6}/g) == null && ['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'].indexOf(bank1) == -1) {
                                             // name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             date = `${emoji(0x1000A6)}วันที่โอนundefined`;
                                             // price = 'undefined';
                                         } else {
-                                            date = ['COD', 'CM', 'XX', 'CP','ADMIN','STOCK'].indexOf(bank1) == -1 ?
+                                            date = ['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'].indexOf(bank1) == -1 ?
                                                 moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').isValid() ?
                                                     moment(bank1.match(/\d{6}/g)[0], 'DDMMYY').format('YYYYMMDD') : `${emoji(0x1000A6)}วันที่โอนundefined`
                                                 : date;
                                         }
-                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP','ADMIN','STOCK'].indexOf(bank1) == -1) {
+                                        if (bank1.match(/\d{2}\.\d{2}/g) == null && ['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'].indexOf(bank1) == -1) {
                                             // name = bank1.match(/[a-zA-Z]+/g, '')[0];
                                             time = `${emoji(0x1000A6)}เวลาโอนundefined`;
                                             // price = 'undefined';
                                         } else {
-                                            time = ['COD', 'CM', 'XX', 'CP','ADMIN','STOCK'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
+                                            time = ['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'].indexOf(bank1) == -1 ? bank1.match(/\d{2}\.\d{2}/g)[0] : time;
                                         }
                                         // if (price != 'undefined') {
                                         //     name = bank1.match(/[a-zA-Z]+/g, '')[0];
@@ -1172,7 +1179,7 @@ const initMsgOrder = (txt) => {
                             data.product[order]['amount'] = 'undefined';
                         }
                     }
-                    if (['CM', 'XX','ADMIN','STOCK'].indexOf(data.bank.match(/[a-zA-Z]+/g, '')) > -1) {
+                    if (['CM', 'XX', 'ADMIN', 'STOCK'].indexOf(data.bank.match(/[a-zA-Z]+/g, '')) > -1) {
                         if (data.costs > data.price) {
                             data.costs = `${emoji(0x1000A6)}undefinedจำนวนสินค้าหรือราคาสินค้าไม่ถูกต้อง`;
                         }
@@ -1487,3 +1494,126 @@ const fourDigit = (n) => {
     }
 }
 const emoji = (hex) => { return String.fromCodePoint(hex) };
+
+const callbackUpdateProductsAndPayments = async (orderId, resultOrder) => {
+    for (var p = 0; p < resultOrder.data.product.length; p++) {
+        await db.collection('products').doc(resultOrder.data.product[p].code).get()
+            .then(product => {
+                const balance = product.data().amount - resultOrder.data.product[p].amount;
+                // if (balance <= product.data().alert) {
+                //     db.collection('admins').get()
+                //         .then(snapShot => {
+                //             snapShot.forEach(admin => {
+                //                 push({
+                //                     to: admin.id,
+                //                     messages: [
+                //                         {
+                //                             "type": "text",
+                //                             "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+                //                         }
+                //                     ]
+                //                 }, LINE_TH)
+                //             })
+                //         })
+                // }
+                db.collection('products').doc(resultOrder.data.product[p].code)
+                    .set({ amount: balance }, { merge: true })
+            })
+    }
+
+    await obj.messages.push({
+        type: 'text',
+        text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น\n🙏ขอบคุณนะคะที่อุดหนุนสินค้า😊`
+    })
+    await obj.messages.push({
+        type: 'text',
+        text: `@@ยกเลิก:${orderId}`
+    })
+    for (var b = 0; b < resultOrder.data.banks.length; b++) {
+        if (['COD', 'CM', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
+            await db.collection('payments')
+                .where('name', '==', resultOrder.data.banks[b].name)
+                .where('date', '==', resultOrder.data.banks[b].date)
+                .where('time', '==', resultOrder.data.banks[b].time)
+                .where('price', '==', resultOrder.data.banks[b].price)
+                .get()
+                .then(snapShot => {
+                    snapShot.forEach(doc => {
+                        obj.messages.push({
+                            type: 'text',
+                            text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
+รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page}
+รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
+                        })
+                    })
+                    db.collection('payments').add({
+                        orderId,
+                        ...resultOrder.data.banks[b],
+                        page: resultOrder.data.page
+                    })
+                })
+        }
+    }
+    await reply(obj, LINE_TH);
+}
+//  async function callbackUpdateProductsAndPayments() {
+//     for (var p = 0; p < resultOrder.data.product.length; p++) {
+//         await db.collection('products').doc(resultOrder.data.product[p].code).get()
+//             .then(product => {
+//                 const balance = product.data().amount - resultOrder.data.product[p].amount;
+//                 // if (balance <= product.data().alert) {
+//                 //     db.collection('admins').get()
+//                 //         .then(snapShot => {
+//                 //             snapShot.forEach(admin => {
+//                 //                 push({
+//                 //                     to: admin.id,
+//                 //                     messages: [
+//                 //                         {
+//                 //                             "type": "text",
+//                 //                             "text": `สินค้า ${product.id}\n${product.data().name}\nเหลือแค่ ${balance} ชิ้นละจ้า`
+//                 //                         }
+//                 //                     ]
+//                 //                 }, LINE_TH)
+//                 //             })
+//                 //         })
+//                 // }
+//                 db.collection('products').doc(resultOrder.data.product[p].code)
+//                     .set({ amount: balance }, { merge: true })
+//             })
+//     }
+
+//     await obj.messages.push({
+//         type: 'text',
+//         text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น\n🙏ขอบคุณนะคะที่อุดหนุนสินค้า😊`
+//     })
+//     await obj.messages.push({
+//         type: 'text',
+//         text: `@@ยกเลิก:${orderId}`
+//     })
+//     for (var b = 0; b < resultOrder.data.banks.length; b++) {
+//         if (['COD', 'CM', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
+//             await db.collection('payments')
+//                 .where('name', '==', resultOrder.data.banks[b].name)
+//                 .where('date', '==', resultOrder.data.banks[b].date)
+//                 .where('time', '==', resultOrder.data.banks[b].time)
+//                 .where('price', '==', resultOrder.data.banks[b].price)
+//                 .get()
+//                 .then(snapShot => {
+//                     snapShot.forEach(doc => {
+//                         obj.messages.push({
+//                             type: 'text',
+//                             text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
+// รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page}
+// รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
+//                         })
+//                     })
+//                     db.collection('payments').add({
+//                         orderId,
+//                         ...resultOrder.data.banks[b],
+//                         page: resultOrder.data.page
+//                     })
+//                 })
+//         }
+//     }
+//     await reply(obj, LINE_TH);
+// }
