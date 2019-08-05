@@ -1564,7 +1564,7 @@ const callbackUpdateProductsAndPayments = async (orderId, resultOrder) => {
         }
     }
     console.log(obj)
-    await reply(obj, LINE_TH);
+    // await reply(obj, LINE_TH);
 }
 //  async function callbackUpdateProductsAndPayments() {
 //     for (var p = 0; p < resultOrder.data.product.length; p++) {
