@@ -254,7 +254,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                             initMsgOrder(msg.split('@@edit:')[1])
                                 .then(resultOrder => {
                                     if (resultOrder.success) {
-                                        const orderId = resultOrder.data.indexOf('id') > -1 ? resultOrder.data.id.replace(/\s/g, '') : '99999999-9999'
+                                        const orderId = resultOrder.data.id ? resultOrder.data.id.replace(/\s/g, '') : '99999999-9999'
                                         const orderRef = db.collection('orders').doc(orderId);
                                         orderRef.get()
                                             .then(order => {
