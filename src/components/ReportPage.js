@@ -15,6 +15,7 @@ export class ReportPage extends React.Component {
             auth: props.auth,
             pages: props.pages,
             payment: 'ALL',
+            cost: 'admin',
             page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
         }
         this.handleStartChange = this.handleStartChange.bind(this);
@@ -36,6 +37,12 @@ export class ReportPage extends React.Component {
     handlePageChange = (e) => {
         this.setState({
             page: e.target.value
+        })
+        // console.log(e.target.value)
+    }
+    handleCostChange = (e) => {
+        this.setState({
+            cost: e.target.value
         })
         // console.log(e.target.value)
     }
@@ -289,18 +296,25 @@ export class ReportPage extends React.Component {
                                 )}
                                 {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">8</td>
-                                    <td className="has-text-centered">ค่าคอมฯ Admin (วันที่เริ่ม-ถึงวันที่)</td>
+                                    <td className="has-text-centered">ค่าคอมฯ และ ค่าใช้จ่าย&nbsp;
+                                    <select className="select is-info"
+                                            onChange={this.handleCostChange}
+                                            value={this.state.cost}>
+                                            <option value="admin">แอดมิน</option>
+                                            <option value="page">เพจ</option>
+                                        </select>
+                                    </td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
                                                 <a className="button is-danger is-centered is-small"
-                                                    href={`${rptUri}/com/admin?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                    href={`${rptUri}/com/${this.state.cost}?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
                                                     target="_blank">
                                                     PDF</a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-success is-centered is-small"
-                                                    href={`${rptUri}/com/admin?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                    href={`${rptUri}/com/${this.state.cost}?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
                                                     target="_blank">
                                                     EXCEL</a>
                                             </p>
