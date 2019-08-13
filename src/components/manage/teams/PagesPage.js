@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { startGetAdmins } from '../../../actions/manage/admins';
 import { startPushPage, startUpdatePage, startDeletePage } from '../../../actions/manage/pages';
+import { startListPages } from '../../../actions/pages';
 export class PagesPage extends React.Component {
     constructor(props) {
         super(props);
@@ -9,13 +10,14 @@ export class PagesPage extends React.Component {
             auth: props.auth,
             teams: props.teams,
             coms: props.coms,
-            newPage: { id: '' },
+            newPage: { id: '', active: true },
             // teamEdit: { id: '', name: '' },
             admins: props.admins,
             pages: props.pages,
             page: { id: '' }
         }
         this.props.startGetAdmins();
+        this.props.startListPages(props.auth);
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -31,6 +33,7 @@ export class PagesPage extends React.Component {
             this.setState({ pages: nextProps.pages });
         }
     }
+
     onNewTeamChange = (e) => {
         this.setState({ newPage: { ...this.state.newPage, team: e.target.value } })
     }
@@ -54,8 +57,10 @@ export class PagesPage extends React.Component {
             if (this.state.pages.filter(f => f.id == this.state.newPage.id).length > 0) {
                 alert('ไอดีเพจนี้มีการใช้แล้ว')
             } else {
-                if (confirm('คุณแน่ใจที่จะเพิ่มเพจนี้'))
+                if (confirm('คุณแน่ใจที่จะเพิ่มเพจนี้')) {
                     this.props.startPushPage(this.state.newPage)
+                    this.props.startListPages(this.state.auth);
+                }
                 this.setState({ newPage: { id: '' } })
             }
         } else {
@@ -76,6 +81,9 @@ export class PagesPage extends React.Component {
     onContryChange = (e) => {
         this.setState({ page: { ...this.state.page, country: e.target.value } })
     }
+    onActiveChange = (e) => {
+        this.setState({ page: { ...this.state.page, active: e.target.value == 'true' ? true : false } })
+    }
     onEditClick = (e) => {
         this.setState({ page: this.state.pages.find(f => f.id == e.target.value) })
         // console.log(this.state.page)
@@ -85,17 +93,21 @@ export class PagesPage extends React.Component {
     }
     onUpdateClick = (e) => {
         if (this.checkObj(this.state.page)) {
-            if (confirm('คุณแน่ใจที่จะแก้ไขข้อมูลเพจนี้'))
+            if (confirm('คุณแน่ใจที่จะแก้ไขข้อมูลเพจนี้')) {
                 this.props.startUpdatePage(this.state.page)
+                this.props.startListPages(this.state.auth);
+            }
+
             this.setState({ page: { id: '' } })
         } else {
             console.log(this.state.page)
-            console.log('กรุณาเลือกข้อมูลให้ครบ')
+            alert('กรุณาเลือกข้อมูลให้ครบ')
         }
     }
     onDeleteClick = (e) => {
         if (confirm('คุณแน่ใจที่ต้องการจะลบเพจนี้?')) {
             this.props.startDeletePage(this.state.page)
+            this.props.startListPages(this.state.auth);
             this.setState({ page: { id: '' } })
         }
 
@@ -104,8 +116,10 @@ export class PagesPage extends React.Component {
         let ok = true;
         if (Object.keys(obj).length >= 5) {
             for (var p in obj) {
-                if (obj[p] == "")
+                if (obj[p] == "" && obj[p] != false) {
                     ok = false;
+                    console.log(obj[p])
+                }
             }
         } else {
             ok = false;
@@ -179,6 +193,7 @@ export class PagesPage extends React.Component {
                                 <th className="has-text-left" width="20%">Admin</th>
                                 {/* <th className="has-text-left">Com</th> */}
                                 <th className="has-text-left" >Country</th>
+                                <th className="has-text-left" >Status</th>
                                 <th className="has-text-centered" width="50%">จัดการ</th>
                             </tr>
                         </thead>
@@ -194,6 +209,7 @@ export class PagesPage extends React.Component {
                                                 <td>{page.admin}</td>
                                                 {/* <td>{page.comId}</td> */}
                                                 <td>{page.country}</td>
+                                                <td>{page.active ? 'เปิด' : 'ปิด'}</td>
                                                 <td className="has-text-centered">
                                                     <button className="button"
                                                         value={page.id}
@@ -247,6 +263,14 @@ export class PagesPage extends React.Component {
                                                             </select>
                                                         </div>
                                                     </td>
+                                                    <td>
+                                                        <div className="control select">
+                                                            <select value={this.state.page.active} onChange={this.onActiveChange}>
+                                                                <option value="true">เปิด</option>
+                                                                <option value="false">ปิด</option>
+                                                            </select>
+                                                        </div>
+                                                    </td>
                                                     <td className="has-text-centered">
                                                         <button className="button is-primary"
                                                             value={page.id}
@@ -283,6 +307,7 @@ const mapDispatchToProps = (dispatch, props) => ({
     startGetAdmins: () => dispatch(startGetAdmins()),
     startPushPage: (page) => dispatch(startPushPage(page)),
     startUpdatePage: (page) => dispatch(startUpdatePage(page)),
-    startDeletePage: (page) => dispatch(startDeletePage(page))
+    startDeletePage: (page) => dispatch(startDeletePage(page)),
+    startListPages: (auth) => dispatch(startListPages(auth))
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PagesPage)

@@ -38,14 +38,14 @@ const LINE_KH = {
     'Authorization': `Bearer QclnB8WLKaSU+oYsqIcJH/haCyu8zkC8ZVxt4dQjqMyA139YBK0Wm6E29P6Rk0xiyB12PDU5Ob2ifUmtnoFAfMeA6SUP9/cbiK9b/s3amShuBERvpDO0qWhs3UBH1HPIs4KPV0oZ0NtmG+KBBdtSTQdB04t89/1O/w1cDnyilFU=`
 };
 var jsonParser = bodyParser.json();
-let obj = {};
+// let obj = {};
 app.post('/api/linebot', jsonParser, (req, res) => {
     const request = req.body.events[0];
     const msg = request.message.text;
     const userId = request.source.userId;
     const adminRef = db.collection('admins').doc(userId);
     const ownerRef = db.collection('owners').doc(userId);
-    obj = {
+    let obj = {
         replyToken: request.replyToken,
         messages: []
     };
@@ -283,10 +283,58 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                 .update({
                                                                     ...resultOrder.data
                                                                 }).then(order => {
-                                                                    callbackUpdateProductsAndPayments(orderId, resultOrder)
-                                                                })
+                                                                    // callbackUpdateProductsAndPayments(orderId, resultOrder)
+                                                                    async function fixTokenWrong() {
+                                                                        for (var p = 0; p < resultOrder.data.product.length; p++) {
+                                                                            await db.collection('products').doc(resultOrder.data.product[p].code).get()
+                                                                                .then(product => {
+                                                                                    const balance = product.data().amount - resultOrder.data.product[p].amount;
 
+                                                                                    db.collection('products').doc(resultOrder.data.product[p].code)
+                                                                                        .set({ amount: balance }, { merge: true })
+                                                                                })
+                                                                        }
+
+                                                                        await obj.messages.push({
+                                                                            type: 'text',
+                                                                            text: `รหัสสั่งซื้อ: ${orderId}\n${resultOrder.text}\n\n⛔️โปรดอ่านทุกบรรทัด⛔️\n👉กรุณาตรวจสอบข้อมูลรายการสั่งซื้อด้านบนให้ครบถ้วน ถ้าหากพบว่าไม่ถูกต้องกรุณาแจ้งแอดมินให้แก้ไขทันที\n👉หากไม่มีการทักท้วงจากลูกค้า หรือมีการจัดส่งสินค้าเรียบร้อยแล้ว ทางร้านจะถือว่าลูกค้ายืนยันข้อมูลรายการสั่งซื้อดังกล่าว และทางร้านจะไม่รับผิดชอบกรณีใดๆ ทั้งสิ้น\n🙏ขอบคุณนะคะที่อุดหนุนสินค้า😊`
+                                                                        })
+                                                                        await obj.messages.push({
+                                                                            type: 'text',
+                                                                            text: `@@ยกเลิก:${orderId}`
+                                                                        })
+                                                                        for (var b = 0; b < resultOrder.data.banks.length; b++) {
+                                                                            if (['COD', 'CM', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
+                                                                                await db.collection('payments')
+                                                                                    .where('name', '==', resultOrder.data.banks[b].name)
+                                                                                    .where('date', '==', resultOrder.data.banks[b].date)
+                                                                                    .where('time', '==', resultOrder.data.banks[b].time)
+                                                                                    .where('price', '==', resultOrder.data.banks[b].price)
+                                                                                    .get()
+                                                                                    .then(snapShot => {
+                                                                                        snapShot.forEach(doc => {
+                                                                                            obj.messages.push({
+                                                                                                type: 'text',
+                                                                                                text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
+                                                                รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page}
+                                                                รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
+                                                                                            })
+                                                                                        })
+                                                                                        db.collection('payments').add({
+                                                                                            orderId,
+                                                                                            ...resultOrder.data.banks[b],
+                                                                                            page: resultOrder.data.page
+                                                                                        })
+                                                                                    })
+                                                                            }
+                                                                        }
+                                                                        // console.log(obj)
+                                                                        await reply(obj, LINE_TH);
+                                                                    }
+                                                                    fixTokenWrong();
+                                                                })
                                                         }
+
                                                         callback();
 
                                                     } else {
