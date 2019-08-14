@@ -15,7 +15,7 @@ export class CostPage extends React.Component {
             id: '',
             fb: 0,
             line: 0,
-            delivery: 0,
+            other: 0,
             action: false,
             date: moment(),
             isLoading: '',
@@ -47,18 +47,18 @@ export class CostPage extends React.Component {
             })
         }
     }
-    onDeliveryChange = (e) => {
-        const delivery = e.target.value.replace(/\D/g, '');
-        if (!isNaN(delivery)) {
+    onOtherChange = (e) => {
+        const other = e.target.value.replace(/\D/g, '');
+        if (!isNaN(other)) {
             this.setState({
-                delivery: Number(delivery)
+                other: Number(other)
             })
         }
     }
     onActionClick = (action, id) => {
         if (action) {
-            const data = this.state.costs.find(f => f.page == id) || { fb: 0, line: 0, delivery: 0 }
-            this.setState({ fb: data.fb, line: data.line, delivery: data.delivery })
+            const data = this.state.costs.find(f => f.page == id) || { fb: 0, line: 0, other: 0 }
+            this.setState({ fb: data.fb, line: data.line, other: data.other })
         }
         this.setState({
             id,
@@ -78,11 +78,11 @@ export class CostPage extends React.Component {
         let cost = this.state.costs.find(f => f.page == this.state.id);
         cost.fb = this.state.fb;
         cost.line = this.state.line;
-        cost.delivery = this.state.delivery;
+        cost.other = this.state.other;
         // console.log(cost)
         this.props.startSaveCost(cost)
             .then((x) => {
-                this.setState({ isLoading: '', id: '', fb: 0, line: 0, delivery: 0 })
+                this.setState({ isLoading: '', id: '', fb: 0, line: 0, other: 0 })
             })
     }
     render() {
@@ -125,7 +125,7 @@ export class CostPage extends React.Component {
                                         <th className="has-text-left">เพจ</th>
                                         <th className="has-text-right has-text-info">Facebook</th>
                                         <th className="has-text-right has-text-success">Line</th>
-                                        <th className="has-text-right has-text-danger">ค่าขนส่ง</th>
+                                        <th className="has-text-right has-text-danger">อื่นๆ</th>
                                         <th className="has-text-centered" width="20%">จัดการ</th>
                                     </tr>
                                 </thead>
@@ -137,7 +137,7 @@ export class CostPage extends React.Component {
                                                 <td className="has-text-left">{`${cost.page} ${cost.admin}`}</td>
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.fb, 0)}</td>)}
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.line, 0)}</td>)}
-                                                {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.delivery, 0)}</td>)}
+                                                {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.other, 0)}</td>)}
                                                 {(this.state.id !== cost.page) && (
                                                     <td className="has-text-centered">
                                                         <button
@@ -181,8 +181,8 @@ export class CostPage extends React.Component {
                                                                 <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
-                                                                    value={Money(this.state.delivery, 0)}
-                                                                    onChange={this.onDeliveryChange}
+                                                                    value={Money(this.state.other, 0)}
+                                                                    onChange={this.onOtherChange}
                                                                 />
                                                             </div>
                                                         </div>
