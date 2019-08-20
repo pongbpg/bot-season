@@ -12,7 +12,7 @@ export default (costs, pages, date) => {
                     admin: pages[p].admin,
                     fb: 0,
                     line: 0,
-                    delivery: 0,
+                    other: 0,
                     date,
                     year: date.substr(0, 4),
                     month: date.substr(2, 2),

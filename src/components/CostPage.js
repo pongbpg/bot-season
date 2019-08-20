@@ -73,7 +73,7 @@ export class CostPage extends React.Component {
         this.props.startListCosts(moment(date).format('YYYYMMDD'))
         this.onActionClick(false, 0)
     }
-    onAmountSave = (action) => {
+    onAmountSave = () => {
         this.setState({ isLoading: 'is-loading' })
         let cost = this.state.costs.find(f => f.page == this.state.id);
         cost.fb = this.state.fb;
