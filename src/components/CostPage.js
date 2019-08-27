@@ -122,6 +122,7 @@ export class CostPage extends React.Component {
                                 <thead>
                                     <tr>
                                         <th className="has-text-centered">ลำดับ</th>
+                                        <th className="has-text-left">ทีม</th>
                                         <th className="has-text-left">เพจ</th>
                                         <th className="has-text-right has-text-info">Facebook</th>
                                         <th className="has-text-right has-text-success">Line</th>
@@ -134,6 +135,7 @@ export class CostPage extends React.Component {
                                         return (
                                             <tr key={cost.page}>
                                                 <td className="has-text-centered">{++i}</td>
+                                                <td className="has-text-left">{`${cost.team}`}</td>
                                                 <td className="has-text-left">{`${cost.page} ${cost.admin}`}</td>
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.fb, 0)}</td>)}
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.line, 0)}</td>)}

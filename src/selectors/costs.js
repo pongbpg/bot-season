@@ -10,6 +10,7 @@ export default (costs, pages, date) => {
                 costs.push({
                     page: pages[p].id,
                     admin: pages[p].admin,
+                    team: pages[p].team,
                     fb: 0,
                     line: 0,
                     other: 0,
@@ -21,5 +22,5 @@ export default (costs, pages, date) => {
             }
         }
     }
-    return costs.sort((a, b) => a.page > b.page ? 1 : -1)
+    return costs.sort((a, b) => a.team + a.page > b.team + b.page ? 1 : -1)
 };
