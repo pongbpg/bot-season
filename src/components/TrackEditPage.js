@@ -18,8 +18,8 @@ export class TrackEditPage extends React.Component {
       alert: false,
       isLoading: false,
       isSave: true,
-      expressName: '',
-      expressLink: '',
+      // expressName: '',
+      // expressLink: '',
       expresses: [
         { expressName: 'ALPHA FAST', expressLink: 'https://www.alphafast.com/th/track-alpha' },
         { expressName: 'EMS', expressLink: 'http://track.thailandpost.co.th/tracking/default.aspx' },
@@ -71,10 +71,10 @@ export class TrackEditPage extends React.Component {
       // console.log(index)
       expressLink = this.state.expresses.find(f => f.expressName === expressName).expressLink
 
-      orders[index] = { ...orders[index], expressName: this.state.expressName, expressLink: this.state.expressLink };
+      orders[index] = { ...orders[index], expressName, expressLink };
       // this.setState({ orders })
     }
-    this.setState({ expressName, expressLink, orders })
+    this.setState({ orders })
   }
   onAlertCloseClick = () => {
     this.setState({ alert: false })
@@ -87,7 +87,7 @@ export class TrackEditPage extends React.Component {
 
       } else {
         let orders = this.state.orders.slice();
-        orders[index] = { ...orders[index], tracking, expressName: this.state.expressName, expressLink: this.state.expressLink };
+        orders[index] = { ...orders[index], tracking }//, expressName: this.state.expressName, expressLink: this.state.expressLink };
         this.setState({ orders })
       }
     } else {
@@ -102,7 +102,7 @@ export class TrackEditPage extends React.Component {
 
       } else {
         let orders = this.state.orders.slice();
-        orders[index] = { ...orders[index], freight, expressName: this.state.expressName, expressLink: this.state.expressLink };
+        orders[index] = { ...orders[index], freight }//, expressName: this.state.expressName, expressLink: this.state.expressLink };
         this.setState({ orders })
 
         // console.log({ ...orders[index] })
@@ -119,7 +119,7 @@ export class TrackEditPage extends React.Component {
 
       } else {
         let orders = this.state.orders.slice();
-        orders[index] = { ...orders[index], codFee, expressName: this.state.expressName, expressLink: this.state.expressLink };
+        orders[index] = { ...orders[index], codFee }// ,expressName: this.state.expressName, expressLink: this.state.expressLink };
         this.setState({ orders })
       }
     } else {
@@ -129,6 +129,7 @@ export class TrackEditPage extends React.Component {
   onSaveTracking = () => {
     if (this.state.expressName != "") {
       const orders = this.state.orders.filter(f => f.tracking !== '');
+      // console.log(orders)
       this.props.startSaveTracking(orders);
     } else {
       alert('กรุณาเลือกขนส่งก่อนครับ')
@@ -202,7 +203,7 @@ export class TrackEditPage extends React.Component {
                       <td className="has-text-right">{Money(order.price)}</td>
                       <td className="has-text-centered">
                         <div className="select">
-                          <select selected={this.state.express}
+                          <select selected={order.expressName}
                             name={order.id}
                             onChange={this.onExpressChange} value={order.expressName}>
                             <option value="">เลือกขนส่ง</option>
@@ -228,7 +229,7 @@ export class TrackEditPage extends React.Component {
                         <div className="field">
                           <div className="control">
                             <input type="text" name={order.id}
-                              className="input is-rounded is-small has-text-centered"
+                              className="input is-rounded has-text-centered"
                               value={order.freight}
                               onChange={this.onFreightChange} />
                           </div>
@@ -238,7 +239,7 @@ export class TrackEditPage extends React.Component {
                         <div className="field">
                           <div className="control">
                             <input type="text" name={order.id}
-                              className="input is-rounded is-small has-text-centered"
+                              className="input is-rounded has-text-centered"
                               value={order.codFee}
                               onChange={this.onFeeChange} />
                           </div>
