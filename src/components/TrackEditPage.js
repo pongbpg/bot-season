@@ -131,6 +131,7 @@ export class TrackEditPage extends React.Component {
       const orders = this.state.orders.filter(f => f.tracking !== '');
       // console.log(orders)
       this.props.startSaveTracking(orders);
+      this.setState({ isSave: true })
     } else {
       alert('กรุณาเลือกขนส่งก่อนครับ')
     }
@@ -204,6 +205,7 @@ export class TrackEditPage extends React.Component {
                       <td className="has-text-centered">
                         <div className="select">
                           <select selected={order.expressName}
+                            disabled={this.state.isSave}
                             name={order.id}
                             onChange={this.onExpressChange} value={order.expressName}>
                             <option value="">เลือกขนส่ง</option>
@@ -230,6 +232,7 @@ export class TrackEditPage extends React.Component {
                           <div className="control">
                             <input type="text" name={order.id}
                               className="input is-rounded has-text-centered"
+                              disabled={this.state.isSave}
                               value={order.freight}
                               onChange={this.onFreightChange} />
                           </div>
@@ -240,6 +243,7 @@ export class TrackEditPage extends React.Component {
                           <div className="control">
                             <input type="text" name={order.id}
                               className="input is-rounded has-text-centered"
+                              disabled={this.state.isSave}
                               value={order.codFee}
                               onChange={this.onFeeChange} />
                           </div>
