@@ -18,14 +18,24 @@ export class TrackingPage extends React.Component {
       search: '',
       searchList: props.searchList,
       alert: false,
-      isLoading: false
+      isLoading: false,
+      sumPrice: 0
     };
+    this.calcSumPrice = this.calcSumPrice.bind(this);
   }
   componentWillReceiveProps(nextProps) {
     if (nextProps.searchList != this.state.searchList) {
       this.setState({ searchList: nextProps.searchList });
     }
   }
+  calcSumPrice = (lists) => {
+    let sumPrice = 0;
+    lists.map(l => {
+      sumPrice += l.price
+    })
+    this.setState({ sumPrice })
+  }
+
   toggleIsMenu = () => {
     this.setState(() => ({
       isMenu: !this.state.isMenu
@@ -37,7 +47,7 @@ export class TrackingPage extends React.Component {
     }))
   }
   onSearchChange = (e) => {
-    this.setState({ search: e.target.value.replace(/\s/g, '') })
+    this.setState({ search: e.target.value.replace(/\D/g, '') })
   }
   onSearchClick = () => {
     if (this.state.search.length > 0) {
@@ -48,6 +58,7 @@ export class TrackingPage extends React.Component {
           if (result.search.length == 0) {
             this.setState({ alert: this.state.search })
           } else {
+            this.calcSumPrice(result.search)
             this.setState({ alert: false })
             result.search[0].product.map(p => {
               ReactPixel.trackCustom('purchase', {
@@ -56,7 +67,7 @@ export class TrackingPage extends React.Component {
                 amount: p.amount
               })
             })
-            ReactPixel.trackCustom('price', {price:result.search[0].price})
+            ReactPixel.trackCustom('price', { price: result.search[0].price })
           }
         })
     }
@@ -101,35 +112,41 @@ export class TrackingPage extends React.Component {
         </nav>
         <div className="hero-body">
           <div className="container">
-            <div className="columns is-hidden-mobile">
+            <div className="columns">
               <div className="column is-8 is-offset-2">
-                {/* <h4 className="pretitol" style={{ marginBottom: 1 + 'rem' }}>CRYPTOCURRENCY INDEX FUND</h4> */}
                 <h1 className="title has-text-white">ค้นหาเลขพัสดุ</h1>
-                <div className="field is-grouped">
+                {/* <div className="columns"> */}
+                <div className="column is-12">
                   <p className="control has-icons-left is-expanded">
-                    <input className="input is-large" type="text" placeholder="รหัสสั่งซื้อ/เบอร์โทรศัพท์"
+                    <input className="input is-large" type="text" placeholder="เบอร์โทรศัพท์"
                       value={this.state.search}
                       onChange={this.onSearchChange} />
                     <span className="icon is-small is-left">
                       <FaSearch />
                     </span>
                   </p>
-                  <p className="control">
-                    <button className={`button is-success is-large is-rounded ${this.state.isLoading ? 'is-loading' : ''}`}
-                      onClick={this.onSearchClick}>
-                      ค้นหา</button>
-                  </p>
                 </div>
+                {/* </div> */}
+                {/* <div className="field is-grouped"> */}
+                <div className="level">
+                  <div className="level-item">
+                    <p className="control">
+                      <button className={`button is-success is-large is-rounded ${this.state.isLoading ? 'is-loading' : ''}`}
+                        onClick={this.onSearchClick}>
+                        ค้นหา</button>
+                    </p>
+                  </div>
+                </div>
+                {/* </div> */}
               </div>
             </div>
 
-            <div className="columns is-hidden-tablet">
+            {/* <div className="columns is-hidden-tablet">
               <div className="column is-8 is-offset-2">
-                {/* <h4 className="pretitol" style={{ marginBottom: 1 + 'rem' }}>CRYPTOCURRENCY INDEX FUND</h4> */}
                 <h1 className="title has-text-white">ค้นหาเลขพัสดุ</h1>
                 <div className="field">
                   <p className="control has-icons-left is-expanded">
-                    <input className="input is-large" type="text" placeholder="รหัสสั่งซื้อ/เบอร์โทรศัพท์"
+                    <input className="input is-large" type="text" placeholder="เบอร์โทรศัพท์"
                       value={this.state.search}
                       onChange={this.onSearchChange} />
                     <span className="icon is-small is-left">
@@ -145,9 +162,9 @@ export class TrackingPage extends React.Component {
                   </p>
                 </div>
               </div>
-            </div>
+            </div> */}
             <div className="columns is-hidden-mobile">
-              <div className="column is-10 is-offset-1">
+              <div className="column is-12">
                 {this.state.searchList.length > 0 &&
                   (
                     <table className="table is-fullwidth is-striped is-narrow">
@@ -156,6 +173,7 @@ export class TrackingPage extends React.Component {
                           <th className="has-text-centered">รหัสสั่งซื้อ</th>
                           <th className="has-text-centered">ชื่อผู้สั่งซื้อ</th>
                           <th className="has-text-centered">เพจ</th>
+                          <th className="has-text-centered">สินค้า</th>
                           <th className="has-text-centered">วันที่ส่งสินค้า</th>
                           <th className="has-text-right">ยอดโอน</th>
                           <th className="has-text-centered">เลขพัสดุ</th>
@@ -169,6 +187,7 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-centered">{order.id}</td>
                             <td className="has-text-centered">{order.name}</td>
                             <td className="has-text-centered">{order.page}</td>
+                            <td className="has-text-centered">{order.product.map(p => p.code).reduce((a, b) => a + ',' + b)}</td>
                             <td className="has-text-centered">{moment(d).format('ll')}</td>
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</td>
@@ -184,6 +203,11 @@ export class TrackingPage extends React.Component {
                           </tr>;
                         })
                         }
+                        <tr>
+                          <th className="has-text-centered" colSpan="5">ยอดรวม</th>
+                          <th className="has-text-right">{Money(this.state.sumPrice)}</th>
+                          <th colSpan="2"></th>
+                        </tr>
                       </tbody>
                     </table>
                   )
@@ -223,17 +247,17 @@ export class TrackingPage extends React.Component {
                       </h3>
                       <h4>{order.name}</h4>
 
-                      <div className="media">
-                        <div className="media-left">
+                      <div className="level">
+                        <div className="level-left">
                           <p className="has-text-grey-light">{order.id + order.page}</p>
                         </div>
-                        <div className="media-content">
+                        <div className="level-content">
                           <div className="content">
-                            <span className="has-text-grey">{moment(d).format('Do MMM YY')}</span>
+                            <span className="has-text-grey">{order.product.map(p => p.code).reduce((a, b) => a + ',' + b)}</span>
                           </div>
                         </div>
-                        <div className="media-right">
-                          <span className="has-text-weight-bold">฿{Money(order.price, 0)}</span>
+                        <div className="level-right">
+                          <span className="has-text-weight-bold">{moment(d).format('Do MMM YY') + ' ฿' + Money(order.price, 0)}</span>
                         </div>
                       </div>
                     </article>
@@ -247,8 +271,8 @@ export class TrackingPage extends React.Component {
                   <div className="column is-4 is-offset-4">
                     <div className="notification is-danger">
                       <button className="delete" onClick={this.onAlertCloseClick}></button>
-                      <h2>ไม่พบข้อมูล <strong>{this.state.alert}</strong></h2>
-                      กรุณาตรวจสอบรหัสสั่งซื้อ/เบอร์โทรศัพท์
+                      <h2>ไม่พบเบอร์โทร <strong>{this.state.alert}</strong> ในระบบ</h2>
+                      กรุณาตรวจสอบเบอร์โทรศัพท์ให้ถูกต้อง
                 </div>
                   </div>
                 </div>
