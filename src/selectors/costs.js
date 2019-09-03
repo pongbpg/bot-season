@@ -4,9 +4,10 @@ export default (costs, pages, date) => {
     if (costs.length != pages.length) {
         for (let p = 0; p < pages.length; p++) {
             // console.log(pages[p])
-            const data = costs.find(f => f.page == pages[p].id)
+            const index = costs.findIndex(f => f.page == pages[p].id)
+
             // console.log('data',data)
-            if (!data) {
+            if (index == -1) {
                 costs.push({
                     page: pages[p].id,
                     admin: pages[p].admin,
@@ -19,6 +20,8 @@ export default (costs, pages, date) => {
                     month: date.substr(2, 2),
                     day: date.substr(4, 2)
                 })
+            } else {
+                costs[index]['team'] = pages[p].team
             }
         }
     }

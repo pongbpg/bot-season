@@ -187,7 +187,7 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-centered">{order.id}</td>
                             <td className="has-text-centered">{order.name}</td>
                             <td className="has-text-centered">{order.page}</td>
-                            <td className="has-text-centered">{order.product.map(p => p.code).reduce((a, b) => a + ',' + b)}</td>
+                            <td className="has-text-centered">{order.product.map(p => p.code + '=' + p.amount).reduce((a, b) => a + ',' + b)}</td>
                             <td className="has-text-centered">{moment(d).format('ll')}</td>
                             <td className="has-text-right">{Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</td>
@@ -253,7 +253,7 @@ export class TrackingPage extends React.Component {
                         </div>
                         <div className="level-content">
                           <div className="content">
-                            <span className="has-text-grey">{order.product.map(p => p.code).reduce((a, b) => a + ',' + b)}</span>
+                            <span className="has-text-grey">{order.product.map(p => p.code + '=' + p.amount).reduce((a, b) => a + ',' + b)}</span>
                           </div>
                         </div>
                         <div className="level-right">
