@@ -76,9 +76,9 @@ export class CostPage extends React.Component {
     onAmountSave = () => {
         this.setState({ isLoading: 'is-loading' })
         let cost = this.state.costs.find(f => f.page == this.state.id);
-        cost.fb = this.state.fb;
-        cost.line = this.state.line;
-        cost.other = this.state.other;
+        cost.fb = isNaN(this.state.fb) ? 0 : Number(this.state.fb);
+        cost.line = isNaN(this.state.line) ? 0 : Number(this.state.line);
+        cost.other = isNaN(this.state.other) ? 0 : Number(this.state.other);
         // console.log(cost)
         this.props.startSaveCost(cost)
             .then((x) => {
