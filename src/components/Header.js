@@ -85,7 +85,7 @@ export class Header extends React.Component {
                     </div>
                   </div>
                 )}
-                {['owner'].indexOf(this.state.auth.role) > -1 && (
+                {['owner', 'stock'].indexOf(this.state.auth.role) > -1 && (
                   <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">บัญชี</a>
                     <div className="navbar-dropdown">
