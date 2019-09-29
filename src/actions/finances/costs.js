@@ -1,4 +1,4 @@
-import firestore from '../firebase/firebase';
+import firestore from '../../firebase/firebase';
 export const startListCosts = (date) => {
     return (dispatch) => {
         return firestore.collection('costs')

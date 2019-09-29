@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { startGetEmails, startUpdateEmail, startResetPassword, startPushEmail } from '../../../actions/manage/emails';
-import MdAddCircle from 'react-icons/lib/md/add-circle';
+import { MdAddCircle } from 'react-icons/md';
 export class EmailsPage extends React.Component {
     constructor(props) {
         super(props);

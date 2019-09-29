@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import { startGetCutOff, startCutOff } from '../actions/cutoff';
-import MdAlarmOn from 'react-icons/lib/md/alarm-on';
+import { MdAlarmOn } from 'react-icons/md';
 import moment from 'moment';
 moment.locale('th');
 export class CutOffPage extends React.Component {

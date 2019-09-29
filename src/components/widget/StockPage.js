@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { startGetStock, startChangeStock } from '../../actions/widget/stock';
 import { startUpdateProduct, startDeleteProduct } from '../../actions/widget/product';
 import Money from '../../selectors/money';
-import MdEdit from 'react-icons/lib/md/edit';
+import { MdEdit } from 'react-icons/md';
 export class StockPage extends React.Component {
     constructor(props) {
         super(props);

@@ -2,13 +2,8 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
-import MdMailOutline from 'react-icons/lib/md/mail-outline';
-import MdAlarmOn from 'react-icons/lib/md/alarm-on';
-import FaSearch from 'react-icons/lib/fa/search';
-import FaFileTextO from 'react-icons/lib/fa/file-text-o';
-import MdPanTool from 'react-icons/lib/md/pan-tool';
-import MdAttachMoney from 'react-icons/lib/md/attach-money';
-import FaFacebook from 'react-icons/lib/fa/facebook';
+import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople } from 'react-icons/md';
+import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine } from 'react-icons/fa';
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -89,8 +84,11 @@ export class Header extends React.Component {
                   <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">บัญชี</a>
                     <div className="navbar-dropdown">
-                      <Link className="navbar-item" to="/cost">
-                        <span className="icon"><MdAttachMoney /></span>ค่าใช้จ่าย
+                      <Link className="navbar-item" to="/finances/cost">
+                        <span className="icon"><MdPayment /></span>ค่าใช้จ่าย
+                  </Link>
+                      <Link className="navbar-item" to="/finances/cod">
+                        <span className="icon"><FaShippingFast /></span>COD
                   </Link>
                       <Link className="navbar-item" to="/widget/posts">
                         <span className="icon"><FaFacebook /></span>ยอดโพสต์
@@ -103,13 +101,13 @@ export class Header extends React.Component {
                     <a className="navbar-link">จัดการ</a>
                     <div className="navbar-dropdown">
                       <Link className="navbar-item" to="/manage/teams">
-                        ทีม/เพจ
+                        <span className="icon"><MdPeople /></span>Team
                       </Link>
                       <Link className="navbar-item" to="/manage/admins">
-                        แอดมินไลน์
+                        <span className="icon"><FaLine /></span>Line
                       </Link>
                       <Link className="navbar-item" to="/manage/emails">
-                        ผู้ใช้งาน
+                        <span className="icon"><MdEmail /></span>Email
                       </Link>
                       {/* <Link className="navbar-item" to="/manage/product/types">
                         ประเภทสินค้า
@@ -121,7 +119,7 @@ export class Header extends React.Component {
                   </div>
                 )}
                 <Link className="navbar-item" to="/report">
-                  <span className="icon"><FaFileTextO /></span>รายงาน
+                  <span className="icon"><FaFileAlt /></span>รายงาน
                   </Link>
                 {/*  */}
                 {/* <div className="navbar-item has-dropdown is-hoverable">

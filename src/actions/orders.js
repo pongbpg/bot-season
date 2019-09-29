@@ -40,6 +40,7 @@ export const startSaveTracking = (orders) => {
                 codFee: Number(orders[x].codFee),
                 totalFreight: Number(orders[x].freight) + Number(orders[x].codFee),
                 codAmount: orders[x].codFee > 0 ? Number(orders[x].price) : 0,
+                cod: orders[x].codFee > 0 ? true : false,
                 expressName: orders[x].expressName,
                 expressLink: orders[x].expressLink
             })
@@ -61,6 +62,7 @@ export const startUploadTracks = (tracks) => {
                     expressLink: tracks[x].expressLink,
                     freight: tracks[x].freight,
                     codFee: tracks[x].codFee,
+                    cod: tracks[x].codFee > 0 ? true : false,
                     totalFreight: tracks[x].totalFreight,
                     codAmount: tracks[x].codAmount
                 })

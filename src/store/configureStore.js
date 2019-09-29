@@ -7,7 +7,8 @@ import searchReducer from '../reducers/search';
 import stockReducer from '../reducers/stock';
 import pagesReducer from '../reducers/pages';
 import sayhisReducer from '../reducers/sayhis';
-import costsReducer from '../reducers/costs';
+import costsReducer from '../reducers/finances/costs';
+import codReducer from '../reducers/finances/cod';
 import gamesReducer from '../reducers/games';
 import typesReducer from '../reducers/types';
 import manageReducer from '../reducers/manage';
@@ -26,7 +27,8 @@ export default () => {
       costs: costsReducer,
       games: gamesReducer,
       types: typesReducer,
-      manage: manageReducer
+      manage: manageReducer,
+      cods: codReducer
     }),
     composeEnhancers(applyMiddleware(thunk))
     // window.__REDUX_DEVTOOLS_EXTENSION__ && window.__REDUX_DEVTOOLS_EXTENSION__()

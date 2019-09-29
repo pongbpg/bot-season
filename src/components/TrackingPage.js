@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { startSearchTracking } from '../actions/search';
-import FaSearch from 'react-icons/lib/fa/search';
+import {FaSearch} from 'react-icons/fa';
 import Money from '../selectors/money';
 import moment from 'moment';
 import ReactPixel from 'react-facebook-pixel';

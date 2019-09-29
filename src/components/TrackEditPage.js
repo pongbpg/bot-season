@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startSearchTracking } from '../actions/search';
 import { startSaveTracking } from '../actions/orders';
-import FaSearch from 'react-icons/lib/fa/search';
+import {FaSearch} from 'react-icons/fa';
 import Money from '../selectors/money';
 import moment from 'moment';
 moment.locale('th');

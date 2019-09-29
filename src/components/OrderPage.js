@@ -3,8 +3,8 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { startListOrders, startSaveTracking, startUploadTracks } from '../actions/orders';
 import filterOrders from '../selectors/orders';
-import FaSearch from 'react-icons/lib/fa/search';
-import MdEdit from 'react-icons/lib/md/edit';
+import { FaSearch } from 'react-icons/fa';
+import { MdEdit } from 'react-icons/md';
 import Money from '../selectors/money';
 import readXlsxFile from 'read-excel-file'
 import moment from 'moment';
