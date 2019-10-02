@@ -971,7 +971,7 @@ const initMsgOrder = (txt) => {
             snapShotPages.forEach(page => {
                 pages.push(page.id)
                 pages.push('@' + page.id)
-                dataPages.push({ id: doc.id, ...doc.data() })
+                dataPages.push({ id: page.id, ...page.data() })
             })
             let orders = [];
             let data = Object.assign(...txt.split('#').filter(f => f != "")
