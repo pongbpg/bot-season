@@ -14,7 +14,7 @@ export class PagesPage extends React.Component {
             // teamEdit: { id: '', name: '' },
             admins: props.admins,
             pages: props.pages,
-            page: { id: '' }
+            page: { id: '', actId: '' }
         }
         this.props.startGetAdmins();
         this.props.startListPages(props.auth);
@@ -44,9 +44,7 @@ export class PagesPage extends React.Component {
     onNewComChange = (e) => {
         this.setState({ newPage: { ...this.state.newPage, comId: e.target.value } })
     }
-    onNewContryChange = (e) => {
-        this.setState({ newPage: { ...this.state.newPage, country: e.target.value } })
-    }
+
     onNewIdChange = (e) => {
         this.setState({ newPage: { ...this.state.newPage, id: e.target.value.toUpperCase() } })
     }
@@ -78,8 +76,9 @@ export class PagesPage extends React.Component {
     onComChange = (e) => {
         this.setState({ page: { ...this.state.page, ...this.state.coms.find(com => com.comId == e.target.value) } })
     }
-    onContryChange = (e) => {
-        this.setState({ page: { ...this.state.page, country: e.target.value } })
+    onActIdChange = (e) => {
+        const actId = e.target.value.replace(/\s/g, '');
+        this.setState({ page: { ...this.state.page, actId } })
     }
     onActiveChange = (e) => {
         this.setState({ page: { ...this.state.page, active: e.target.value == 'true' ? true : false } })
@@ -89,7 +88,7 @@ export class PagesPage extends React.Component {
         // console.log(this.state.page)
     }
     onCancelClick = (e) => {
-        this.setState({ page: { id: '' } })
+        this.setState({ page: { id: '', actId: '' } })
     }
     onUpdateClick = (e) => {
         if (this.checkObj(this.state.page)) {
@@ -98,7 +97,7 @@ export class PagesPage extends React.Component {
                 this.props.startListPages(this.state.auth);
             }
 
-            this.setState({ page: { id: '' } })
+            this.setState({ page: { id: '', actId: '' } })
         } else {
             console.log(this.state.page)
             alert('กรุณาเลือกข้อมูลให้ครบ')
@@ -108,7 +107,7 @@ export class PagesPage extends React.Component {
         if (confirm('คุณแน่ใจที่ต้องการจะลบเพจนี้?')) {
             this.props.startDeletePage(this.state.page)
             this.props.startListPages(this.state.auth);
-            this.setState({ page: { id: '' } })
+            this.setState({ page: { id: '', actId: '' } })
         }
 
     }
@@ -161,23 +160,6 @@ export class PagesPage extends React.Component {
                                         )}
                                     </select>
                                 </div>
-                                {/* <div className="control select">
-                                    <select selected={this.state.newPage.comId} onChange={this.onNewComChange}>
-                                        <option value="">เลือกค่าคอม</option>
-                                        {this.state.coms.length > 0 && (
-                                            this.state.coms.map(com => {
-                                                return (<option key={com.comId} value={com.comId}>{com.salary}</option>)
-                                            })
-                                        )}
-                                    </select>
-                                </div> */}
-                                <div className="control select">
-                                    <select selected={this.state.newPage.country} onChange={this.onNewContryChange}>
-                                        <option value="">เลือกประเทศ</option>
-                                        <option value="TH">ไทย</option>
-                                        <option value="KH">กัมพูชา</option>
-                                    </select>
-                                </div>
                                 <div className="control">
                                     <a className="button is-info" onClick={this.onNewPageClick}> เพิ่ม</a>
                                 </div>
@@ -187,14 +169,14 @@ export class PagesPage extends React.Component {
                     <table className="table is-fullwidth is-striped is-narrow">
                         <thead>
                             <tr>
-                                <th className="has-text-centered" width="10%">ลำดับ</th>
-                                <th className="has-text-left" width="20%">Team</th>
-                                <th className="has-text-left" width="20%">Page</th>
-                                <th className="has-text-left" width="20%">Admin</th>
+                                <th className="has-text-centered" width="5%">ลำดับ</th>
+                                <th className="has-text-left">Team</th>
+                                <th className="has-text-left">Page</th>
+                                <th className="has-text-left">Admin</th>
                                 {/* <th className="has-text-left">Com</th> */}
-                                <th className="has-text-left" >Country</th>
+                                <th className="has-text-left" >Act ID</th>
                                 <th className="has-text-left" >Status</th>
-                                <th className="has-text-centered" width="50%">จัดการ</th>
+                                <th className="has-text-centered" width="10%">จัดการ</th>
                             </tr>
                         </thead>
                         <tbody>
@@ -208,7 +190,7 @@ export class PagesPage extends React.Component {
                                                 <td>{page.id}</td>
                                                 <td>{page.admin}</td>
                                                 {/* <td>{page.comId}</td> */}
-                                                <td>{page.country}</td>
+                                                <td>{page.actId}</td>
                                                 <td>{page.active ? 'เปิด' : 'ปิด'}</td>
                                                 <td className="has-text-centered">
                                                     <button className="button"
@@ -255,13 +237,8 @@ export class PagesPage extends React.Component {
                                                         </div>
                                                     </td> */}
                                                     <td>
-                                                        <div className="control select">
-                                                            <select value={this.state.page.country} onChange={this.onContryChange}>
-                                                                <option value="">เลือกประเทศ</option>
-                                                                <option value="TH">ไทย</option>
-                                                                <option value="KH">กัมพูชา</option>
-                                                            </select>
-                                                        </div>
+                                                        <input type="text" className="input" onChange={this.onActIdChange} value={this.state.page.actId} />
+
                                                     </td>
                                                     <td>
                                                         <div className="control select">

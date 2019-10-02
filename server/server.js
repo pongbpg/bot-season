@@ -967,9 +967,11 @@ const initMsgOrder = (txt) => {
         .get()
         .then(snapShotPages => {
             let pages = [];
+            let dataPages = [];
             snapShotPages.forEach(page => {
                 pages.push(page.id)
                 pages.push('@' + page.id)
+                dataPages.push({ id: doc.id, ...doc.data() })
             })
             let orders = [];
             let data = Object.assign(...txt.split('#').filter(f => f != "")
@@ -1143,7 +1145,8 @@ const initMsgOrder = (txt) => {
                         return { [key]: value };
                     }
                 }));
-
+            data.team = dataPages.find(f => f.id == data.page.replace('@', '')).team;
+            data.pageOwnerId = dataPages.find(f => f.id == data.page.replace('@', '')).adminId;
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
             data.bank = data.banks ? data.banks.map(bank => {
                 let checkBank = false;
@@ -1403,7 +1406,6 @@ const initMsgOrderKH = (txt) => {
                         return { [key]: value };
                     }
                 }));
-
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
             data.bank = data.banks ? data.banks.map(bank => {
                 let checkBank = true;

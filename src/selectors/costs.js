@@ -17,8 +17,8 @@ export default (costs, pages, date) => {
                     other: 0,
                     date,
                     year: date.substr(0, 4),
-                    month: date.substr(2, 2),
-                    day: date.substr(4, 2)
+                    month: date.substr(4, 2),
+                    day: date.substr(6, 2)
                 })
             } else {
                 costs[index]['team'] = pages[p].team

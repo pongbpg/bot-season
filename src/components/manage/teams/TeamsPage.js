@@ -7,8 +7,8 @@ export class TeamsPage extends React.Component {
         this.state = {
             auth: props.auth,
             teams: props.teams,
-            team: { id: '', name: '' },
-            teamEdit: { id: '', name: '' },
+            team: { id: '', name: '', country: '' },
+            teamEdit: { id: '', name: '', country: '' },
             pages: props.pages
         }
         this.props.startGetTeams();
@@ -32,20 +32,26 @@ export class TeamsPage extends React.Component {
         const name = e.target.value.replace(/\s/g, '');
         this.setState({ team: { ...this.state.team, name } })
     }
+    onNewContryChange = (e) => {
+        this.setState({ team: { ...this.state.team, country: e.target.value } })
+    }
     onTeamNameEditChange = (e) => {
         const name = e.target.value.replace(/\s/g, '');
         this.setState({ teamEdit: { ...this.state.teamEdit, name } })
+    }
+    onContryChange = (e) => {
+        this.setState({ teamEdit: { ...this.state.teamEdit, country: e.target.value } })
     }
     onTeamEditClick = (e) => {
         this.setState({ teamEdit: this.state.teams.find(f => f.id == e.target.value) })
     }
     onTeamCancelClick = (e) => {
-        this.setState({ teamEdit: { id: '', name: '' } })
+        this.setState({ teamEdit: { id: '', name: '', country: '' } })
     }
     onTeamUpdateClick = (e) => {
         if (confirm('คุณต้องการบันทึกข้อมูลนี้?')) {
             this.props.startUpdateTeam(this.state.teamEdit)
-            this.setState({ teamEdit: { id: '', name: '' } })
+            this.setState({ teamEdit: { id: '', name: '', country: '' } })
         }
     }
     onTeamDeleteClick = (e) => {
@@ -54,7 +60,7 @@ export class TeamsPage extends React.Component {
         } else {
             if (confirm('คุณแน่ใจที่ต้องการจะลบทีมนี้?')) {
                 this.props.startDeleteTeam(this.state.teamEdit)
-                this.setState({ teamEdit: { id: '', name: '' } })
+                this.setState({ teamEdit: { id: '', name: '', country: '' } })
             }
         }
     }
@@ -65,7 +71,7 @@ export class TeamsPage extends React.Component {
                 alert('ไอดีทีมนี้มีการใช้แล้ว')
             } else {
                 this.props.startPushTeam(this.state.team)
-                this.setState({ team: { id: '', name: '' } })
+                this.setState({ team: { id: '', name: '', country: '' } })
             }
         } else {
             alert('ไอดีทีม หรือชื่อทีม ห้ามว่างจ้า')
@@ -89,6 +95,13 @@ export class TeamsPage extends React.Component {
                                     <input className="input" type="text" value={this.state.team.name} placeholder="ชื่อทีม"
                                         onChange={this.onTeamNameChange} />
                                 </div>
+                                <div className="control select">
+                                    <select selected={this.state.team.country} onChange={this.onNewContryChange}>
+                                        <option value="">เลือกประเทศ</option>
+                                        <option value="TH">ไทย</option>
+                                        <option value="KH">กัมพูชา</option>
+                                    </select>
+                                </div>
                                 <div className="control">
                                     <a className="button is-info" onClick={this.onTeamClick}>เพิ่ม</a>
                                 </div>
@@ -99,8 +112,9 @@ export class TeamsPage extends React.Component {
                         <thead>
                             <tr>
                                 <th className="has-text-centered">ลำดับ</th>
-                                <th className="has-text-left">Team</th>
-                                <th className="has-text-left">Name</th>
+                                <th className="has-text-left">Id</th>
+                                <th className="has-text-left">ชื่อทีม</th>
+                                <th className="has-text-left">ประเทศ</th>
                                 <th className="has-text-centered">จัดการ</th>
                             </tr>
                         </thead>
@@ -113,6 +127,15 @@ export class TeamsPage extends React.Component {
                                             <td>{team.id}</td>
                                             <td>{this.state.teamEdit.id != team.id ? team.name : (
                                                 <input type="text" className="input" onChange={this.onTeamNameEditChange} value={this.state.teamEdit.name} />
+                                            )}</td>
+                                            <td>{this.state.teamEdit.id != team.id ? team.country : (
+                                                <div className="control select">
+                                                    <select value={this.state.teamEdit.country} onChange={this.onContryChange}>
+                                                        <option value="">เลือกประเทศ</option>
+                                                        <option value="TH">ไทย</option>
+                                                        <option value="KH">กัมพูชา</option>
+                                                    </select>
+                                                </div>
                                             )}</td>
                                             {this.state.teamEdit.id != team.id ? (
                                                 <td className="has-text-centered">

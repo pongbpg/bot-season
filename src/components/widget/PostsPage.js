@@ -11,7 +11,7 @@ export class PostsPage extends React.Component {
             auth: props.auth,
             startDate: moment(),
             endDate: moment(),
-            accessToken: '',
+            accessToken: 'EAAia6dmIkVgBAIZBzWwPhOBJufWpZCwn1himixyFdqUoZBxkP4G8hKf7JRsD0pDxsZBXN5WUZCxZAExf25hBVxL9fSkV2RFsUZABZCcsm63B2EGrsr6VFyCcFt9OvYtdrgjZBBljli3w8tqBzgoojrD3YCHLfOKblUbJjDOpCUU0DWAZDZD',
             pageId: '',
             posts: [],
             error: ''
@@ -121,14 +121,14 @@ export class PostsPage extends React.Component {
                                     />
                                 </div>
                             </div>
-                            <div className="level-item">
+                            {/* <div className="level-item">
                                 <div className="field">
                                     <label className="label">Access Token</label>
                                     <input className="input" type="text" placeholder="Access token"
                                         value={this.state.accessToken}
                                         onChange={this.onTokenChange} />
                                 </div>
-                            </div>
+                            </div> */}
                             <div className="level-item">
                                 <div className="field">
                                     <label className="label">Page ID</label>

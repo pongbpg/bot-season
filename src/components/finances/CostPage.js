@@ -3,6 +3,8 @@ import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 import Money from '../../selectors/money';
 import { startListCosts, startSaveCost } from '../../actions/finances/costs';
+import { FaFacebook } from 'react-icons/fa';
+import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
 import moment from 'moment';
 moment.locale('th');
@@ -85,6 +87,56 @@ export class CostPage extends React.Component {
                 this.setState({ isLoading: '', id: '', fb: 0, line: 0, other: 0 })
             })
     }
+    onFbAdsClick = () => {
+        let sumPage = [];
+        let count = 0;
+        const date = this.state.date;
+        this.state.pages.map(page => {
+            if (page.actId) {
+                const acts = page.actId.split(',');
+                if (sumPage.indexOf(page.id) == -1) {
+                    sumPage[page.id] = 0;
+                }
+                count += acts.length;
+                for (let i = 0; i < acts.length; i++) {
+                    var cors_api_url = `https://graph.facebook.com/v4.0/act_${acts[i]}/insights?access_token=EAAia6dmIkVgBAAZApTLrZAFaAnBYO54kFfZAf6ma7atttqSHMZB7Tsz0pwV0QZCdd2cuM8MDGJZAxb4ZBNYWOS4XVT7gMNZCYxgjS9aAQAtrFtYLoZAYMOnpRrt5FZBHhgA0RUSW2ZCrwGZCl131JdbjcPsX16oXI2DLEZCyqut8TJJ3pwQZDZD&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"${page.id}"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                    // console.log(cors_api_url)
+                    fetch(cors_api_url)
+                        .then(function (response) {
+                            return response.json();
+                        })
+                        .then((jsonStr) => {
+                            const insights = JSON.parse(JSON.stringify(jsonStr));
+                            if (insights.data.length > 0) {
+                                sumPage[page.id] += Number(insights.data[0].spend)
+                            }
+                            if (count > 0) {
+                                count--;
+                            }
+                            if (count == 0) {
+                                for (var item in sumPage) {
+                                    let cost = this.state.costs.find(f => f.page == item);
+                                    // console.log(cost)
+                                    this.props.startSaveCost({
+                                        date: moment(date).format('YYYYMMDD'),
+                                        page: item,
+                                        id: moment(date).format('YYYYMMDD') + item,
+                                        fb: sumPage[item],
+                                        team: cost.team,
+                                        admin: cost.admin,
+                                        year: moment(date).format('YYYYMMDD').substr(0, 4),
+                                        month: moment(date).format('YYYYMMDD').substr(4, 2),
+                                        day: moment(date).format('YYYYMMDD').substr(6, 2)
+                                    })
+                                }
+                                // console.log(sumPage)
+                            }
+                        })
+                }
+            }
+        })
+    }
+
     render() {
         // console.log(this.state.costs)
         // console.log(this.state.date)
@@ -124,7 +176,11 @@ export class CostPage extends React.Component {
                                         <th className="has-text-centered">ลำดับ</th>
                                         <th className="has-text-left">ทีม</th>
                                         <th className="has-text-left">เพจ</th>
-                                        <th className="has-text-right has-text-info">Facebook</th>
+                                        <th className="has-text-right">
+                                            <a className="button has-text-info" onClick={this.onFbAdsClick}>
+                                                <span className="icon"><MdRefresh /></span>&nbsp;Facebook
+                                            </a>
+                                        </th>
                                         <th className="has-text-right has-text-success">Line</th>
                                         <th className="has-text-right has-text-danger">อื่นๆ</th>
                                         <th className="has-text-centered" width="20%">จัดการ</th>
