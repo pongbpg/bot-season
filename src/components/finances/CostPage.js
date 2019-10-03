@@ -6,6 +6,7 @@ import { startListCosts, startSaveCost } from '../../actions/finances/costs';
 import { FaFacebook } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
+import NumberFormat from 'react-number-format';
 import moment from 'moment';
 moment.locale('th');
 export class CostPage extends React.Component {
@@ -34,12 +35,12 @@ export class CostPage extends React.Component {
         }
     }
     onFbChange = (e) => {
-        const fb = e.target.value.replace(/\D/g, '');
-        if (!isNaN(fb)) {
-            this.setState({
-                fb: Number(fb)
-            })
-        }
+        // const fb = e.target.value.replace(/\D/g, '');
+        // if (!isNaN(fb)) {
+        //     this.setState({
+        //         fb: Number(fb)
+        //     })
+        // }
     }
     onLineChange = (e) => {
         const line = e.target.value.replace(/\D/g, '');
@@ -208,12 +209,21 @@ export class CostPage extends React.Component {
                                                     <td className="has-text-right">
                                                         <div className="field has-addons has-addons-right">
                                                             <div className="control">
-                                                                <input type="text" name={this.state.id}
+                                                                {/* <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
                                                                     value={Money(this.state.fb, 0)}
                                                                     onChange={this.onFbChange}
-                                                                />
+                                                                /> */}
+                                                                <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                                    value={this.state.fb}
+                                                                    onFocus={this.handleSelectAll}
+                                                                    onValueChange={(values) => {
+                                                                        const { formattedValue, value } = values;
+                                                                        // formattedValue = $2,223
+                                                                        // value ie, 2223
+                                                                        this.setState({ fb: value })
+                                                                    }} />
                                                             </div>
                                                         </div>
                                                     </td>
@@ -222,12 +232,21 @@ export class CostPage extends React.Component {
                                                     <td className="has-text-right">
                                                         <div className="field has-addons has-addons-right">
                                                             <div className="control">
-                                                                <input type="text" name={this.state.id}
+                                                                {/* <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
                                                                     value={Money(this.state.line, 0)}
                                                                     onChange={this.onLineChange}
-                                                                />
+                                                                /> */}
+                                                                <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                                    value={this.state.line}
+                                                                    onFocus={this.handleSelectAll}
+                                                                    onValueChange={(values) => {
+                                                                        const { formattedValue, value } = values;
+                                                                        // formattedValue = $2,223
+                                                                        // value ie, 2223
+                                                                        this.setState({ line: value })
+                                                                    }} />
                                                             </div>
                                                         </div>
                                                     </td>
@@ -236,12 +255,21 @@ export class CostPage extends React.Component {
                                                     <td className="has-text-right">
                                                         <div className="field has-addons has-addons-right">
                                                             <div className="control">
-                                                                <input type="text" name={this.state.id}
+                                                                {/* <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
                                                                     value={Money(this.state.other, 0)}
                                                                     onChange={this.onOtherChange}
-                                                                />
+                                                                /> */}
+                                                                <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                                    value={this.state.other}
+                                                                    onFocus={this.handleSelectAll}
+                                                                    onValueChange={(values) => {
+                                                                        const { formattedValue, value } = values;
+                                                                        // formattedValue = $2,223
+                                                                        // value ie, 2223
+                                                                        this.setState({ other: value })
+                                                                    }} />
                                                             </div>
                                                         </div>
                                                     </td>
