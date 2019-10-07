@@ -3,7 +3,7 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { startSearchTracking } from '../actions/search';
-import {FaSearch} from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import Money from '../selectors/money';
 import moment from 'moment';
 import ReactPixel from 'react-facebook-pixel';
@@ -61,9 +61,14 @@ export class TrackingPage extends React.Component {
             this.calcSumPrice(result.search)
             this.setState({ alert: false })
             result.search[0].product.map(p => {
+              // console.log({
+              //   product: p.code,
+              //   productType: p.typeId == "" ? p.code : p.typeId,
+              //   amount: p.amount
+              // })
               ReactPixel.trackCustom('purchase', {
                 product: p.code,
-                productType: p.typeId,
+                productType: p.typeId == "" ? p.code : p.typeId,
                 amount: p.amount
               })
             })
