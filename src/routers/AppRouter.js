@@ -17,6 +17,7 @@ import EmailsPage from '../components/manage/emails/IndexPage';
 import TeamsPage from '../components/manage/teams/IndexPage';
 import EmailPage from '../components/manage/emails/EditPage';
 import PostsPage from '../components/widget/PostsPage';
+import SetPostsPage from '../components/widget/SetPostsPage';
 import NotFoundPage from '../components/NotFoundPage';
 import PrivateRoute from './PrivateRoute';
 import PublicRoute from './PublicRoute';
@@ -43,6 +44,7 @@ const AppRouter = () => (
         <PrivateRoute path="/manage/emails" component={EmailsPage} exact={true} />
         <PrivateRoute path="/manage/email/:uid" component={EmailPage} />
         <PrivateRoute path="/widget/posts" component={PostsPage} />
+        <PrivateRoute path="/widget/set/posts" component={SetPostsPage} />
         <Route component={NotFoundPage} />
       </Switch>
     </div>
