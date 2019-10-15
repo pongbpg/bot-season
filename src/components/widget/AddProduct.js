@@ -183,7 +183,7 @@ export class AddProduct extends React.Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input" type="text" placeholder="แจ้งเตือน"
+                                        <input className="input" type="text" placeholder="ยืม"
                                             value={this.state.alert == '' ? '' : Money(this.state.alert, 0)}
                                             onKeyPress={this.onHandleKeyPress}
                                             onChange={this.onAlertChange} />

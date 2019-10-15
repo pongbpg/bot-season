@@ -248,7 +248,7 @@ export class StockPage extends React.Component {
                                 <th className="has-text-left">หน่วยนับ</th>
                                 <th className="has-text-right">ราคาขาย</th>
                                 {this.state.showCost && (<th className="has-text-right">ต้นทุน</th>)}
-                                {this.state.auth.role == 'owner' && (<th className="has-text-right">แจ้งเตือน</th>)}
+                                {this.state.auth.role == 'owner' && (<th className="has-text-right">ยืม</th>)}
                                 <th className="has-text-right">คงเหลือ</th>
                                 {this.state.auth.role == 'owner' && (< th className="has-text-right">จัดการ</th>)}
                             </tr>
