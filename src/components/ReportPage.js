@@ -16,6 +16,7 @@ export class ReportPage extends React.Component {
             pages: props.pages,
             payment: 'ALL',
             cost: 'admin',
+            groupBy: 'cutoff',
             page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
         }
         this.handleStartChange = this.handleStartChange.bind(this);
@@ -48,6 +49,9 @@ export class ReportPage extends React.Component {
     }
     handlePaymentChange = (e) => {
         this.setState({ payment: e.target.value })
+    }
+    handleGroupByChange = (e) => {
+        this.setState({ groupBy: e.target.value })
     }
     render() {
         // console.log('pages', this.state.pages)
@@ -296,18 +300,24 @@ export class ReportPage extends React.Component {
                                 )}
                                 {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">8</td>
-                                    <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)</td>
+                                    <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)
+                                    <select className="select is-info"
+                                            onChange={this.handleGroupByChange}
+                                            value={this.state.groupBy}>
+                                            <option value='cutoff'>รอบส่งของ</option>
+                                            <option value='day'>รอบวันขาย</option>
+                                        </select></td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
                                                 <a className="button is-danger is-centered is-small"
-                                                    href={`${rptUri}/dailyStatement?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf`}
+                                                    href={`${rptUri}/statement?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=pdf&groupBy=${this.state.groupBy}`}
                                                     target="_blank">
                                                     PDF</a>
                                             </p>
                                             <p className="control">
                                                 <a className="button is-success is-centered is-small"
-                                                    href={`${rptUri}/dailyStatement?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                    href={`${rptUri}/statement?uid=${this.state.uid}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel&groupBy=${this.state.groupBy}`}
                                                     target="_blank">
                                                     EXCEL</a>
                                             </p>

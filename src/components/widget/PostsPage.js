@@ -11,7 +11,7 @@ export class PostsPage extends React.Component {
             auth: props.auth,
             startDate: moment(),
             endDate: moment(),
-            accessToken: 'EAAia6dmIkVgBAIZBzWwPhOBJufWpZCwn1himixyFdqUoZBxkP4G8hKf7JRsD0pDxsZBXN5WUZCxZAExf25hBVxL9fSkV2RFsUZABZCcsm63B2EGrsr6VFyCcFt9OvYtdrgjZBBljli3w8tqBzgoojrD3YCHLfOKblUbJjDOpCUU0DWAZDZD',
+            accessToken: 'EAAia6dmIkVgBAMLOzwO8fzea8lycndchc4yydHnpZB0xi8lWwaCZAC2RDgLArZCBDk76IKapaGLNUq4WYposadW4ZCNf040eadCvx6Y2O6cfhJlVvTBVzwNFi3mcLl9sm48rFb2ZAvpEdcZAwCYZCI23MkZA3zJZBg8XGaqhyuFz7NwZDZD',
             pageId: '',
             posts: [],
             error: ''
