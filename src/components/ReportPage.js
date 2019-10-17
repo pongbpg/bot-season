@@ -298,7 +298,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['owner','stock'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">8</td>
                                     <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)
                                     <select className="select is-info"
