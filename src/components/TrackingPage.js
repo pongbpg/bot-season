@@ -66,7 +66,7 @@ export class TrackingPage extends React.Component {
               //   productType: p.typeId == "" ? p.code : p.typeId,
               //   amount: p.amount
               // })
-              ReactPixel.track('purchase', {
+              ReactPixel.track('Purchase', {
                 product: p.code,
                 productType: p.typeId == "" ? p.code : p.typeId,
                 amount: p.amount
