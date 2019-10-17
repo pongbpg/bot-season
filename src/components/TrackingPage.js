@@ -66,13 +66,13 @@ export class TrackingPage extends React.Component {
               //   productType: p.typeId == "" ? p.code : p.typeId,
               //   amount: p.amount
               // })
-              ReactPixel.trackCustom('purchase', {
+              ReactPixel.track('purchase', {
                 product: p.code,
                 productType: p.typeId == "" ? p.code : p.typeId,
                 amount: p.amount
               })
             })
-            ReactPixel.trackCustom('price', { price: result.search[0].price })
+            ReactPixel.track('price', { price: result.search[0].price })
           }
         })
     }
