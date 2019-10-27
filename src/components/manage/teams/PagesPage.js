@@ -35,7 +35,8 @@ export class PagesPage extends React.Component {
     }
 
     onNewTeamChange = (e) => {
-        this.setState({ newPage: { ...this.state.newPage, team: e.target.value } })
+        const country = this.state.teams.find(team => team.id == e.target.value).country
+        this.setState({ newPage: { ...this.state.newPage, team: e.target.value, country } })
     }
     onNewAdminChange = (e) => {
         const admin = this.state.admins.find(f => f.userId == e.target.value)
@@ -66,7 +67,8 @@ export class PagesPage extends React.Component {
         }
     }
     onTeamChange = (e) => {
-        this.setState({ page: { ...this.state.page, team: e.target.value } })
+        const country = this.state.teams.find(team => team.id == e.target.value).country
+        this.setState({ page: { ...this.state.page, team: e.target.value, country } })
     }
     onAdminChange = (e) => {
         const admin = this.state.admins.find(f => f.userId == e.target.value)
