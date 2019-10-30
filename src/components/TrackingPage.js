@@ -60,19 +60,23 @@ export class TrackingPage extends React.Component {
           } else {
             this.calcSumPrice(result.search)
             this.setState({ alert: false })
-            result.search[0].product.map(p => {
-              // console.log({
-              //   product: p.code,
-              //   productType: p.typeId == "" ? p.code : p.typeId,
-              //   amount: p.amount
-              // })
-              ReactPixel.trackCustom('Products', {
-                product: p.code,
-                productType: p.typeId == "" ? p.code : p.typeId,
-                amount: p.amount
+            if (result.search[0].price > 0) {
+              ReactPixel.trackCustom('Purchase', {
+                content_ids: result.search[0].product.map(m => m.code),
+                content_type: result.search[0].product.map(m => m.typeId),
+                contents: result.search[0].product.map(p => {
+                  return {
+                    product: p.code,
+                    productType: p.typeId == "" ? p.code : p.typeId,
+                    amount: p.amount
+                  }
+                }),
+                currency: "THB",
+                value: result.search[0].price,
+                search_string: this.state.search,
+                status: true
               })
-            })
-            ReactPixel.track('Purchase', { currency: "THB", value: result.search[0].price })
+            }
           }
         })
     }
