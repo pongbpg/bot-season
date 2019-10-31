@@ -100,7 +100,7 @@ export class CostPage extends React.Component {
                 }
                 count += acts.length;
                 for (let i = 0; i < acts.length; i++) {
-                    var cors_api_url = `https://graph.facebook.com/v4.0/act_${acts[i]}/insights?access_token=EAAia6dmIkVgBAMLOzwO8fzea8lycndchc4yydHnpZB0xi8lWwaCZAC2RDgLArZCBDk76IKapaGLNUq4WYposadW4ZCNf040eadCvx6Y2O6cfhJlVvTBVzwNFi3mcLl9sm48rFb2ZAvpEdcZAwCYZCI23MkZA3zJZBg8XGaqhyuFz7NwZDZD&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"${page.id}"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                    var cors_api_url = `https://graph.facebook.com/v4.0/act_${acts[i]}/insights?access_token=EAAia6dmIkVgBACpfsoG8p6DvSD5DdNARFzyo0isZB694LeaJlDFPHmnc50SmZA8FmnMxr89KhvCZCPBZBDeV30uhE0t7ZBhaKERR53Tm9zurbbE6GRbYA6DxqSAoHfEgdynkclYqm2wi3STIP3wkolhekKC3ZAdZBmdcdoPcZBjv3QZDZD&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"${page.id}"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
                     // console.log(cors_api_url)
                     fetch(cors_api_url)
                         .then(function (response) {
