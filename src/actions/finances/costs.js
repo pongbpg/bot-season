@@ -31,3 +31,16 @@ export const startSaveCost = (cost) => {
             })
     }
 }
+export const startGetAdsFBToken = () => {
+    return (dispatch) => {
+        return firestore.collection('settings').doc('ads')
+            .get()
+            .then(doc => {
+                return dispatch(setAdsFBToken(doc.data().fb))
+            })
+    }
+}
+export const setAdsFBToken = (token) => ({
+    type: 'SET_ADS_FB_TOKEN',
+    token
+});

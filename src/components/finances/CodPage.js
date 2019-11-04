@@ -99,6 +99,7 @@ export class CodPage extends React.Component {
         let sumPrice = 0;
         let sumRev = 0;
         let sumNotRev = 0;
+        let sumRet = 0;
         return (
             <section className="hero">
                 <div className="hero-body">
@@ -133,7 +134,7 @@ export class CodPage extends React.Component {
                             </div>
                         </div>
                         <div className="columns">
-                            <div className="column is-centered">
+                            <div className="column is-centered is-full">
                                 <table className="table is-fullwidth is-striped is-narrow">
                                     <thead>
                                         <tr>
@@ -143,6 +144,7 @@ export class CodPage extends React.Component {
                                             <th>ลูกค้า</th>
                                             <th>ยอดเงิน</th>
                                             <th>โอนแล้ว</th>
+                                            <th>ตีคืน</th>
                                             <th>ค้างชำระ</th>
                                             <th>ทั้งหมด<input type="checkbox" name="checkAll" checked={this.state.checkAll} onChange={this.onCheckAll} /></th>
                                         </tr>
@@ -152,28 +154,31 @@ export class CodPage extends React.Component {
                                             this.state.cods.map((cod, i) => {
                                                 sumPrice += cod.price;
                                                 sumRev += cod.received ? cod.price : 0;
-                                                sumNotRev += !cod.received ? cod.price : 0;
+                                                sumNotRev += !cod.received && !cod.return ? cod.price : 0;
+                                                sumRet += !cod.received && cod.return ? cod.price : 0;
                                                 return (
-                                                    <tr key={cod.id}>
+                                                    <tr key={cod.id} className={cod.return && "has-text-grey-light"}>
                                                         <td>{i + 1}</td>
                                                         <td>{cod.id}</td>
                                                         <td>{cod.tracking}</td>
-                                                        <td>{cod.name + ' ' + cod.page}</td>
+                                                        <td>{cod.name.substr(0, 20) + ' ' + cod.page}</td>
                                                         <td>{Money(cod.price, 0)}</td>
                                                         <td>{cod.received && Money(cod.price, 0)}</td>
-                                                        <td>{!cod.received && Money(cod.price, 0)}</td>
+                                                        <td>{!cod.received && cod.return && Money(cod.price, 0)}</td>
+                                                        <td>{!cod.received && !cod.return && Money(cod.price, 0)}</td>
                                                         <td><input type="checkbox" name={cod.id} disabled={cod.return} checked={cod.received ? true : false} onChange={this.onCheckClick} /></td>
                                                     </tr>
                                                 )
                                             })
                                             : <tr>
-                                                <td colSpan="8" className="has-text-centered">ไม่มีรายการ</td>
+                                                <td colSpan="9" className="has-text-centered">ไม่มีรายการ</td>
                                             </tr>
                                         }
                                         <tr>
                                             <td colSpan="4">รวม</td>
                                             <td>{Money(sumPrice, 0)}</td>
                                             <td>{Money(sumRev, 0)}</td>
+                                            <td>{Money(sumRet, 0)}</td>
                                             <td>{Money(sumNotRev, 0)}</td>
                                             <td></td>
                                         </tr>

@@ -2,7 +2,8 @@ export default (state = {
     admins: [],
     emails: [],
     teams: [],
-    coms: [{ comId: '1', salary: 9800 }, { comId: '2', salary: 12000 }]
+    coms: [{ comId: '1', salary: 9800 }, { comId: '2', salary: 12000 }],
+    ads: {}
 }, action) => {
     switch (action.type) {
         case 'SET_MANAGE_ADMINS':
@@ -58,6 +59,14 @@ export default (state = {
             return {
                 ...state,
                 teams: state.teams.filter(team => team.id != action.team.id)
+            }
+        case 'SET_ADS_FB_TOKEN':
+            return {
+                ...state,
+                ads: {
+                    ...state.ads,
+                    fb: action.token
+                }
             }
         default:
             return state;

@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 import Money from '../../selectors/money';
-import { startListCosts, startSaveCost } from '../../actions/finances/costs';
+import { startListCosts, startSaveCost, startGetAdsFBToken } from '../../actions/finances/costs';
 import { FaFacebook } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
@@ -22,9 +22,11 @@ export class CostPage extends React.Component {
             action: false,
             date: moment(),
             isLoading: '',
-            pages: props.pages || []
+            pages: props.pages || [],
+            token: props.ads || {}
         }
         this.props.startListCosts(moment().format('YYYYMMDD'));
+        this.props.startGetAdsFBToken();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -32,6 +34,9 @@ export class CostPage extends React.Component {
         }
         if (nextProps.costs != this.state.costs) {
             this.setState({ costs: ListCosts(nextProps.costs, this.state.pages, moment(this.state.date).format('YYYYMMDD')) });
+        }
+        if (nextProps.ads != this.state.token) {
+            this.setState({ token: nextProps.ads });
         }
     }
     onFbChange = (e) => {
@@ -89,6 +94,7 @@ export class CostPage extends React.Component {
             })
     }
     onFbAdsClick = () => {
+        // console.log(this.state.token)
         let sumPage = [];
         let count = 0;
         const date = this.state.date;
@@ -100,7 +106,7 @@ export class CostPage extends React.Component {
                 }
                 count += acts.length;
                 for (let i = 0; i < acts.length; i++) {
-                    var cors_api_url = `https://graph.facebook.com/v4.0/act_${acts[i]}/insights?access_token=EAAia6dmIkVgBACpfsoG8p6DvSD5DdNARFzyo0isZB694LeaJlDFPHmnc50SmZA8FmnMxr89KhvCZCPBZBDeV30uhE0t7ZBhaKERR53Tm9zurbbE6GRbYA6DxqSAoHfEgdynkclYqm2wi3STIP3wkolhekKC3ZAdZBmdcdoPcZBjv3QZDZD&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"${page.id}"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                    var cors_api_url = `https://graph.facebook.com/v4.0/act_${acts[i]}/insights?access_token=${this.state.token.fb}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"${page.id}"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
                     // console.log(cors_api_url)
                     fetch(cors_api_url)
                         .then(function (response) {
@@ -303,10 +309,12 @@ export class CostPage extends React.Component {
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
     costs: state.costs,
-    pages: state.pages
+    pages: state.pages,
+    ads: state.manage.ads
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startListCosts: (date) => dispatch(startListCosts(date)),
-    startSaveCost: (cost) => dispatch(startSaveCost(cost))
+    startSaveCost: (cost) => dispatch(startSaveCost(cost)),
+    startGetAdsFBToken: () => dispatch(startGetAdsFBToken())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(CostPage);
