@@ -1,6 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
+import { startGetAdsFBToken } from '../../actions/finances/costs';
 import Money from '../../selectors/money';
 import moment from 'moment';
 moment.locale('th');
@@ -11,15 +12,20 @@ export class PostsPage extends React.Component {
             auth: props.auth,
             startDate: moment(),
             endDate: moment(),
-            accessToken: 'EAAia6dmIkVgBAMLOzwO8fzea8lycndchc4yydHnpZB0xi8lWwaCZAC2RDgLArZCBDk76IKapaGLNUq4WYposadW4ZCNf040eadCvx6Y2O6cfhJlVvTBVzwNFi3mcLl9sm48rFb2ZAvpEdcZAwCYZCI23MkZA3zJZBg8XGaqhyuFz7NwZDZD',
+            // accessToken: 'EAAia6dmIkVgBAMLOzwO8fzea8lycndchc4yydHnpZB0xi8lWwaCZAC2RDgLArZCBDk76IKapaGLNUq4WYposadW4ZCNf040eadCvx6Y2O6cfhJlVvTBVzwNFi3mcLl9sm48rFb2ZAvpEdcZAwCYZCI23MkZA3zJZBg8XGaqhyuFz7NwZDZD',
             pageId: '',
             posts: [],
-            error: ''
+            error: '',
+            token: props.ads || {}
         }
+        this.props.startGetAdsFBToken();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
             this.setState({ auth: nextProps.auth });
+        }
+        if (nextProps.ads != this.state.token) {
+            this.setState({ token: nextProps.ads });
         }
     }
     onIDChange = (e) => {
@@ -49,7 +55,7 @@ export class PostsPage extends React.Component {
             start.add(1, 'days')
         }
 
-        var cors_api_url = `https://graph.facebook.com/v3.2/${this.state.pageId}/posts?access_token=${this.state.accessToken}&pretty=1&since=${since.startOf('day').unix()}&until=${util.endOf('day').unix()}&limit=100`;
+        var cors_api_url = `https://graph.facebook.com/v3.2/${this.state.pageId}/posts?access_token=${this.state.token.fb}&pretty=1&since=${since.startOf('day').unix()}&until=${util.endOf('day').unix()}&limit=100`;
         fetch(cors_api_url)
             .then(function (response) {
                 return response.json();
@@ -194,8 +200,10 @@ export class PostsPage extends React.Component {
     }
 }
 const mapStateToProps = (state, props) => ({
-    auth: state.auth
+    auth: state.auth,
+    ads: state.manage.ads
 });
 const mapDispatchToProps = (dispatch, props) => ({
+    startGetAdsFBToken: () => dispatch(startGetAdsFBToken())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PostsPage);
