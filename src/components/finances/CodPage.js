@@ -173,11 +173,11 @@ export class CodPage extends React.Component {
                                                 )
                                             })
                                             : <tr>
-                                                <td colSpan="9" className="has-text-centered">ไม่มีรายการ</td>
+                                                <td colSpan="10" className="has-text-centered">ไม่มีรายการ</td>
                                             </tr>
                                         }
                                         <tr>
-                                            <td colSpan="4">รวม</td>
+                                            <td colSpan="5">รวม</td>
                                             <td>{Money(sumPrice, 0)}</td>
                                             <td>{Money(sumRev, 0)}</td>
                                             <td>{Money(sumRet, 0)}</td>
