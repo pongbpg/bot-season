@@ -90,7 +90,7 @@ export class OrderPage extends React.Component {
     }
     onSaveTracking = () => {
         if (this.state.expressName != "") {
-            const orders = this.state.orders.filter(f => f.tracking !== '' && f.freight > 0);
+            const orders = this.state.orders.filter(f => f.tracking !== '' && f.freight >= 0);
             this.props.startSaveTracking(orders);
         } else {
             alert('กรุณาเลือกขนส่งก่อนครับ')
