@@ -142,6 +142,7 @@ export class CodPage extends React.Component {
                                             <th>ID</th>
                                             <th>เลขพัสดุ</th>
                                             <th>ลูกค้า</th>
+                                            <th>เบอร์โทร</th>
                                             <th>ยอดเงิน</th>
                                             <th>โอนแล้ว</th>
                                             <th>ตีคืน</th>
@@ -161,7 +162,8 @@ export class CodPage extends React.Component {
                                                         <td>{i + 1}</td>
                                                         <td>{cod.id}</td>
                                                         <td>{cod.tracking}</td>
-                                                        <td>{cod.name.substr(0, 20) + ' ' + cod.page}</td>
+                                                        <td>{cod.name + ' ' + cod.page}</td>
+                                                        <td>{cod.tel}</td>
                                                         <td>{Money(cod.price, 0)}</td>
                                                         <td>{cod.received && Money(cod.price, 0)}</td>
                                                         <td>{!cod.received && cod.return && Money(cod.price, 0)}</td>
