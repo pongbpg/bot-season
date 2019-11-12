@@ -44,7 +44,7 @@ export class OrderPage extends React.Component {
     onTrackingChange = (e) => {
         if (this.state.expressName != "") {
             const index = this.state.orders.findIndex(f => f.id === e.target.name);
-            const tracking = e.target.value.toUpperCase();
+            const tracking = e.target.value.toUpperCase().replace(/\s/g, '');
             if (index === -1) {
 
             } else {
