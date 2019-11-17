@@ -184,7 +184,9 @@ export class CostPage extends React.Component {
                                         <th className="has-text-left">ทีม</th>
                                         <th className="has-text-left">เพจ</th>
                                         <th className="has-text-right">
-                                            <a className="button has-text-info" onClick={this.onFbAdsClick}>
+                                            <a className="button has-text-info"
+                                                disabled={!this.state.token.fb}
+                                                onClick={this.onFbAdsClick}>
                                                 <span className="icon"><MdRefresh /></span>&nbsp;Facebook
                                             </a>
                                         </th>
