@@ -6,6 +6,7 @@ import filterOrders from '../selectors/orders';
 import { FaSearch } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import Money from '../selectors/money';
+import NumberFormat from 'react-number-format';
 import readXlsxFile from 'read-excel-file'
 import moment from 'moment';
 moment.locale('th');
@@ -92,6 +93,7 @@ export class OrderPage extends React.Component {
         if (this.state.expressName != "") {
             const orders = this.state.orders.filter(f => f.tracking !== '' && f.freight >= 0);
             this.props.startSaveTracking(orders);
+            // console.log(orders)
         } else {
             alert('กรุณาเลือกขนส่งก่อนครับ')
         }
@@ -165,6 +167,9 @@ export class OrderPage extends React.Component {
     }
     onCancelClick = (e) => {
         this.setState({ tracks: [] })
+    }
+    handleSelectAll = (e) => {
+        e.target.select()
     }
     render() {
         return (
@@ -269,20 +274,60 @@ export class OrderPage extends React.Component {
                                         <td className="has-text-centered">
                                             <div className="field">
                                                 <div className="control">
-                                                    <input type="text" name={order.id}
+                                                    {/* <input type="text" name={order.id}
                                                         className="input is-rounded is-small has-text-centered"
                                                         value={order.freight}
-                                                        onChange={this.onFreightChange} />
+                                                        onChange={this.onFreightChange} /> */}
+                                                    <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                        value={order.freight}
+                                                        onFocus={this.handleSelectAll}
+                                                        onValueChange={(values) => {
+                                                            const { formattedValue, value } = values;
+                                                            let orders = this.state.orders.slice();
+                                                            const index = orders.findIndex(f => f.id == order.id)
+                                                            const freight = value || 0;
+                                                            if (index === -1) {
+
+                                                            } else {
+                                                                let orders = this.state.orders.slice();
+                                                                orders[index] = {
+                                                                    ...orders[index], freight: Number(freight),
+                                                                    expressName: this.state.expressName,
+                                                                    expressLink: this.state.expressLink
+                                                                };
+                                                                this.setState({ orders })
+                                                            }
+                                                        }} />
                                                 </div>
                                             </div>
                                         </td>
                                         <td className="has-text-centered">
                                             <div className="field">
                                                 <div className="control">
-                                                    <input type="text" name={order.id}
+                                                    {/* <input type="text" name={order.id}
                                                         className="input is-rounded is-small has-text-centered"
                                                         value={order.codFee}
-                                                        onChange={this.onFeeChange} />
+                                                        onChange={this.onFeeChange} /> */}
+                                                    <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                        value={order.codFee}
+                                                        onFocus={this.handleSelectAll}
+                                                        onValueChange={(values) => {
+                                                            const { formattedValue, value } = values;
+                                                            let orders = this.state.orders.slice();
+                                                            const index = orders.findIndex(f => f.id == order.id)
+                                                            const codFee = value || 0;
+                                                            if (index === -1) {
+
+                                                            } else {
+                                                                let orders = this.state.orders.slice();
+                                                                orders[index] = {
+                                                                    ...orders[index], codFee: Number(codFee),
+                                                                    expressName: this.state.expressName,
+                                                                    expressLink: this.state.expressLink
+                                                                };
+                                                                this.setState({ orders })
+                                                            }
+                                                        }} />
                                                 </div>
                                             </div>
                                         </td>

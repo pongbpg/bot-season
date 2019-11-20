@@ -3,8 +3,9 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startSearchTracking } from '../actions/search';
 import { startSaveTracking } from '../actions/orders';
-import {FaSearch} from 'react-icons/fa';
+import { FaSearch } from 'react-icons/fa';
 import Money from '../selectors/money';
+import NumberFormat from 'react-number-format';
 import moment from 'moment';
 moment.locale('th');
 export class TrackEditPage extends React.Component {
@@ -136,6 +137,9 @@ export class TrackEditPage extends React.Component {
       alert('กรุณาเลือกขนส่งก่อนครับ')
     }
   }
+  handleSelectAll = (e) => {
+    e.target.select()
+  }
   render() {
     // console.log(this.state.orders)
     const style = {
@@ -230,22 +234,60 @@ export class TrackEditPage extends React.Component {
                       <td className="has-text-centered">
                         <div className="field">
                           <div className="control">
-                            <input type="text" name={order.id}
+                            {/* <input type="text" name={order.id}
                               className="input is-rounded has-text-centered"
                               disabled={this.state.isSave}
                               value={order.freight}
-                              onChange={this.onFreightChange} />
+                              onChange={this.onFreightChange} /> */}
+                            <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                              value={order.freight}
+                              onFocus={this.handleSelectAll}
+                              disabled={this.state.isSave}
+                              onValueChange={(values) => {
+                                const { formattedValue, value } = values;
+                                let orders = this.state.orders.slice();
+                                const index = orders.findIndex(f => f.id == order.id)
+                                const freight = value || 0;
+                                if (index === -1) {
+
+                                } else {
+                                  let orders = this.state.orders.slice();
+                                  orders[index] = {
+                                    ...orders[index], freight: Number(freight)
+                                  };
+                                  this.setState({ orders })
+                                }
+                              }} />
                           </div>
                         </div>
                       </td>
                       <td className="has-text-centered">
                         <div className="field">
                           <div className="control">
-                            <input type="text" name={order.id}
+                            {/* <input type="text" name={order.id}
                               className="input is-rounded has-text-centered"
                               disabled={this.state.isSave}
                               value={order.codFee}
-                              onChange={this.onFeeChange} />
+                              onChange={this.onFeeChange} /> */}
+                              <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                              value={order.codFee}
+                              onFocus={this.handleSelectAll}
+                              disabled={this.state.isSave}
+                              onValueChange={(values) => {
+                                const { formattedValue, value } = values;
+                                let orders = this.state.orders.slice();
+                                const index = orders.findIndex(f => f.id == order.id)
+                                const codFee = value || 0;
+                                if (index === -1) {
+
+                                } else {
+                                  let orders = this.state.orders.slice();
+                                  orders[index] = {
+                                    ...orders[index], codFee: Number(codFee)
+                                  };
+                                  this.setState({ orders })
+                                }
+                              }} />
                           </div>
                         </div>
                       </td>
