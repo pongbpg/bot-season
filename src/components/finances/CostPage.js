@@ -227,10 +227,10 @@ export class CostPage extends React.Component {
                                                                     value={this.state.fb}
                                                                     onFocus={this.handleSelectAll}
                                                                     onValueChange={(values) => {
-                                                                        const { formattedValue, value } = values;
+                                                                        const { formattedValue, value, floatValue } = values;
                                                                         // formattedValue = $2,223
                                                                         // value ie, 2223
-                                                                        this.setState({ fb: value })
+                                                                        this.setState({ fb: floatValue })
                                                                     }} />
                                                             </div>
                                                         </div>
@@ -250,10 +250,10 @@ export class CostPage extends React.Component {
                                                                     value={this.state.line}
                                                                     onFocus={this.handleSelectAll}
                                                                     onValueChange={(values) => {
-                                                                        const { formattedValue, value } = values;
+                                                                        const { formattedValue, value, floatValue } = values;
                                                                         // formattedValue = $2,223
                                                                         // value ie, 2223
-                                                                        this.setState({ line: value })
+                                                                        this.setState({ line: floatValue })
                                                                     }} />
                                                             </div>
                                                         </div>
@@ -273,10 +273,10 @@ export class CostPage extends React.Component {
                                                                     value={this.state.other}
                                                                     onFocus={this.handleSelectAll}
                                                                     onValueChange={(values) => {
-                                                                        const { formattedValue, value } = values;
+                                                                        const { formattedValue, value, floatValue } = values;
                                                                         // formattedValue = $2,223
                                                                         // value ie, 2223
-                                                                        this.setState({ other: value })
+                                                                        this.setState({ other: floatValue })
                                                                     }} />
                                                             </div>
                                                         </div>

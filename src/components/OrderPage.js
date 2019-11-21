@@ -282,16 +282,16 @@ export class OrderPage extends React.Component {
                                                         value={order.freight}
                                                         onFocus={this.handleSelectAll}
                                                         onValueChange={(values) => {
-                                                            const { formattedValue, value } = values;
+                                                            const { formattedValue, value, floatValue } = values;
                                                             let orders = this.state.orders.slice();
                                                             const index = orders.findIndex(f => f.id == order.id)
-                                                            const freight = value || 0;
+                                                            const freight = floatValue || 0;
                                                             if (index === -1) {
 
                                                             } else {
                                                                 let orders = this.state.orders.slice();
                                                                 orders[index] = {
-                                                                    ...orders[index], freight: Number(freight),
+                                                                    ...orders[index], freight,
                                                                     expressName: this.state.expressName,
                                                                     expressLink: this.state.expressLink
                                                                 };
@@ -312,16 +312,16 @@ export class OrderPage extends React.Component {
                                                         value={order.codFee}
                                                         onFocus={this.handleSelectAll}
                                                         onValueChange={(values) => {
-                                                            const { formattedValue, value } = values;
+                                                            const { formattedValue, value, floatValue } = values;
                                                             let orders = this.state.orders.slice();
                                                             const index = orders.findIndex(f => f.id == order.id)
-                                                            const codFee = value || 0;
+                                                            const codFee = floatValue || 0;
                                                             if (index === -1) {
 
                                                             } else {
                                                                 let orders = this.state.orders.slice();
                                                                 orders[index] = {
-                                                                    ...orders[index], codFee: Number(codFee),
+                                                                    ...orders[index], codFee,
                                                                     expressName: this.state.expressName,
                                                                     expressLink: this.state.expressLink
                                                                 };

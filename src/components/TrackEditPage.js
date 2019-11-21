@@ -244,16 +244,16 @@ export class TrackEditPage extends React.Component {
                               onFocus={this.handleSelectAll}
                               disabled={this.state.isSave}
                               onValueChange={(values) => {
-                                const { formattedValue, value } = values;
+                                const { formattedValue, value, floatValue } = values;
                                 let orders = this.state.orders.slice();
                                 const index = orders.findIndex(f => f.id == order.id)
-                                const freight = value || 0;
+                                const freight = floatValue || 0;
                                 if (index === -1) {
 
                                 } else {
                                   let orders = this.state.orders.slice();
                                   orders[index] = {
-                                    ...orders[index], freight: Number(freight)
+                                    ...orders[index], freight
                                   };
                                   this.setState({ orders })
                                 }
@@ -269,21 +269,21 @@ export class TrackEditPage extends React.Component {
                               disabled={this.state.isSave}
                               value={order.codFee}
                               onChange={this.onFeeChange} /> */}
-                              <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                            <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
                               value={order.codFee}
                               onFocus={this.handleSelectAll}
                               disabled={this.state.isSave}
                               onValueChange={(values) => {
-                                const { formattedValue, value } = values;
+                                const { formattedValue, value, floatValue } = values;
                                 let orders = this.state.orders.slice();
                                 const index = orders.findIndex(f => f.id == order.id)
-                                const codFee = value || 0;
+                                const codFee = floatValue || 0;
                                 if (index === -1) {
 
                                 } else {
                                   let orders = this.state.orders.slice();
                                   orders[index] = {
-                                    ...orders[index], codFee: Number(codFee)
+                                    ...orders[index], codFee
                                   };
                                   this.setState({ orders })
                                 }
