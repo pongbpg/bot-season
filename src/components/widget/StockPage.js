@@ -4,6 +4,7 @@ import { startGetStock, startChangeStock } from '../../actions/widget/stock';
 import { startUpdateProduct, startDeleteProduct } from '../../actions/widget/product';
 import Money from '../../selectors/money';
 import { MdEdit } from 'react-icons/md';
+import NumberFormat from 'react-number-format';
 export class StockPage extends React.Component {
     constructor(props) {
         super(props);
@@ -68,7 +69,7 @@ export class StockPage extends React.Component {
         }
     }
     onCostChange = (e) => {
-        const cost = e.target.value.replace(/\D/g, '');
+        const cost = e.target.value;//.replace(/\D/g, '');
         if (!isNaN(cost)) {
             this.setState({
                 cost: Number(cost)
@@ -319,29 +320,45 @@ export class StockPage extends React.Component {
                                         }
                                     </td>
                                     <td className="has-text-right">
-                                        {this.state.id !== st.id || this.state.action == 'stock' ? st.sale
+                                        {this.state.id !== st.id || this.state.action == 'stock' ? Money(st.sale, 2)
                                             : (this.state.action == 'edit' &&
                                                 <div className="control">
-                                                    <input type="text" name={this.state.id}
+                                                    {/* <input type="text" name={this.state.id}
                                                         className="input is-rounded has-text-left is-4"
                                                         value={this.state.sale}
-                                                        onChange={this.onSaleChange}
-                                                    />
+                                                        onChange={this.onSaleChange}  />*/}
+
+                                                    <NumberFormat className="input is-rounded has-text-right is-4" thousandSeparator={true}
+                                                        value={this.state.sale}
+                                                        onFocus={this.handleSelectAll}
+                                                        onValueChange={(values) => {
+                                                            const { formattedValue, value, floatValue } = values;
+                                                            const sale = floatValue;
+                                                            this.setState({ sale })
+                                                        }} />
                                                 </div>
                                             )
                                         }
                                     </td>
                                     {this.state.showCost && (
                                         < td className="has-text-right">
-                                            {this.state.id !== st.id || this.state.action == 'stock' ? Money(st.cost, 0)
+                                            {this.state.id !== st.id || this.state.action == 'stock' ? Money(st.cost, 2)
                                                 : (this.state.action == 'edit' &&
                                                     <div className="control">
-                                                        <input type="text" name={this.state.id}
+                                                        {/* <input type="text" name={this.state.id}
                                                             className="input is-rounded has-text-right"
                                                             onFocus={this.handleSelectAll}
-                                                            value={Money(this.state.cost, 0)}
+                                                            value={Money(this.state.cost, 2)}
                                                             onChange={this.onCostChange}
-                                                        />
+                                                        /> */}
+                                                        <NumberFormat className="input is-rounded has-text-right is-4" thousandSeparator={true}
+                                                            value={this.state.cost}
+                                                            onFocus={this.handleSelectAll}
+                                                            onValueChange={(values) => {
+                                                                const { formattedValue, value, floatValue } = values;
+                                                                const cost = floatValue;
+                                                                this.setState({ cost })
+                                                            }} />
                                                     </div>
                                                 )}
                                         </td>
@@ -351,12 +368,21 @@ export class StockPage extends React.Component {
                                             {this.state.id !== st.id || this.state.action == 'stock' ? Money(st.alert, 0)
                                                 : (this.state.action == 'edit' &&
                                                     <div className="control">
-                                                        <input type="text" name={this.state.id}
+                                                        {/* <input type="text" name={this.state.id}
                                                             className="input is-rounded has-text-right"
                                                             onFocus={this.handleSelectAll}
                                                             value={Money(this.state.alert, 0)}
                                                             onChange={this.onAlertChange}
-                                                        />
+                                                        /> */}
+                                                        <NumberFormat className="input is-rounded has-text-right is-4" thousandSeparator={true}
+                                                            value={this.state.alert}
+                                                            onFocus={this.handleSelectAll}
+                                                            decimalScale={0}
+                                                            onValueChange={(values) => {
+                                                                const { formattedValue, value, floatValue } = values;
+                                                                const alert = floatValue;
+                                                                this.setState({ alert })
+                                                            }} />
                                                     </div>
                                                 )}
                                         </td>
@@ -419,12 +445,21 @@ export class StockPage extends React.Component {
                                                                 +</button>
                                                         </div>
                                                         <div className="control">
-                                                            <input type="text" name={this.state.id}
+                                                            {/* <input type="text" name={this.state.id}
                                                                 className="input is-rounded has-text-right"
                                                                 onFocus={this.handleSelectAll}
                                                                 value={Money(this.state.amount2, 0)}
                                                                 onChange={this.onAmount2Change}
-                                                            />
+                                                            /> */}
+                                                            <NumberFormat className="input is-rounded has-text-right is-4" thousandSeparator={true}
+                                                                value={this.state.amount2}
+                                                                onFocus={this.handleSelectAll}
+                                                                decimalScale={0}
+                                                                onValueChange={(values) => {
+                                                                    const { formattedValue, value, floatValue } = values;
+                                                                    const amount2 = floatValue;
+                                                                    this.setState({ amount2 })
+                                                                }} />
                                                         </div>
                                                         <div className="control">
                                                             <button className={`button is-danger ${this.state.isLoading}`}

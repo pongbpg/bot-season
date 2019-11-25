@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { startAddProduct, startGetProductType } from '../../actions/widget/product';
 import Money from '../../selectors/money';
+import NumberFormat from 'react-number-format';
 export class AddProduct extends React.Component {
     constructor(props) {
         super(props);
@@ -9,6 +10,7 @@ export class AddProduct extends React.Component {
             id: '',
             name: '',
             amount: '',
+            amount2: '',
             cost: '',
             alert: '',
             unit: '',
@@ -38,6 +40,14 @@ export class AddProduct extends React.Component {
         if (!isNaN(amount)) {
             this.setState({
                 amount: Number(amount)
+            })
+        }
+    }
+    onAmount2Change = (e) => {
+        const amount2 = e.target.value.replace(/\D/g, '');
+        if (!isNaN(amount2)) {
+            this.setState({
+                amount2: Number(amount2)
             })
         }
     }
@@ -79,6 +89,7 @@ export class AddProduct extends React.Component {
                 name: this.state.name,
                 unit: this.state.unit,
                 amount: this.state.amount == '' ? 0 : this.state.amount,
+                amount2: this.state.amount2 == '' ? 0 : this.state.amount2,
                 sale: this.state.sale == '' ? 0 : this.state.sale,
                 alert: this.state.alert == '' ? 0 : this.state.alert,
                 cost: this.state.cost == '' ? 0 : this.state.cost,
@@ -89,7 +100,7 @@ export class AddProduct extends React.Component {
                 if (msg == 'no') {
                     alert('กรุณาตรวจสอบรหัสสินค้านี้มีแล้ว')
                 } else {
-                    this.setState({ id: '', name: '', unit: '', amount: '', cost: '', alert: '', sale: '' })
+                    this.setState({ id: '', name: '', unit: '', amount: '', amount2: '', cost: '', alert: '', sale: '' })
                 }
             })
         }
@@ -98,6 +109,9 @@ export class AddProduct extends React.Component {
         if (e.key === 'Enter') {
             this.onAddClick();
         }
+    }
+    handleSelectAll = (e) => {
+        e.target.select()
     }
     handleTypeChange = (e) => {
         const typeId = e.target.value;
@@ -171,10 +185,19 @@ export class AddProduct extends React.Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input" type="text" placeholder="ต้นทุน"
-                                            value={this.state.cost == '' ? '' : Money(this.state.cost, 0)}
+                                        {/* <input className="input" type="text" placeholder="ต้นทุน"
+                                            value={this.state.cost == '' ? '' : Money(this.state.cost, 2)}
                                             onKeyPress={this.onHandleKeyPress}
-                                            onChange={this.onCostChange} />
+                                            onChange={this.onCostChange} /> */}
+                                        <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                            placeholder="ต้นทุน"
+                                            value={this.state.cost}
+                                            onFocus={this.handleSelectAll}
+                                            onValueChange={(values) => {
+                                                const { formattedValue, value, floatValue } = values;
+                                                const cost = floatValue;
+                                                this.setState({ cost })
+                                            }} />
                                     </div>
                                 </div>
                             </div>
@@ -183,10 +206,20 @@ export class AddProduct extends React.Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input" type="text" placeholder="ยืม"
+                                        {/* <input className="input" type="text" placeholder="ยืม"
                                             value={this.state.alert == '' ? '' : Money(this.state.alert, 0)}
                                             onKeyPress={this.onHandleKeyPress}
-                                            onChange={this.onAlertChange} />
+                                            onChange={this.onAlertChange} /> */}
+                                        <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                            placeholder="ยืม"
+                                            decimalScale={0}
+                                            value={this.state.alert}
+                                            onFocus={this.handleSelectAll}
+                                            onValueChange={(values) => {
+                                                const { formattedValue, value, floatValue } = values;
+                                                const alert = floatValue;
+                                                this.setState({ alert })
+                                            }} />
                                     </div>
                                 </div>
                             </div>
@@ -195,10 +228,19 @@ export class AddProduct extends React.Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input" type="text" placeholder="ราคาขาย"
-                                            value={this.state.sale == '' ? '' : Money(this.state.sale, 0)}
+                                        {/* <input className="input" type="text" placeholder="ราคาขาย"
+                                            value={this.state.sale == '' ? '' : Money(this.state.sale, 2)}
                                             onKeyPress={this.onHandleKeyPress}
-                                            onChange={this.onSaleChange} />
+                                            onChange={this.onSaleChange} /> */}
+                                        <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                            placeholder="ราคาขาย"
+                                            value={this.state.sale}
+                                            onFocus={this.handleSelectAll}
+                                            onValueChange={(values) => {
+                                                const { formattedValue, value, floatValue } = values;
+                                                const sale = floatValue;
+                                                this.setState({ sale })
+                                            }} />
                                     </div>
                                 </div>
                             </div>
@@ -207,10 +249,20 @@ export class AddProduct extends React.Component {
                             <div className="field-body">
                                 <div className="field">
                                     <div className="control">
-                                        <input className="input" type="text" placeholder="จำนวน"
+                                        {/* <input className="input" type="text" placeholder="จำนวน"
                                             value={this.state.amount == '' ? '' : Money(this.state.amount, 0)}
                                             onKeyPress={this.onHandleKeyPress}
-                                            onChange={this.onAmountChange} />
+                                            onChange={this.onAmountChange} /> */}
+                                        <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                            placeholder="จำนวน"
+                                            decimalScale={0}
+                                            value={this.state.amount}
+                                            onFocus={this.handleSelectAll}
+                                            onValueChange={(values) => {
+                                                const { formattedValue, value, floatValue } = values;
+                                                const amount = floatValue;
+                                                this.setState({ amount })
+                                            }} />
                                     </div>
                                 </div>
                             </div>
