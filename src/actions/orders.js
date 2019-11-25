@@ -12,11 +12,22 @@ export const startListOrders = () => {
             .then(querySnapshot => {
                 let orders = [];
                 querySnapshot.forEach(function (doc) {
+                    let codFee = 0;
+                    if (doc.data().bank.indexOf('COD') > -1) {
+                        if (doc.data().name.substr(0, 1) == 'A') {
+                            codFee = Number((doc.data().price * 0.02).toFixed(2));
+                            if (Number(codFee) < 25) {
+                                codFee = 25;
+                            }
+                        } else {
+                            codFee = Number((doc.data().price * 0.03).toFixed(2));
+                        }
+                    }
                     orders.push({
                         id: doc.id,
                         ...doc.data(),
                         freight: 0,
-                        codFee: doc.data().bank.indexOf('COD') > -1 ? Number((doc.data().price * 0.03).toFixed(2)) : 0
+                        codFee//: doc.data().bank.indexOf('COD') > -1 ? Number((doc.data().price * 0.03).toFixed(2)) : 0
                     })
                 });
                 dispatch(setListOrders(orders))
