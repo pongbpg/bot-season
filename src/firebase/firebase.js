@@ -14,6 +14,7 @@ const config = {
 // console.log(config)
 firebase.initializeApp(config);
 
+
 // const database = firebase.database();
 const firestore = firebase.firestore();
 const storage = firebase.storage();
