@@ -9,10 +9,13 @@ export default (state = { role: '', pages: [] }, action) => {
             return {};
         case 'SET_AUTH':
             return {
+                // ...action
                 uid: action.uid,
                 email: action.email,
                 role: action.role,
-                pages: action.pages
+                pages: action.pages,
+                line: action.admin,
+                imgUrl: action.imgUrl
             }
         default:
             return state;

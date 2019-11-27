@@ -1,6 +1,7 @@
 import firebase from 'firebase/app';
 import 'firebase/auth';
 import 'firebase/firestore';
+import 'firebase/storage';
 
 const config = {
   apiKey: process.env.FIREBASE_API_KEY,
@@ -15,17 +16,18 @@ firebase.initializeApp(config);
 
 // const database = firebase.database();
 const firestore = firebase.firestore();
+const storage = firebase.storage();
 const settings = {/* your settings... */ timestampsInSnapshots: true };
 firestore.settings(settings);
 // const storage = firebase.storage();
 // const googleAuthProvider = new firebase.auth.GoogleAuthProvider().addScope('https://www.googleapis.com/auth/userinfo.email');
-// const facebookAuthProvider = new firebase.auth.FacebookAuthProvider().addScope('email');
+const facebookAuthProvider = new firebase.auth.FacebookAuthProvider().addScope('email');
 // var provider = new firebase.auth.GoogleAuthProvider();
 // var provider = new firebase.auth.FacebookAuthProvider();
 const auth = firebase.auth();
 
 
-export { auth, firestore as default };
+export { auth, facebookAuthProvider, storage, firestore as default };
 
 // // child_removed
 // database.ref('expenses').on('child_removed', (snapshot) => {

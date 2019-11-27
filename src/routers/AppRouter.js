@@ -3,6 +3,7 @@ import { Router, Route, Switch, Link, NavLink } from 'react-router-dom';
 import createHistory from 'history/createBrowserHistory';
 import LoginPage from '../components/LoginPage';
 import HomePage from '../components/HomePage';
+import ProfilePage from '../components/ProfilePage';
 import OrderPage from '../components/OrderPage';
 import CutOffPage from '../components/CutOffPage';
 import ReportPage from '../components/ReportPage';
@@ -31,6 +32,7 @@ const AppRouter = () => (
         <Route path="/" component={TrackingPage} exact={true} />
         <PublicRoute path="/login" component={LoginPage} exact={true} />
         <PrivateRoute path="/home" component={HomePage} exact={true} />
+        <PrivateRoute path="/profile" component={ProfilePage} exact={true} />
         <PrivateRoute path="/orders" component={OrderPage} exact={true} />
         <PrivateRoute path="/orders/edit" component={TrackEditPage} exact={true} />
         <PrivateRoute path="/cutoff" component={CutOffPage} exact={true} />

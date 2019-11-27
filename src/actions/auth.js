@@ -25,7 +25,8 @@ export const startLoginLocal = (username, password) => {
 
 export const startGetAuth = (user) => {
     return (dispatch) => {
-        return database.collection('emails').doc(user.uid).get()
+        return database.collection('emails').doc(user.uid)
+            .get()
             .then(doc => {
                 return dispatch(setAuth({
                     ...user,

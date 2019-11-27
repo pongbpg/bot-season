@@ -2,7 +2,7 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
-import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople } from 'react-icons/md';
+import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople, MdExitToApp, MdAccountCircle } from 'react-icons/md';
 import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine } from 'react-icons/fa';
 export class Header extends React.Component {
   constructor(props) {
@@ -137,12 +137,16 @@ export class Header extends React.Component {
               <div className="navbar-end is-hidden-touch">
                 <div className={this.state.isMenu === true ? "navbar-item has-dropdown is-active" : "navbar-item has-dropdown"}>
                   <a className="navbar-link" onClick={this.toggleIsMenu}>
+                    <img src={this.props.auth.imgUrl} />
                     &nbsp;{this.props.auth.email}
                   </a>
                   <div className="navbar-dropdown">
+                    <Link className="navbar-item" to="/profile">
+                      <span className="icon"><MdAccountCircle /></span> ข้อมูลส่วนตัว
+                    </Link>
                     {/* <hr className="navbar-divider" /> */}
                     <a className="navbar-item" onClick={this.props.startLogout}>
-                      ออกจากระบบ
+                      <span className="icon"><MdExitToApp /></span> ออกจากระบบ
                     </a>
                   </div>
                 </div>
