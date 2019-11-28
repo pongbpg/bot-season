@@ -2,6 +2,7 @@ import React from 'react';
 import { connect } from 'react-redux';
 import StockWidget from './widget/StockPage';
 import AddProduct from './widget/AddProduct';
+import TopsDay from './games/TopsDay';
 import { startGetProductType } from '../actions/widget/stock';
 export class HomePage extends React.Component {
   constructor(props) {
@@ -26,6 +27,7 @@ export class HomePage extends React.Component {
       <div className="hero-body">
         <div className="columns">
           <div className="column is-12">
+            <TopsDay />
             {this.state.auth.role == 'owner' && (<AddProduct types={this.state.types} />)}
             <StockWidget types={this.state.types} />
           </div>
