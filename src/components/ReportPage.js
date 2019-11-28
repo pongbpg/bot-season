@@ -201,7 +201,7 @@ export class ReportPage extends React.Component {
                                         </div>
                                     </td>
                                 </tr>
-                                {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
+                                {['stock', 'owner', 'marketing'].indexOf(this.state.auth.role) > -1 && (
                                     <tr>
                                         <td className="has-text-centered">4</td>
                                         <td className="has-text-centered">
@@ -298,7 +298,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                {['owner','stock'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['owner', 'stock'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">8</td>
                                     <td className="has-text-centered">STATEMENTการโอนแต่ละธนาคาร (วันที่เริ่ม-ถึงวันที่)
                                     <select className="select is-info"
@@ -376,7 +376,7 @@ export class ReportPage extends React.Component {
                                 </tr>
                                 )}
 
-                                {['owner'].indexOf(this.state.auth.role) > -1 && (< tr >
+                                {['owner', 'marketing'].indexOf(this.state.auth.role) > -1 && (< tr >
                                     <td className="has-text-centered">11</td>
                                     <td className="has-text-centered">ยอดขายแยกช่องทางโฆษณา (วันที่เริ่ม-ถึงวันที่)</td>
                                     <td className="has-text-centered">

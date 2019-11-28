@@ -4,6 +4,7 @@ export const startGetTopsDay = (date) => {
     return (dispatch) => {
         return firestore.collection('orders')
             .where('orderDate', '==', date)
+            .where('return', '==', false)
             .onSnapshot(snapShot => {
                 let data = [];
                 snapShot.forEach(doc => {
@@ -16,7 +17,7 @@ export const startGetTopsDay = (date) => {
                             adminId: key,
                             pages: _.chain(owner).flatten().groupBy('page')
                                 .map((page, pageId) => {
-                                    return { pageId, price: page.filter(f => f.return == false).reduce((memo, num) => memo + num.price, 0) }
+                                    return { pageId, price: page.reduce((memo, num) => memo + num.price, 0) }
                                 }).sortBy('price').reverse()
                                 .value()
                         }

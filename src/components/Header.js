@@ -130,6 +130,9 @@ export class Header extends React.Component {
                   </Link>
                   </div>
                 </div> */}
+                <Link className="navbar-item  is-hidden-desktop" to="/profile">
+                  <span className="icon"><MdAccountCircle /></span> ข้อมูลส่วนตัว
+                    </Link>
                 <a className="navbar-item is-hidden-desktop" onClick={this.props.startLogout}>
                   ออกจากระบบ
                 </a>

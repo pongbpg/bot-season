@@ -106,6 +106,7 @@ export class EditPage extends React.Component {
                                             <option value="owner">ผู้ดูแล</option>
                                             <option value="admin">แอดมิน</option>
                                             <option value="stock">สต็อกสินค้า</option>
+                                            <option value="marketing">การตลาด</option>
                                         </select>
                                     </div>
                                 </div>
