@@ -183,7 +183,7 @@ export class EmailsPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
-    emails: state.manage.emails.sort((a, b) => a.email.toLowerCase() > b.email.toLowerCase() ? 1 : -1)
+    emails: state.manage.emails.sort((a, b) => a.disabled + a.email.toLowerCase() > b.disabled + b.email.toLowerCase() ? 1 : -1)
 });
 const mapDispatchToProps = (dispatch, props) => ({
     startGetEmails: () => dispatch(startGetEmails()),

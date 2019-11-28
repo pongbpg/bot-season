@@ -55,7 +55,7 @@ export class AdminsPage extends React.Component {
                                 </thead>
                                 <tbody>
                                     {this.state.admins.length > 0 ?
-                                        this.state.admins.sort((a, b) => a.role + a.name > b.role + b.name ? -1 : 1)
+                                        this.state.admins
                                             .map((admin, index) => {
                                                 // console.log(admin.comId)
                                                 return (<tr key={admin.userId}>
@@ -106,7 +106,7 @@ export class AdminsPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
-    admins: state.manage.admins,
+    admins: state.manage.admins.sort((a, b) => a.active + a.role + a.name < b.active + b.role + b.name ? 1 : -1),
     coms: state.manage.coms
 });
 const mapDispatchToProps = (dispatch, props) => ({
