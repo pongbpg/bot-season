@@ -73,7 +73,7 @@ export class TopsDayPage extends React.Component {
                                         <div className="card">
                                             <div className="card-image">
                                                 {/* <figure className="image is-128x128"> */}
-                                                <img style={{ maxWidth: 200 }} src={admin.imgUrl} />
+                                                <img style={{ maxWidth: 200,maxHeight:200 }} src={admin.imgUrl} />
                                                 {/* </figure> */}
                                             </div>
                                             <div className="card-content">
