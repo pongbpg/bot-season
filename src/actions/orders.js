@@ -47,9 +47,9 @@ export const startSaveTracking = (orders) => {
         for (let x = 0; x < orders.length; x++) {
             update.doc(orders[x].id).update({
                 tracking: orders[x].tracking,
-                freight: Number(orders[x].freight),
-                codFee: Number(orders[x].codFee),
-                totalFreight: Number(orders[x].freight) + Number(orders[x].codFee),
+                freight: Number(orders[x].freight) || 0,
+                codFee: Number(orders[x].codFee) || 0,
+                totalFreight: (Number(orders[x].freight) || 0) + (Number(orders[x].codFee) || 0),
                 codAmount: orders[x].codFee > 0 ? Number(orders[x].price) : 0,
                 cod: orders[x].codFee > 0 ? true : false,
                 expressName: orders[x].expressName,
