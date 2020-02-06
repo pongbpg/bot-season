@@ -106,7 +106,7 @@ export class CostPage extends React.Component {
                 }
                 count += acts.length;
                 for (let i = 0; i < acts.length; i++) {
-                    var cors_api_url = `https://graph.facebook.com/v4.0/act_${acts[i]}/insights?access_token=${this.state.token.fb}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                    var cors_api_url = `https://graph.facebook.com/v5.0/act_${acts[i]}/insights?access_token=${this.state.token.fb}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
                     // console.log(cors_api_url)
                     fetch(cors_api_url)
                         .then(function (response) {
