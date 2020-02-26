@@ -10,9 +10,12 @@ const shortid = require('shortid');
 const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
-// const serviceAccount = require('./admin.json');
+
+if (process.env.NODE_ENV !== 'production') {
+    require('dotenv').config({ path: '.env.development' });
+}
+
 admin.initializeApp({
-    // credential: admin.credential.cert(serviceAccount)
     credential: admin.credential.cert({
         "type": "service_account",
         "project_id": "bot-orders",
@@ -515,7 +518,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                 text: `@@ยกเลิก:${orderId}`
                                                                             })
                                                                             for (var b = 0; b < resultOrder.data.banks.length; b++) {
-                                                                                if (['COD', 'CM', 'XX', 'CP','ADMIN'].indexOf(resultOrder.data.banks[b].name) == -1) {
+                                                                                if (['COD', 'CM', 'XX', 'CP', 'ADMIN'].indexOf(resultOrder.data.banks[b].name) == -1) {
                                                                                     await db.collection('payments')
                                                                                         .where('name', '==', resultOrder.data.banks[b].name)
                                                                                         .where('date', '==', resultOrder.data.banks[b].date)
@@ -1132,7 +1135,7 @@ const initMsgOrder = (txt) => {
                                 value = value.replace('99999', '')
                             } else if (key == 'tel') {
                                 value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
-                                if (value.length != 10) {
+                                if (value.length < 10) {
                                     value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
                                 } else {
                                     if (value.substr(0, 2) == '00') {
@@ -1288,8 +1291,8 @@ const initMsgOrderKH = (txt) => {
                         if (key !== 'addr' && key !== 'fb' && key !== 'id') value = value.replace(/\n/g, '').toUpperCase();
                         if (key == 'tel') {
                             value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
-                            if (value.length < 9 || value.length > 10) {
-                                value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 9 หรือ 10 หลักundefined`
+                            if (value.length < 10) {
+                                value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
                             }
                         }
                         if (key !== 'price' && key !== 'delivery') {
