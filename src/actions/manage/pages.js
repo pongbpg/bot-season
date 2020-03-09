@@ -12,7 +12,7 @@ export const startPushPage = (page) => {
     return (dispatch) => {
         return firestore.collection('pages').doc(page.id).set({ ...page })
             .then(() => {
-                // console.log(page)
+                console.log(page)
                 return dispatch(pushPage(page))
             })
     }

@@ -3,6 +3,8 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import Money from '../../selectors/money';
 import NumberFormat from 'react-number-format';
+import { startLoginWithFacebook } from '../../actions/auth';
+
 import moment from 'moment';
 moment.locale('th');
 export class SetPostsPage extends React.Component {
@@ -210,6 +212,13 @@ export class SetPostsPage extends React.Component {
                                     <button className="button is-large" onClick={this.onCalcClick}>ค้นหา</button>
                                 </div>
                             </div>
+                            <div className="level-item">
+                                <div className="field">
+                                    <label className="label"></label>
+                                    <a className="button is-link" onClick={this.props.startLoginWithFacebook}>Login with Facebook</a>
+                               
+                                </div>
+                            </div>
                         </div>
                         <div className="level">
                             <div className="column is-5">
@@ -341,5 +350,6 @@ const mapStateToProps = (state, props) => ({
     auth: state.auth
 });
 const mapDispatchToProps = (dispatch, props) => ({
+    startLoginWithFacebook: () => dispatch(startLoginWithFacebook())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(SetPostsPage);

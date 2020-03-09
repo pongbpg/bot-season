@@ -8,7 +8,7 @@ export default (state = [], action) => {
                 return { ...page, ...action.page }
             })
         case 'PUSH_PAGE':
-            return [...state, action.page]
+            return state.concat(action.page)
         case 'REMOVE_PAGE':
             return state.filter(page => page.id != action.page.id)
         default:

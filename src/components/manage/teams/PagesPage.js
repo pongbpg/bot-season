@@ -58,9 +58,11 @@ export class PagesPage extends React.Component {
             } else {
                 if (confirm('คุณแน่ใจที่จะเพิ่มเพจนี้')) {
                     this.props.startPushPage(this.state.newPage)
-                    this.props.startListPages(this.state.auth);
+                        // .then(() => {
+                        //     this.props.startListPages(this.state.auth);
+                        // })
                 }
-                this.setState({ newPage: { id: '' } })
+                this.setState({ newPage: { ...this.state.newPage, id: '' } })
             }
         } else {
             console.log('กรุณาเลือกข้อมูลให้ครบ')
@@ -185,6 +187,7 @@ export class PagesPage extends React.Component {
                             {this.state.pages.length > 0 ?
                                 this.state.pages.filter(f => f.team == this.state.newPage.team)
                                     .map((page, index) => {
+                                        // console.log('map', page.id, this.state.newPage.team)
                                         return this.state.page.id != page.id ? (
                                             <tr key={page.id}>
                                                 <td className='has-text-centered'>{index + 1}</td>
