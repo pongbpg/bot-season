@@ -307,7 +307,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                             text: `@@ยกเลิก:${orderId}`
                                                                         })
                                                                         for (var b = 0; b < resultOrder.data.banks.length; b++) {
-                                                                            if (['COD', 'CM', 'XX', 'CP', 'ADMIN'].indexOf(resultOrder.data.banks[b].name) == -1) {
+                                                                            if (['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'].indexOf(resultOrder.data.banks[b].name) == -1) {
                                                                                 await db.collection('payments')
                                                                                     .where('name', '==', resultOrder.data.banks[b].name)
                                                                                     .where('date', '==', resultOrder.data.banks[b].date)
@@ -518,7 +518,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                 text: `@@ยกเลิก:${orderId}`
                                                                             })
                                                                             for (var b = 0; b < resultOrder.data.banks.length; b++) {
-                                                                                if (['COD', 'CM', 'XX', 'CP', 'ADMIN'].indexOf(resultOrder.data.banks[b].name) == -1) {
+                                                                                if (['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'].indexOf(resultOrder.data.banks[b].name) == -1) {
                                                                                     await db.collection('payments')
                                                                                         .where('name', '==', resultOrder.data.banks[b].name)
                                                                                         .where('date', '==', resultOrder.data.banks[b].date)
@@ -963,7 +963,7 @@ const push = (obj, LINE_HEADER) => {
     });
 };
 const initMsgOrder = (txt) => {
-    const express = ["K", 'F', 'M', 'A'];
+    const express = ["K", 'F', 'M', 'A', 'J'];
     const bankWithouts = ['COD', 'CM', 'XX', 'CP', 'ADMIN', 'STOCK'];
     // const pages = ["@DB", "@SCR01", "@TCT01", "@TD01", "@TD02", "@TS01", "@TS02", "@TS03", "@TST", "DB", "SCR01", "SSN01", "TCT01", "TD01", "TD02", "TS01", "TS02", "TS03", "TST", "TPF01"];
     return db.collection('pages')
@@ -1155,11 +1155,11 @@ const initMsgOrder = (txt) => {
             data.bank = data.banks ? data.banks.map(bank => {
                 let checkBank = false;
                 if (bank.name.indexOf('COD') > -1) {
-                    if (['K', 'F', 'A'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'F', 'A', 'J'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 } else {
-                    if (['K', 'F', 'M', 'A'].indexOf(data.name.substr(0, 1)) > -1) {
+                    if (['K', 'F', 'M', 'A', 'J'].indexOf(data.name.substr(0, 1)) > -1) {
                         checkBank = true;
                     }
                 }

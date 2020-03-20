@@ -25,6 +25,7 @@ export class TrackEditPage extends React.Component {
         { expressName: 'ALPHA FAST', expressLink: 'https://www.alphafast.com/th/track-alpha' },
         { expressName: 'EMS', expressLink: 'http://track.thailandpost.co.th/tracking/default.aspx' },
         { expressName: 'FLASH', expressLink: 'https://www.flashexpress.co.th/tracking/' },
+        { expressName: 'JT', expressLink: 'https://www.jtexpress.co.th/index/query/gzquery.html' },
         { expressName: 'KERRY', expressLink: 'https://th.kerryexpress.com/th/track/?track' }
       ]
     };
@@ -216,6 +217,7 @@ export class TrackEditPage extends React.Component {
                             <option value="ALPHA FAST">ALPHA</option>
                             <option value="EMS">EMS</option>
                             <option value="FLASH">FLASH</option>
+                            <option value="JT">J&T</option>
                             <option value="KERRY">KERRY</option>
                           </select>
                         </div>
