@@ -1141,7 +1141,7 @@ const initMsgOrder = (txt) => {
                                     amphur = 'เขต' + addrArr[1].split(' ')[0];
                                 } else {
                                     addrArr = value.split(' อ.');
-                                    if (arrays.length > 1)
+                                    if (addrArr.length > 1)
                                         amphur = addrArr[1].split(' ')[0];
                                     addrArr = value.split(' จ.');
                                     if (addrArr.length > 1)
