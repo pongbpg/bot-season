@@ -1151,12 +1151,12 @@ const initMsgOrder = (txt) => {
                                 const provinceJson = fs.readFileSync('./server/province.json');
                                 const provinces = JSON.parse(provinceJson);
                                 if (provinces.filter(f => f.province == province).length == 0)
-                                    value = value.replace(province, emoji(0x1000A6) + province + 'undefined');
+                                    value = value.concat(emoji(0x1000A6) + province + 'undefined');
 
                                 const amphurJson = fs.readFileSync('./server/amphur.json');
                                 const amphures = JSON.parse(amphurJson);
                                 if (amphures.filter(f => f.province == province && f.amphur == amphur).length == 0)
-                                    value = value.replace(amphur, emoji(0x1000A6) + amphur + 'undefined');
+                                    value = value.concat(emoji(0x1000A6) + amphur + 'undefined');
 
                                 value = value.replace('99999', '')
                             } else if (key == 'tel') {
