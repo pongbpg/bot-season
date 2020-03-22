@@ -1147,17 +1147,17 @@ const initMsgOrder = (txt) => {
                                     if (addrArr.length > 1)
                                         province = addrArr[1].split(' ')[0];
                                 }
-                                if (amphur != '' && province != '') {
-                                    const provinceJson = fs.readFileSync('./server/province.json');
-                                    const provinces = JSON.parse(provinceJson);
-                                    if (provinces.filter(f => f.province == province).length == 0)
-                                        value = value.replace(province, emoji(0x1000A6) + province + 'undefined');
 
-                                    const amphurJson = fs.readFileSync('./server/amphur.json');
-                                    const amphures = JSON.parse(amphurJson);
-                                    if (amphures.filter(f => f.province == province && f.amphur == amphur).length == 0)
-                                        value = value.replace(amphur, emoji(0x1000A6) + amphur + 'undefined');
-                                }
+                                const provinceJson = fs.readFileSync('./server/province.json');
+                                const provinces = JSON.parse(provinceJson);
+                                if (provinces.filter(f => f.province == province).length == 0)
+                                    value = value.replace(province, emoji(0x1000A6) + province + 'undefined');
+
+                                const amphurJson = fs.readFileSync('./server/amphur.json');
+                                const amphures = JSON.parse(amphurJson);
+                                if (amphures.filter(f => f.province == province && f.amphur == amphur).length == 0)
+                                    value = value.replace(amphur, emoji(0x1000A6) + amphur + 'undefined');
+
                                 value = value.replace('99999', '')
                             } else if (key == 'tel') {
                                 value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
