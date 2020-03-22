@@ -1125,12 +1125,38 @@ const initMsgOrder = (txt) => {
                                 if (postcode == null) {
                                     value = `${value + ' ' + emoji(0x1000A6)}ไม่มีรหัสไปรษณีย์undefined`
                                 } else {
-                                    const rawdata = fs.readFileSync('./server/postcode.json');
-                                    // const postcodes = require('./postcode.json');
-                                    const postcodes = JSON.parse(rawdata)
-                                    if (postcodes.indexOf(Number(postcode[postcode.length - 1])) == -1) {
-                                        value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
-                                    }
+                                    //รหัสไปรษณีย์
+                                    // const rawdata = fs.readFileSync('./server/postcode.json');
+                                    // const postcodes = JSON.parse(rawdata)
+                                    // if (postcodes.indexOf(Number(postcode[postcode.length - 1])) == -1) {
+                                    //     value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
+                                    // }
+                                }
+                                let amphur = '';
+                                let province = '';
+                                let addrArr = [];
+                                if (value.indexOf(' เขต') > -1) {
+                                    province = 'กรุงเทพมหานคร';
+                                    addrArr = value.split(' เขต');
+                                    amphur = 'เขต' + addrArr[1].split(' ')[0];
+                                } else {
+                                    addrArr = value.split(' อ.');
+                                    if (arrays.length > 1)
+                                        amphur = addrArr[1].split(' ')[0];
+                                    addrArr = value.split(' จ.');
+                                    if (addrArr.length > 1)
+                                        province = addrArr[1].split(' ')[0];
+                                }
+                                if (amphur != '' && province != '') {
+                                    const provinceJson = fs.readFileSync('./server/province.json');
+                                    const provinces = JSON.parse(provinceJson);
+                                    if (provinces.filter(f => f.province == province).length == 0)
+                                        value = value.replace(province, emoji(0x1000A6) + province + 'undefined');
+
+                                    const amphurJson = fs.readFileSync('./server/amphur.json');
+                                    const amphures = JSON.parse(amphurJson);
+                                    if (amphures.filter(f => f.province == province && f.amphur == amphur).length == 0)
+                                        value = value.replace(amphur, emoji(0x1000A6) + amphur + 'undefined');
                                 }
                                 value = value.replace('99999', '')
                             } else if (key == 'tel') {
