@@ -1132,8 +1132,8 @@ const initMsgOrder = (txt) => {
                                     //     value = `${value + ' ' + emoji(0x1000A6)}รหัสไปรษณีย์ไม่ถูกต้องundefined`
                                     // }
                                 }
-                                let amphur = '';
-                                let province = '';
+                                let amphur = 'ไม่พบอำเภอ';
+                                let province = 'ไม่พบจังหวัด';
                                 let addrArr = [];
                                 if (value.indexOf(' เขต') > -1) {
                                     province = 'กรุงเทพมหานคร';
