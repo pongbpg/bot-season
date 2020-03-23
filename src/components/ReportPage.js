@@ -150,6 +150,13 @@ export class ReportPage extends React.Component {
                                                     FLASH
                                         </a>
                                             </p>
+                                            <p className="control">
+                                                <a className="button is-danger is-centered is-small"
+                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=jt&country=TH&payment=${this.state.payment}`}
+                                                    target="_blank">
+                                                    J&T
+                                        </a>
+                                            </p>
                                         </div>
                                     </td>
                                 </tr>
