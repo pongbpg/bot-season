@@ -110,27 +110,48 @@ export class OrderPage extends React.Component {
                 .then((rows) => {
                     // console.log(rows)
                     let tracks = [];
-                    const colId = rows[0].findIndex(f => f == 'Order No.');
-                    const colTack = rows[0].findIndex(f => f == 'Tracking No.');
-                    const colFreight = rows[0].findIndex(f => f == 'Freight');
-                    const colCodFee = rows[0].findIndex(f => f == 'COD fee');
-                    const colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
-                    const colCodAmt = rows[0].findIndex(f => f == 'COD Amt');
-                    // console.log(colId, colTack)
+                    let colId = null;
+                    let colTack = null;
+                    let colFreight = null;
+                    let colCodFee = null;
+                    let colTotalCharge = null;
+                    let colCodAmt = null;
+                    if (this.state.expressName == "FLASH") {
+                        colId = rows[0].findIndex(f => f == 'Order No.');
+                        colTack = rows[0].findIndex(f => f == 'Tracking No.');
+                        colFreight = rows[0].findIndex(f => f == 'Freight');
+                        // colCodFee = rows[0].findIndex(f => f == 'COD fee');
+                        // colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
+                        colCodAmt = rows[0].findIndex(f => f == 'COD Amt');
+                    }
+                    if (this.state.expressName == "JT") {
+                        colId = rows[0].findIndex(f => f == 'ที่อยู่ผู้ส่ง');
+                        colTack = rows[0].findIndex(f => f == 'เลขที่ AWB');
+                        colFreight = rows[0].findIndex(f => f == 'รวมค่าส่ง');
+                        // colCodFee = rows[0].findIndex(f => f == 'COD fee');
+                        // colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
+                        colCodAmt = rows[0].findIndex(f => f == 'COD');
+                    }
                     if (rows.length > 0) {
                         for (var row in rows) {
                             if (rows[row][colId] != '' && rows[row][colId] != null && rows[row][colTack] != null) {
-                                if (rows[row][colId].replace(/\s/g, '').length == 18)
+                                const id = rows[row][colId].split(' ')[0].replace(/\s/g, '');
+                                if (id.length == 18) {
+                                    const freight = Number(rows[row][colFreight]);
+                                    const codAmount = Number(rows[row][colCodAmt]);
+                                    const codFee = codAmount > 0 ? codAmount * 0.03 : 0;
+                                    const totalFreight = freight + codFee;
                                     tracks.push({
                                         tracking: rows[row][colTack].replace(/\s/g, ''),
-                                        id: rows[row][colId].replace(/\s/g, ''),
+                                        id,
                                         expressName: this.state.expressName,
                                         expressLink: this.state.expressLink,
-                                        freight: Number(rows[row][colFreight]),
-                                        codFee: Number(rows[row][colCodFee]),
-                                        totalFreight: Number(rows[row][colTotalCharge]),
-                                        codAmount: Number(rows[row][colCodAmt])
+                                        freight,
+                                        codFee,
+                                        totalFreight,
+                                        codAmount
                                     })
+                                }
                             }
                         }
                     }
@@ -189,7 +210,7 @@ export class OrderPage extends React.Component {
                             <Link to="/orders/edit" className="button"><h1 className="sub-title"><MdEdit />แก้ไข</h1></Link>
                         </div>
                         {this.state.tracks.length == 0
-                            ? <input type="file" onChange={this.onFileChange} />
+                            ? <input type="file" onChange={this.onFileChange} disabled={['FLASH', 'JT'].indexOf(this.state.expressName) == -1} />
                             : <div className="level">
                                 <div className="level-item">
                                     <h3 className="subtitle">
