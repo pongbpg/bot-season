@@ -58,9 +58,9 @@ export class PagesPage extends React.Component {
             } else {
                 if (confirm('คุณแน่ใจที่จะเพิ่มเพจนี้')) {
                     this.props.startPushPage(this.state.newPage)
-                        // .then(() => {
-                        //     this.props.startListPages(this.state.auth);
-                        // })
+                    // .then(() => {
+                    //     this.props.startListPages(this.state.auth);
+                    // })
                 }
                 this.setState({ newPage: { ...this.state.newPage, id: '' } })
             }
@@ -242,8 +242,10 @@ export class PagesPage extends React.Component {
                                                         </div>
                                                     </td> */}
                                                     <td>
-                                                        <input type="text" className="input" onChange={this.onActIdChange} value={this.state.page.actId} />
+                                                        {/* <input type="text" className="input" onChange={this.onActIdChange} value={this.state.page.actId} /> */}
+                                                        <textarea className="textarea" rows="5" onChange={this.onActIdChange} value={this.state.page.actId}>
 
+                                                        </textarea>
                                                     </td>
                                                     <td>
                                                         <div className="control select">
