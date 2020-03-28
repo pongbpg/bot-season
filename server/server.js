@@ -1140,10 +1140,10 @@ const initMsgOrder = (txt) => {
                                     addrArr = value.split(' เขต');
                                     amphur = 'เขต' + addrArr[1].split(' ')[0];
                                 } else {
-                                    addrArr = value.replace('อำเภอ', 'อ.').split(' อ.');
+                                    addrArr = value.replace(' อำเภอ', ' อ.').split(' อ.');
                                     if (addrArr.length > 1)
                                         amphur = addrArr[1].split(' ')[0];
-                                    addrArr = value.replace('จังหวัด', 'จ.').split(' จ.');
+                                    addrArr = value.replace(' จังหวัด', 'จ.').split(' จ.');
                                     if (addrArr.length > 1)
                                         province = addrArr[1].split(' ')[0];
                                 }
