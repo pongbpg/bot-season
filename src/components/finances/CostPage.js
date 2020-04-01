@@ -114,8 +114,11 @@ export class CostPage extends React.Component {
                         })
                         .then((jsonStr) => {
                             const insights = JSON.parse(JSON.stringify(jsonStr));
-                            if (insights.data.length > 0) {
-                                sumPage[page.id] += Number(insights.data[0].spend)
+                            // console.log(insights)
+                            if (!insights.error) {
+                                if (insights.data.length > 0) {
+                                    sumPage[page.id] += Number(insights.data[0].spend)
+                                }
                             }
                             if (count > 0) {
                                 count--;
@@ -136,7 +139,7 @@ export class CostPage extends React.Component {
                                         day: moment(date).format('YYYYMMDD').substr(6, 2)
                                     })
                                 }
-                                // console.log(sumPage)
+                                console.log(sumPage)
                             }
                         })
                 }

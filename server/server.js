@@ -1611,7 +1611,7 @@ const callbackUpdateProductsAndPayments = async (orderId, resultOrder) => {
         text: `@@ยกเลิก:${orderId}`
     })
     for (var b = 0; b < resultOrder.data.banks.length; b++) {
-        if (['COD', 'CM', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
+        if (['COD', 'CM', 'ADMIN', 'STOCK', 'XX', 'CP'].indexOf(resultOrder.data.banks[b].name) == -1) {
             await db.collection('payments')
                 .where('name', '==', resultOrder.data.banks[b].name)
                 .where('date', '==', resultOrder.data.banks[b].date)
