@@ -1204,11 +1204,11 @@ const initMsgOrder = (txt) => {
                 } else {
                     if (data.page.indexOf('@') > -1) {
                         if (['O', 'N', 'F','T'].indexOf(data.channel) == -1) {
-                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F เท่านั้นundefined`
+                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F,T เท่านั้นundefined`
                         }
                     } else {
                         if (['O', 'N','T'].indexOf(data.channel) == -1) {
-                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N เท่านั้นundefined`
+                            data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,T เท่านั้นundefined`
                         }
                     }
                 }
