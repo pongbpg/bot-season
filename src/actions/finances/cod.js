@@ -4,8 +4,8 @@ export const startGetCods = (date) => {
         return firestore.collection('orders')
             .where('codAmount', '>', 0)
             .where('orderDate', '==', date)
-            // .get()
-            .onSnapshot(snapShot => {
+            .get()
+            .then(snapShot => {
                 let cods = [];
                 snapShot.forEach(doc => {
                     cods.push({ id: doc.id, ...doc.data() })
