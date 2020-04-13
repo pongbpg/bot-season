@@ -17,7 +17,8 @@ export class ReportPage extends React.Component {
             payment: 'ALL',
             cost: 'admin',
             groupBy: 'cutoff',
-            page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id)
+            page: (['owner', 'stock'].indexOf(props.auth.role) > -1 ? 'ALL' : props.pages[0].id),
+            range: 'today'
         }
         this.handleStartChange = this.handleStartChange.bind(this);
         this.handleEndChange = this.handleEndChange.bind(this);
@@ -53,6 +54,36 @@ export class ReportPage extends React.Component {
     handleGroupByChange = (e) => {
         this.setState({ groupBy: e.target.value })
     }
+    onRangeChange = (e) => {
+        let starDate = moment();
+        let endDate = moment();
+        const range = e.target.value;
+        switch (range) {
+            case 'yesterday':
+                starDate = moment().subtract('1', 'days')
+                endDate = moment().subtract('1', 'days')
+                break;
+            case '7days':
+                starDate = moment().subtract('7', 'days')
+                endDate = moment().subtract('1', 'days')
+                break;
+            case 'thismonth1':
+                starDate = moment().startOf('month');
+                endDate = moment().subtract('1', 'days')
+                break;
+            case 'thismonth2':
+                starDate = moment().startOf('month');
+                break;
+            case 'lastmonth':
+                starDate = moment().startOf('month').subtract('1', 'months');
+                endDate = moment().subtract('1', 'months').endOf('month');
+                break;
+        }
+        this.setState({
+            range
+        }, this.handleStartChange(starDate)
+            , this.handleEndChange(endDate))
+    }
     render() {
         // console.log('pages', this.state.pages)
         const rptUri = 'http://rpt.topslimstore.com';
@@ -65,7 +96,7 @@ export class ReportPage extends React.Component {
                     </div>
                 </div>
                 <div className="columns is-mobile is-centered">
-                    <div className="column is-half">
+                    <div className="column is-8">
                         <div className="level">
                             <div className="level-item has-text-centered">
                                 <div className="field">
@@ -89,6 +120,21 @@ export class ReportPage extends React.Component {
                                         selected={this.state.endDate}
                                         onChange={this.handleEndChange}
                                     />
+                                </div>
+                            </div>
+                            <div className="level-item has-text-centered">
+                                <div className="field">
+                                    <label className="label">ช่วงเวลา</label>
+                                    <div className="select">
+                                        <select selected={this.state.range} onChange={this.onRangeChange}>
+                                            <option value="today">วันนี้</option>
+                                            <option value="yesterday">เมื่อวาน</option>
+                                            <option value="7days">7 วันที่แล้ว</option>
+                                            <option value="thismonth1">เดือนนี้ถึงเมื่อวาน</option>
+                                            <option value="thismonth2">เดือนนี้</option>
+                                            <option value="lastmonth">เดือนที่แล้ว</option>
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
                             <div className="level-item has-text-centered">
