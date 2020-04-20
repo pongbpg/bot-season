@@ -1148,24 +1148,31 @@ const initMsgOrder = (txt) => {
                                         province = addrArr[1].split(' ')[0];
                                 }
 
-                                const provinceJson = fs.readFileSync('./server/province.json');
-                                const provinces = JSON.parse(provinceJson);
-                                if (provinces.filter(f => f.province == province).length == 0)
-                                    value = value.concat(emoji(0x1000A6) + province + 'undefined');
+                                if (amphur != 'abc' && province != 'abc') {
+                                    const provinceJson = fs.readFileSync('./server/province.json');
+                                    const provinces = JSON.parse(provinceJson);
+                                    if (provinces.filter(f => f.province == province).length == 0)
+                                        value = value.concat(emoji(0x1000A6) + province + 'undefined');
 
-                                const amphurJson = fs.readFileSync('./server/amphur.json');
-                                const amphures = JSON.parse(amphurJson);
-                                if (amphures.filter(f => f.province == province && f.amphur == amphur).length == 0)
-                                    value = value.concat(emoji(0x1000A6) + amphur + 'undefined');
-
+                                    const amphurJson = fs.readFileSync('./server/amphur.json');
+                                    const amphures = JSON.parse(amphurJson);
+                                    if (amphures.filter(f => f.province == province && f.amphur == amphur).length == 0)
+                                        value = value.concat(emoji(0x1000A6) + amphur + 'undefined');
+                                } else {
+                                    value = value.replace('อ.abc', '');
+                                    value = value.replace('จ.abc', '');
+                                }
                                 value = value.replace('99999', '')
                             } else if (key == 'tel') {
+                                const foreign = value.substr(0, 1) == '+';
                                 value = value.replace(/\D/g, ''); //เหลือแต่ตัวเลข
-                                if (value.length < 10) {
-                                    value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
-                                } else {
-                                    if (value.substr(0, 2) == '00') {
-                                        value = value.substr(1, 10)
+                                if (!foreign) {
+                                    if (value.length < 10) {
+                                        value = `${emoji(0x1000A6)}เบอร์โทรไม่ครบ 10 หลักundefined`
+                                    } else {
+                                        if (value.substr(0, 2) == '00') {
+                                            value = value.substr(1, 10)
+                                        }
                                     }
                                 }
                             }
@@ -1203,11 +1210,11 @@ const initMsgOrder = (txt) => {
                     data.channel = `${emoji(0x1000A6)}ไม่ได้ใส่ช่องทางโฆษณาundefined`
                 } else {
                     if (data.page.indexOf('@') > -1) {
-                        if (['O', 'N', 'F','T'].indexOf(data.channel) == -1) {
+                        if (['O', 'N', 'F', 'T'].indexOf(data.channel) == -1) {
                             data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,F,T เท่านั้นundefined`
                         }
                     } else {
-                        if (['O', 'N','T'].indexOf(data.channel) == -1) {
+                        if (['O', 'N', 'T'].indexOf(data.channel) == -1) {
                             data.channel = `${emoji(0x1000A6)}ใส่ช่องทางโฆษณาได้เพียง O,N,T เท่านั้นundefined`
                         }
                     }
