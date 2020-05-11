@@ -438,7 +438,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                 .update({ amount: balance })
                                                         })
                                                 }
-                                                await orderRef.update({ return: false, freight2: 0, totalFreight: order.data().totalFreight - (doc.get('freight2') ? doc.data().freight2 : 0) })
+                                                await orderRef.update({ return: false, freight2: 0, totalFreight: order.data().totalFreight - (order.get('freight2') ? order.data().freight2 : 0) })
                                                     .then(cancel => {
                                                         obj.messages.push({
                                                             type: 'text',
