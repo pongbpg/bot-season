@@ -367,40 +367,61 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                             }
 
                         } else if (msg.indexOf('@@return:') > -1 && msg.split(':').length == 2) {
-                            const orderId = msg.split(':')[1].replace(/\s/g, '');
-                            const orderRef = db.collection('orders').doc(orderId);
-                            orderRef.get()
-                                .then(order => {
-                                    if (order.exists) {
-                                        if (user.data().role == 'owner') {
-                                            async function callback() {
-                                                for (var p = 0; p < order.data().product.length; p++) {
-                                                    await db.collection('products').doc(order.data().product[p].code).get()
-                                                        .then(product => {
-                                                            const balance = product.data().amount + order.data().product[p].amount;
-                                                            db.collection('products').doc(order.data().product[p].code)
-                                                                .update({ amount: balance })
+                            const orderMsg = msg.split(':')[1].replace(/\s/g, '');
+                            if (orderMsg.split('=').length == 2) {
+                                const orderId = orderMsg.split('=')[0];
+                                const freight2 = orderMsg.split('=')[1];
+                                if (!isNaN(freight2)) {
+                                    const orderRef = db.collection('orders').doc(orderId);
+                                    orderRef.get()
+                                        .then(order => {
+                                            if (order.exists) {
+                                                if (user.data().role == 'owner') {
+                                                    async function callback() {
+                                                        for (var p = 0; p < order.data().product.length; p++) {
+                                                            await db.collection('products').doc(order.data().product[p].code).get()
+                                                                .then(product => {
+                                                                    const balance = product.data().amount + order.data().product[p].amount;
+                                                                    db.collection('products').doc(order.data().product[p].code)
+                                                                        .update({ amount: balance })
+                                                                })
+                                                        }
+                                                        await orderRef.update({
+                                                            return: true, freight2: Number(freight2), totalFreight: order.data().totalFreight + Number(freight2)
                                                         })
+                                                            .then(cancel => {
+                                                                obj.messages.push({
+                                                                    type: 'text',
+                                                                    text: `${emoji(0x10001C)}ตีคืนรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${emoji(0x100018)}\nค่าส่งตีกลับ = ${freight2} บาท`//${formatOrder(order.data())}`
+                                                                })
+                                                                reply(obj, LINE_TH);
+                                                            })
+                                                    }
+                                                    callback();
                                                 }
-                                                await orderRef.update({ return: true })
-                                                    .then(cancel => {
-                                                        obj.messages.push({
-                                                            type: 'text',
-                                                            text: `${emoji(0x10001C)}ตีคืนรายการสั่งซื้อ ${orderId} เรียบร้อยค่ะ${emoji(0x100018)}`//${formatOrder(order.data())}`
-                                                        })
-                                                        reply(obj, LINE_TH);
-                                                    })
+                                            } else {
+                                                obj.messages.push({
+                                                    type: 'text',
+                                                    text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+                                                })
                                             }
-                                            callback();
-                                        }
-                                    } else {
-                                        obj.messages.push({
-                                            type: 'text',
-                                            text: `${emoji(0x100035)}ไม่มีรายการสั่งซื้อนี้: ${orderId}\nกรุณาตรวจสอบ "รหัสสั่งซื้อ" ค่ะ${emoji(0x10000F)}`
+                                            reply(obj, LINE_TH);
                                         })
-                                    }
+                                } else {
+                                    obj.messages.push({
+                                        type: 'text',
+                                        text: `${emoji(0x100035)}ตีคืน=จำนวนเงิน ต้องเป็นตัวเลขเท่านั้นจ้า${emoji(0x10000F)}`
+                                    })
                                     reply(obj, LINE_TH);
+                                }
+                            } else {
+                                obj.messages.push({
+                                    type: 'text',
+                                    text: `${emoji(0x100035)}ตีคืนกรุณาใส่ = จำนวนเงินค่าส่งตีกลับด้วยจ้า${emoji(0x10000F)}`
                                 })
+                                reply(obj, LINE_TH);
+                            }
+
                         } else if (msg.indexOf('@@resend:') > -1 && msg.split(':').length == 2) {
                             const orderId = msg.split(':')[1].replace(/\s/g, '');
                             const orderRef = db.collection('orders').doc(orderId);
@@ -417,7 +438,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                 .update({ amount: balance })
                                                         })
                                                 }
-                                                await orderRef.update({ return: false })
+                                                await orderRef.update({ return: false, freight2: 0, totalFreight: order.data().totalFreight - (doc.get('freight2') ? doc.data().freight2 : 0) })
                                                     .then(cancel => {
                                                         obj.messages.push({
                                                             type: 'text',
