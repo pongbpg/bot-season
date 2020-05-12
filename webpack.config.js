@@ -1,16 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
 const ExtractTextPlugin = require("extract-text-webpack-plugin");
-// var fs = require('fs');
-// var nodeModules = {};
-// fs.readdirSync('node_modules')
-//     .filter(function (x) {
-//         return ['.bin'].indexOf(x) === -1;
-//     })
-//     .forEach(function (mod) {
-//         nodeModules[mod] = 'commonjs ' + mod;
-//     });
-// const nodeExternals = require('webpack-node-externals');
+const CompressionPlugin = require('compression-webpack-plugin');
+const TerserPlugin = require('terser-webpack-plugin');
+const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
 if (process.env.NODE_ENV === 'test') {
@@ -22,24 +16,18 @@ if (process.env.NODE_ENV === 'test') {
 
 module.exports = (env) => {
     const isProduction = env === 'production';
+
+    // console.log('env', env, isProduction)
     const CSSExtract = new ExtractTextPlugin('styles.css');
     return {
-        // externals: {
-        //     '@google-cloud/storage': 'commonjs @google-cloud/storage'
-        // },
-        // target: 'web',
-        // externals: nodeModules,
         entry: ['babel-polyfill', './src/app.js'],
         output: {
-            path: path.join(__dirname, 'public', 'dist'),
-            filename: 'bundle.js'
+            path: path.resolve(__dirname, 'public', 'dist'),
+            // publicPath: 'dist/',
+            filename: '[name].bundle.js',
+            chunkFilename: '[name].bundle.js',
+            // path: path.resolve(process.cwd(), 'public', 'dist'),
         },
-        // node: {
-        //     fs: 'empty',
-        //     child_process: 'empty',
-        //     net: 'empty',
-        //     tls: 'empty',
-        // },
         module: {
             rules: [
                 {
@@ -69,11 +57,31 @@ module.exports = (env) => {
                             }
                         ]
                     })
+                },
+                {
+                    test: /\.svg$/,
+                    use: [
+                        {
+                            loader: 'svg-url-loader',
+                            options: {
+                                limit: 10000,
+                            },
+                        },
+                    ],
                 }
             ]
         },
         plugins: [
+            new webpack.ProgressPlugin(),
+            new CompressionPlugin({
+                filename: '[path].gz[query]',
+                algorithm: 'gzip',
+                test: /\.js$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$|\.svg?.+$/,
+                threshold: 10240,
+                minRatio: 0.8
+            }),
             CSSExtract,
+            new CleanWebpackPlugin(),
             new webpack.DefinePlugin({
                 'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
                 'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
@@ -87,7 +95,7 @@ module.exports = (env) => {
                 'process.env.CLIENT_EMAIL': JSON.stringify(process.env.CLIENT_EMAIL)
             })
         ],
-        devtool: isProduction ? 'source-map' : 'cheap-module-eval-source-map',
+        devtool: isProduction ? false : 'cheap-module-eval-source-map',
         devServer: {
             contentBase: path.join(__dirname, 'public'),
             historyApiFallback: true,
@@ -95,7 +103,14 @@ module.exports = (env) => {
             proxy: {
                 '/api': 'http://127.0.0.1:3000'
             },
-            port: 8080
+            port: 8080,
+            compress: true
+        },
+        optimization: {
+            minimizer: [new TerserPlugin()],
+            splitChunks: {
+                chunks: 'all',
+            }
         }
     }
 };
