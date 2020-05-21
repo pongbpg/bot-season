@@ -183,6 +183,13 @@ export class StockPage extends React.Component {
         const showKH = !!e.target.checked && this.state.auth.role == 'owner'
         this.setState({ showKH })
     }
+    onOfficalChange = (e) => {
+        console.log(e.target.name, e.target.checked)
+        this.props.startUpdateProduct({
+            id: e.target.name,
+            official: e.target.checked
+        })
+    }
     render() {
         let sumAmount = 0;
         return (
@@ -251,6 +258,7 @@ export class StockPage extends React.Component {
                                 {this.state.showCost && (<th className="has-text-right">ต้นทุน</th>)}
                                 {this.state.auth.role == 'owner' && (<th className="has-text-right">ยืม</th>)}
                                 <th className="has-text-right">คงเหลือ</th>
+                                {this.state.auth.role == 'owner' && (< th className="has-text-right">Official</th>)}
                                 {this.state.auth.role == 'owner' && (< th className="has-text-right">จัดการ</th>)}
                             </tr>
                         </thead>
@@ -388,6 +396,9 @@ export class StockPage extends React.Component {
                                         </td>
                                     )}
                                     <td className="has-text-right">{Money(st.amount, 0)}</td>
+                                    {this.state.auth.role == 'owner' && (
+                                        <td className="has-text-centered"><input type="checkbox" name={st.id} onChange={this.onOfficalChange} /></td>
+                                    )}
                                     {this.state.auth.role == 'owner' && (
                                         this.state.action === false || this.state.id !== st.id ? (
                                             <td className="has-text-right">
