@@ -64,7 +64,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     doc.ref.update({ quantity: bal - Number(quan) })
                     obj.messages.push({
                         type: 'text',
-                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nเบิกออก ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal - Number(quan), 0)}`
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nเบิกออก ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal - Number(quan), 0)} ชิ้น`
                     })
                     reply(obj, LINE_TH);
                 })
@@ -78,7 +78,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     doc.ref.update({ quantity: bal + Number(quan) })
                     obj.messages.push({
                         type: 'text',
-                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nนำเข้า ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal + Number(quan), 0)}`
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nนำเข้า ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal + Number(quan), 0)} ชิ้น`
                     })
                     reply(obj, LINE_TH);
                 })
