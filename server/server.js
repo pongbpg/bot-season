@@ -66,6 +66,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                         type: 'text',
                         text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nเบิกออก ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal - Number(quan), 0)}`
                     })
+                    reply(obj, LINE_TH);
                 })
     } else if (msg.indexOf('@@jiffy+:') > -1 && msg.split(':').length == 2) {
         const quan = msg.split(':')[1];
@@ -79,6 +80,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                         type: 'text',
                         text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nนำเข้า ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal + Number(quan), 0)}`
                     })
+                    reply(obj, LINE_TH);
                 })
     } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
         db.collection('groups').get()
