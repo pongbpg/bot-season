@@ -54,7 +54,33 @@ app.post('/api/linebot', jsonParser, (req, res) => {
     };
     // if (request.message.type !== 'text' || request.source.type !== 'group') {
     //}
-    if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
+    if (msg.indexOf('@@jiffy:') > -1 && msg.split(':').length == 2) {
+        const quan = msg.split(':')[1];
+        if (!isNaN(quan))
+            db.collection('stocks').doc('jiffy')
+                .get()
+                .then(doc => {
+                    const bal = doc.data().quantity;
+                    doc.ref.update({ quantity: bal - Number(quan) })
+                    obj.messages.push({
+                        type: 'text',
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nเบิกออก ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal - Number(quan), 0)}`
+                    })
+                })
+    } else if (msg.indexOf('@@jiffy+:') > -1 && msg.split(':').length == 2) {
+        const quan = msg.split(':')[1];
+        if (!isNaN(quan))
+            db.collection('stocks').doc('jiffy')
+                .get()
+                .then(doc => {
+                    const bal = doc.data().quantity;
+                    doc.ref.update({ quantity: bal + Number(quan) })
+                    obj.messages.push({
+                        type: 'text',
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nนำเข้า ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal + Number(quan), 0)}`
+                    })
+                })
+    } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
         db.collection('groups').get()
             .then(snapShot => {
                 snapShot.forEach(group => {

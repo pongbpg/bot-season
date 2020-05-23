@@ -397,7 +397,7 @@ export class StockPage extends React.Component {
                                     )}
                                     <td className="has-text-right">{Money(st.amount, 0)}</td>
                                     {this.state.auth.role == 'owner' && (
-                                        <td className="has-text-centered"><input type="checkbox" name={st.id} onChange={this.onOfficalChange} /></td>
+                                        <td className="has-text-centered"><input type="checkbox" name={st.id} checked={st.official} onChange={this.onOfficalChange} /></td>
                                     )}
                                     {this.state.auth.role == 'owner' && (
                                         this.state.action === false || this.state.id !== st.id ? (
