@@ -101,7 +101,7 @@ export class CostPage extends React.Component {
         this.state.pages.filter(f => f.actId)
             .map(page => {
                 // if (page.actId) {
-                coonsole.log(page.actId)
+                console.log(page.actId)
                 const acts = page.actId.split(',');
                 if (sumPage.indexOf(page.id) == -1) {
                     sumPage[page.id] = 0;
