@@ -61,10 +61,12 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 .get()
                 .then(doc => {
                     const bal = doc.data().quantity;
-                    doc.ref.update({ quantity: bal - Number(quan) })
+                    const quantity = bal - Number(quan);
+                    const quanPack = quantity / doc.data().perpack;
+                    doc.ref.update({ quantity })
                     obj.messages.push({
                         type: 'text',
-                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nเบิกออก ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal - Number(quan), 0)} ชิ้น`
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ${doc.data().unit์Name}\nเบิกออก ${formatMoney(Number(quan), 0)} ${doc.data().unit์Name}\nคงเหลือ ${formatMoney(quantity, 0)} ${doc.data().unit์Name} (${formatMoney(quanPack, 2)} ${doc.data().packName})`
                     })
                     reply(obj, LINE_TH);
                 })
@@ -75,10 +77,12 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 .get()
                 .then(doc => {
                     const bal = doc.data().quantity;
-                    doc.ref.update({ quantity: bal + Number(quan) })
+                    const quantity = bal + Number(quan);
+                    const quanPack = quantity / doc.data().perpack;
+                    doc.ref.update({ quantity })
                     obj.messages.push({
                         type: 'text',
-                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ชิ้น\nนำเข้า ${formatMoney(Number(quan), 0)} ชิ้น\nคงเหลือ ${formatMoney(bal + Number(quan), 0)} ชิ้น`
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ${doc.data().unit์Name}\nนำเข้า ${formatMoney(Number(quan), 0)} ${doc.data().unit์Name}\nคงเหลือ ${formatMoney(quantity, 0)} ${doc.data().unit์Name} (${formatMoney(quanPack, 2)} ${doc.data().packName})`
                     })
                     reply(obj, LINE_TH);
                 })
