@@ -66,7 +66,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     doc.ref.update({ quantity })
                     obj.messages.push({
                         type: 'text',
-                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ${doc.data().unitName}\nเบิกออก ${formatMoney(Number(quan), 0)} ${doc.data().unitName}\nคงเหลือ ${formatMoney(quantity, 0)} ${doc.data().unitName} (${formatMoney(quanPack, 2)} ${doc.data().packName})`
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ${doc.data().unitName}\nเบิกออก ${formatMoney(Number(quan), 0)} ${doc.data().unitName}\nคงเหลือ ${formatMoney(quantity, 0)} ${doc.data().unitName}\n(${formatMoney(quanPack, 2)} ${doc.data().packName})`
                     })
                     reply(obj, LINE_TH);
                 })
@@ -82,7 +82,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     doc.ref.update({ quantity })
                     obj.messages.push({
                         type: 'text',
-                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ${doc.data().unitName}\nนำเข้า ${formatMoney(Number(quan), 0)} ${doc.data().unitName}\nคงเหลือ ${formatMoney(quantity, 0)} ${doc.data().unitName} (${formatMoney(quanPack, 2)} ${doc.data().packName})`
+                        text: `*สินค้า Jiffy*\nยอดเดิม ${formatMoney(bal, 0)} ${doc.data().unitName}\nนำเข้า ${formatMoney(Number(quan), 0)} ${doc.data().unitName}\nคงเหลือ ${formatMoney(quantity, 0)} ${doc.data().unitName}\n(${formatMoney(quanPack, 2)} ${doc.data().packName})`
                     })
                     reply(obj, LINE_TH);
                 })
