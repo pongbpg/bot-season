@@ -1199,6 +1199,10 @@ const initMsgOrder = (txt) => {
                                     addrArr = value.replace(' จังหวัด', ' จ.').split(' จ.');
                                     if (addrArr.length > 1)
                                         province = addrArr[1].split(' ')[0];
+
+                                    if (amphur == 'เมือง')
+                                        amphur += province;
+
                                 }
 
                                 if (amphur != 'abc' && province != 'abc') {
