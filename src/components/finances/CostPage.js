@@ -7,7 +7,9 @@ import { FaFacebook } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
 import NumberFormat from 'react-number-format';
+import isJson from '../../selectors/isJson'
 import moment from 'moment';
+import _ from 'underscore';
 moment.locale('th');
 export class CostPage extends React.Component {
     constructor(props) {
@@ -98,54 +100,100 @@ export class CostPage extends React.Component {
         let sumPage = [];
         let count = 0;
         const date = this.state.date;
+        const costs = this.state.costs;
+        let fetchs = [];
+        // console.log(this.state.pages)
         this.state.pages.filter(f => f.actId)
             .map(page => {
                 // if (page.actId) {
-                console.log(page.actId)
-                const acts = page.actId.split(',');
-                if (sumPage.indexOf(page.id) == -1) {
-                    sumPage[page.id] = 0;
-                }
-                count += acts.length;
-                for (let i = 0; i < acts.length; i++) {
-                    var cors_api_url = `https://graph.facebook.com/v5.0/act_${acts[i]}/insights?access_token=${this.state.token.fb}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
-                    // console.log(cors_api_url)
-                    fetch(cors_api_url)
-                        .then(function (response) {
-                            return response.json();
+                if (isJson(page.actId)) {
+                    const tokens = JSON.parse(page.actId);
+                    // if (sumPage.indexOf(page.id) == -1) {
+                    //     sumPage[page.id] = 0;
+                    // }
+                    tokens.map(t => {
+                        const token = t.token;
+                        t.acts.map(act => {
+                            const cors_api_url = `https://graph.facebook.com/v7.0/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                            fetchs.push(fetch(cors_api_url).then(value => value.json()))
+                            sumPage.push({ page: page.id, spend: 0, account_id: act.id })
                         })
-                        .then((jsonStr) => {
-                            const insights = JSON.parse(JSON.stringify(jsonStr));
-                            // console.log(insights)
-                            if (!insights.error) {
-                                if (insights.data.length > 0) {
-                                    sumPage[page.id] += Number(insights.data[0].spend)
-                                }
-                            }
-                            if (count > 0) {
-                                count--;
-                            }
-                            if (count == 0) {
-                                for (var item in sumPage) {
-                                    let cost = this.state.costs.find(f => f.page == item);
-                                    // console.log(cost)
-                                    this.props.startSaveCost({
-                                        date: moment(date).format('YYYYMMDD'),
-                                        page: item,
-                                        id: moment(date).format('YYYYMMDD') + item,
-                                        fb: sumPage[item],
-                                        team: cost.team,
-                                        admin: cost.admin,
-                                        year: moment(date).format('YYYYMMDD').substr(0, 4),
-                                        month: moment(date).format('YYYYMMDD').substr(4, 2),
-                                        day: moment(date).format('YYYYMMDD').substr(6, 2)
-                                    })
-                                }
-                                console.log(sumPage)
-                            }
-                        })
+                    })
+                    // console.log(page.id, JSON.parse(page.actId))
                 }
+                // const acts = page.actId.split(',');
+                // if (sumPage.indexOf(page.id) == -1) {
+                //     sumPage[page.id] = 0;
                 // }
+                // count += acts.length;
+                // for (let i = 0; i < acts.length; i++) {
+                //     var cors_api_url = `https://graph.facebook.com/v5.0/act_${acts[i]}/insights?access_token=${this.state.token.fb}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                //     // console.log(cors_api_url)
+                //     fetch(cors_api_url)
+                //         .then(function (response) {
+                //             return response.json();
+                //         })
+                //         .then((jsonStr) => {
+                //             const insights = JSON.parse(JSON.stringify(jsonStr));
+                //             if (!insights.error)
+                //                 if (insights.data.length > 0) {
+                //                     sumPage[page.id] += Number(insights.data[0].spend)
+                //                 }
+                //             if (count > 0) {
+                //                 count--;
+                //             }
+                //             if (count == 0) {
+                //                 for (var item in sumPage) {
+                //                     let cost = this.state.costs.find(f => f.page == item);
+                //                     // console.log(cost)
+                //                     this.props.startSaveCost({
+                //                         date: moment(date).format('YYYYMMDD'),
+                //                         page: item,
+                //                         id: moment(date).format('YYYYMMDD') + item,
+                //                         fb: sumPage[item],
+                //                         team: cost.team,
+                //                         admin: cost.admin,
+                //                         year: moment(date).format('YYYYMMDD').substr(0, 4),
+                //                         month: moment(date).format('YYYYMMDD').substr(4, 2),
+                //                         day: moment(date).format('YYYYMMDD').substr(6, 2)
+                //                     })
+                //                 }
+                //                 // console.log(sumPage)
+                //             }
+                //         })
+                // }
+                // }
+            })
+        // console.log(fetchs)
+        Promise.all(fetchs)
+            .then(function (res) {
+                res.map((r, i) => {
+                    const insights = JSON.parse(JSON.stringify(r));
+                    if (!insights.error)
+                        if (insights.data.length > 0) {
+                            sumPage[i] = { ...sumPage[i], spend: Number(insights.data[0].spend) }
+                        }
+                })
+                const result = _.chain(sumPage).groupBy('page')
+                    .map((values, pageId) => {
+                        console.log(values, pageId)
+                        const costPage = _.reduce(_.pluck(values, 'spend'), (t, n) => t + n, 0);
+                        let cost = costs.find(f => f.page == pageId);
+                        // console.log(cost)
+                        this.props.startSaveCost({
+                            date: moment(date).format('YYYYMMDD'),
+                            page: pageId,
+                            id: moment(date).format('YYYYMMDD') + pageId,
+                            fb: costPage,
+                            team: cost.team,
+                            admin: cost.admin,
+                            year: moment(date).format('YYYYMMDD').substr(0, 4),
+                            month: moment(date).format('YYYYMMDD').substr(4, 2),
+                            day: moment(date).format('YYYYMMDD').substr(6, 2)
+                        })
+                        return { pageId, costPage }
+                    }).value();
+                console.log(result)
             })
     }
 
