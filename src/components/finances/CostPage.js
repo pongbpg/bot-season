@@ -166,7 +166,7 @@ export class CostPage extends React.Component {
             })
         // console.log(fetchs)
         Promise.all(fetchs)
-            .then(res => {
+            .then((res) => {
                 res.map((r, i) => {
                     const insights = JSON.parse(JSON.stringify(r));
                     if (!insights.error)
@@ -178,24 +178,22 @@ export class CostPage extends React.Component {
                     .map((values, pageId) => {
                         console.log(values, pageId)
                         const costPage = _.reduce(_.pluck(values, 'spend'), (t, n) => t + n, 0);
+                        let cost = costs.find(f => f.page == pageId);
+                        // console.log(cost)
+                        this.props.startSaveCost({
+                            date: moment(date).format('YYYYMMDD'),
+                            page: pageId,
+                            id: moment(date).format('YYYYMMDD') + pageId,
+                            fb: costPage,
+                            team: cost.team,
+                            admin: cost.admin,
+                            year: moment(date).format('YYYYMMDD').substr(0, 4),
+                            month: moment(date).format('YYYYMMDD').substr(4, 2),
+                            day: moment(date).format('YYYYMMDD').substr(6, 2)
+                        })
                         return { pageId, costPage }
                     }).value();
                 console.log(result)
-                for (let i = 0; i < result.length; i++) {
-                    let cost = costs.find(f => f.page == result[i].pageId);
-                    // console.log(cost)
-                    this.props.startSaveCost({
-                        date: moment(date).format('YYYYMMDD'),
-                        page: result[i].pageId,
-                        id: moment(date).format('YYYYMMDD') + result[i].pageId,
-                        fb: result[i].costPage,
-                        team: cost.team,
-                        admin: cost.admin,
-                        year: moment(date).format('YYYYMMDD').substr(0, 4),
-                        month: moment(date).format('YYYYMMDD').substr(4, 2),
-                        day: moment(date).format('YYYYMMDD').substr(6, 2)
-                    })
-                }
             })
     }
 
