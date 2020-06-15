@@ -12,7 +12,7 @@ export class PostsPage extends React.Component {
             auth: props.auth,
             startDate: moment(),
             endDate: moment(),
-            // accessToken: 'EAAia6dmIkVgBAMLOzwO8fzea8lycndchc4yydHnpZB0xi8lWwaCZAC2RDgLArZCBDk76IKapaGLNUq4WYposadW4ZCNf040eadCvx6Y2O6cfhJlVvTBVzwNFi3mcLl9sm48rFb2ZAvpEdcZAwCYZCI23MkZA3zJZBg8XGaqhyuFz7NwZDZD',
+            accessToken: '',
             pageId: '',
             posts: [],
             error: '',
@@ -55,7 +55,7 @@ export class PostsPage extends React.Component {
             start.add(1, 'days')
         }
 
-        var cors_api_url = `https://graph.facebook.com/v3.2/${this.state.pageId}/posts?access_token=${this.state.token.fb}&pretty=1&since=${since.startOf('day').unix()}&until=${util.endOf('day').unix()}&limit=100`;
+        var cors_api_url = `https://graph.facebook.com/v3.2/${this.state.pageId}/posts?access_token=${this.state.accessToken}&pretty=1&since=${since.startOf('day').unix()}&until=${util.endOf('day').unix()}&limit=100`;
         fetch(cors_api_url)
             .then(function (response) {
                 return response.json();
@@ -127,14 +127,14 @@ export class PostsPage extends React.Component {
                                     />
                                 </div>
                             </div>
-                            {/* <div className="level-item">
+                            <div className="level-item">
                                 <div className="field">
                                     <label className="label">Access Token</label>
                                     <input className="input" type="text" placeholder="Access token"
                                         value={this.state.accessToken}
                                         onChange={this.onTokenChange} />
                                 </div>
-                            </div> */}
+                            </div>
                             <div className="level-item">
                                 <div className="field">
                                     <label className="label">Page ID</label>
