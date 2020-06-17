@@ -1,6 +1,6 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import { startAddProductType, startGetProductTypes, startUpdateProductType, startDeleteProductType } from '../../actions/manage/ProductTypes';
+import { startAddProductType, startGetProductTypes, startUpdateProductType, startDeleteProductType } from '../../actions/manage/productTypes';
 import { MdEdit } from 'react-icons/md'
 export class ProductTypesPage extends React.Component {
     constructor(props) {
