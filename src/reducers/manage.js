@@ -3,7 +3,8 @@ export default (state = {
     emails: [],
     teams: [],
     coms: [{ comId: '1', salary: 9800 }, { comId: '2', salary: 12000 }],
-    ads: {}
+    ads: {},
+    productTypes: []
 }, action) => {
     switch (action.type) {
         case 'SET_MANAGE_ADMINS':
@@ -37,6 +38,20 @@ export default (state = {
                 ...state,
                 emails: [...state.emails, action.email]
             }
+        case 'SET_MANAGE_PRODUCT_TYPES':
+            return {
+                ...state,
+                productTypes: action.productTypes
+            }
+        case 'SET_MANAGE_PRODUCT_TYPE':
+            return {
+                ...state,
+                productTypes: state.productTypes.map(productType => {
+                    if (productType.id !== action.productType.id) return productType
+                    return { ...productType, ...action.productType }
+                })
+            }
+
         case 'SET_MANAGE_TEAMS':
             return {
                 ...state,

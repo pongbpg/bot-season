@@ -14,6 +14,7 @@ import CostPage from '../components/finances/CostPage';
 import CodPage from '../components/finances/CodPage';
 import VotesPage from '../components/games/Votes';
 import AdminsPage from '../components/manage/AdminsPage';
+import ProductTypesPage from '../components/manage/ProductTypesPage';
 import EmailsPage from '../components/manage/emails/IndexPage';
 import TeamsPage from '../components/manage/teams/IndexPage';
 import EmailPage from '../components/manage/emails/EditPage';
@@ -43,6 +44,7 @@ const AppRouter = () => (
         <PrivateRoute path="/votes" component={VotesPage} exact={true} />
         <PrivateRoute path="/manage/teams" component={TeamsPage} exact={true} />
         <PrivateRoute path="/manage/admins" component={AdminsPage} exact={true} />
+        <PrivateRoute path="/manage/product/types" component={ProductTypesPage} exact={true} />
         <PrivateRoute path="/manage/emails" component={EmailsPage} exact={true} />
         <PrivateRoute path="/manage/email/:uid" component={EmailPage} />
         <PrivateRoute path="/widget/posts" component={PostsPage} />
