@@ -1627,7 +1627,7 @@ const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") =
 const yyyymmdd = () => {
     function twoDigit(n) { return (n < 10 ? '0' : '') + n; }
     var today = moment();
-    return '' + today.year() + twoDigit(today.month() + 1) + twoDigit(today.day() + 1);
+    return '' + today.year() + twoDigit(today.month() + 1) + twoDigit(today.date() + 1);
 }
 const fourDigit = (n) => {
     if (n < 10) {
