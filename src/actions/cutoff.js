@@ -15,48 +15,49 @@ export const startGetCutOff = () => {
     }
 }
 export const startCutOff = () => {
-    return (dispatch) => {
-        return firestore.collection('counter').doc('orders').update({ cutoffDate: tomorrow(), cutoff: true })
-            .then(() => {
-                return firestore.collection('orders').where('cutoff', '==', false).get()
-                    .then(querySnapshot => {
-                        querySnapshot.forEach(function (doc) {
-                            firestore.collection('orders').doc(doc.id).update({ cutoff: true })
-                        })
-                        dispatch(setCutOff(true))
-                        dispatch(startListOrders())
-                        return firestore.collection('groups').get()
-                            .then(snapShot => {
-                                let boardcasts = [];
-                                snapShot.forEach(group => {
-                                    boardcasts.push({
-                                        to: group.id,
-                                        messages: [
-                                            {
-                                                "type": "text",
-                                                "text": `‼️‼️‼️‼️‼วันที่ ${moment(new Date()).format('ll')} ปิดรอบแล้วจ้า‼️‼️‼️‼️‼`
-                                            }
-                                        ]
-                                    })
-                                })
-                                fetch('./api/boardcast', {
-                                    body: JSON.stringify({ boardcasts }),
-                                    headers: {
-                                        // 'user-agent': 'Mozilla/4.0 MDN Example',
-                                        'Content-Type': 'application/json'
-                                    },
-                                    method: 'post'
-                                })
-                                    .then(response => response.json())
-                                    .then(result => {
-                                        console.log(result);
-                                    })
-                            })
+    console.log('tomorrow', tomorrow())
+    // return (dispatch) => {
+    //     return firestore.collection('counter').doc('orders').update({ cutoffDate: tomorrow(), cutoff: true })
+    //         .then(() => {
+    //             return firestore.collection('orders').where('cutoff', '==', false).get()
+    //                 .then(querySnapshot => {
+    //                     querySnapshot.forEach(function (doc) {
+    //                         firestore.collection('orders').doc(doc.id).update({ cutoff: true })
+    //                     })
+    //                     dispatch(setCutOff(true))
+    //                     dispatch(startListOrders())
+    //                     return firestore.collection('groups').get()
+    //                         .then(snapShot => {
+    //                             let boardcasts = [];
+    //                             snapShot.forEach(group => {
+    //                                 boardcasts.push({
+    //                                     to: group.id,
+    //                                     messages: [
+    //                                         {
+    //                                             "type": "text",
+    //                                             "text": `‼️‼️‼️‼️‼วันที่ ${moment(new Date()).format('ll')} ปิดรอบแล้วจ้า‼️‼️‼️‼️‼`
+    //                                         }
+    //                                     ]
+    //                                 })
+    //                             })
+    //                             fetch('./api/boardcast', {
+    //                                 body: JSON.stringify({ boardcasts }),
+    //                                 headers: {
+    //                                     // 'user-agent': 'Mozilla/4.0 MDN Example',
+    //                                     'Content-Type': 'application/json'
+    //                                 },
+    //                                 method: 'post'
+    //                             })
+    //                                 .then(response => response.json())
+    //                                 .then(result => {
+    //                                     console.log(result);
+    //                                 })
+    //                         })
 
-                    });
-            })
+    //                 });
+    //         })
 
-    }
+    // }
 }
 const tomorrow = () => {
     function twoDigit(n) { return (n < 10 ? '0' : '') + n; }
