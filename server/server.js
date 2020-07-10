@@ -816,6 +816,7 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
+                                                    console.log('now:', yyyymmdd(), ',new Date():', new Date())
                                                     if (countsData.date == yyyymmdd()) {
                                                         no = countsData.no + 1;
                                                         cutoff = false;
