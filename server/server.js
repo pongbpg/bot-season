@@ -517,6 +517,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
+                                                    console.log('today:', yyyymmdd())
                                                     if (countsData.date == yyyymmdd()) {
                                                         no = countsData.no + 1;
                                                         cutoff = false;
@@ -816,7 +817,7 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
-                                                    console.log('now:', yyyymmdd(), ',new Date():', new Date())
+                                                    // console.log('now:', yyyymmdd(), ',new Date():', new Date())
                                                     if (countsData.date == yyyymmdd()) {
                                                         no = countsData.no + 1;
                                                         cutoff = false;
@@ -1625,8 +1626,8 @@ const formatMoney = (amount, decimalCount = 2, decimal = ".", thousands = ",") =
 };
 const yyyymmdd = () => {
     function twoDigit(n) { return (n < 10 ? '0' : '') + n; }
-    var now = new Date();
-    return '' + now.getFullYear() + twoDigit(now.getMonth() + 1) + twoDigit(now.getDate());
+    var today = moment();
+    return '' + today.years() + twoDigit(today.months() + 1) + twoDigit(today.days() + 1);
 }
 const fourDigit = (n) => {
     if (n < 10) {
