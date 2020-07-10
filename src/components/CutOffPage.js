@@ -10,6 +10,7 @@ export class CutOffPage extends React.Component {
         this.state = {
             cutoff: props.cutoff
         }
+      
         this.props.startGetCutOff()
     }
     componentWillReceiveProps(nextProps) {
@@ -39,7 +40,7 @@ export class CutOffPage extends React.Component {
                 <nav className="level">
                     <p className="level-item has-text-centered">
                         <button className="button is-info is-centered is-large"
-                            onClick={this.onCutOffClick}  disabled={this.state.cutoff.cutoff}>
+                            onClick={this.onCutOffClick} disabled={this.state.cutoff.cutoff}>
                             ปิด{this.state.cutoff.cutoff ? 'แล้ว' : 'รอบ'}จ้า
                         </button>
                     </p>
