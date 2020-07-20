@@ -4,6 +4,7 @@ import DatePicker from 'react-datepicker';
 import { startGetTopsDay } from '../../actions/games/topdays';
 import { startGetEmails } from '../../actions/manage/emails';
 import moment from 'moment';
+import _ from 'underscore'
 moment.locale('th');
 export class TopsDayPage extends React.Component {
     constructor(props) {
@@ -37,6 +38,7 @@ export class TopsDayPage extends React.Component {
     }
 
     render() {
+        let count = 4;
         return (
             <section className="hero">
                 <div className="hero-head">
@@ -66,8 +68,9 @@ export class TopsDayPage extends React.Component {
                 <div className="hero-body">
                     <div className="level">
                         {this.state.tops.map((top, i) => {
-                            const admin = this.state.emails.filter(f => f.adminId == top.adminId)[0];
-                            if (admin) {
+                            const admin = this.state.emails.filter(f => f.adminId == top.adminId && f.role == 'admin')[0];
+                            if (admin && count > 0) {
+                                count--;
                                 return (
                                     <div className="level-item" key={top.adminId}>
                                         <div className="card">

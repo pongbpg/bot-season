@@ -31,9 +31,10 @@ export const startGetTopsDay = (date) => {
                         }
                     }).sortBy('price').reverse()
                     .value()
-                const tops = _.first(groupOwner, 4);
+                // console.log(groupOwner)
+                // const tops = _.first(groupOwner, 4);
                 // console.log(tops)
-                return dispatch(setTops(tops))
+                return dispatch(setTops(groupOwner))
             })
     }
 }
