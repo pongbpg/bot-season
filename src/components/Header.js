@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople, MdExitToApp, MdAccountCircle } from 'react-icons/md';
 import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine, FaLayerGroup } from 'react-icons/fa';
+import {GrTarget} from 'react-icons/gr'
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -112,9 +113,9 @@ export class Header extends React.Component {
                       <Link className="navbar-item" to="/manage/product/types">
                         <span className="icon"><FaLayerGroup /></span>Types
                       </Link>
-                      {/*  <Link className="navbar-item" to="/manage/coms">
-                        ค่าคอมฯ
-                      </Link> */}
+                       <Link className="navbar-item" to="/manage/targets">
+                        <span className="icon"><GrTarget /></span>Targets
+                      </Link>
                     </div>
                   </div>
                 )}

@@ -18,6 +18,7 @@ import ProductTypesPage from '../components/manage/ProductTypesPage';
 import EmailsPage from '../components/manage/emails/IndexPage';
 import TeamsPage from '../components/manage/teams/IndexPage';
 import EmailPage from '../components/manage/emails/EditPage';
+import TargetsPage from '../components/manage/targets/TargetsPage';
 import PostsPage from '../components/widget/PostsPage';
 import SetPostsPage from '../components/widget/SetPostsPage';
 import NotFoundPage from '../components/NotFoundPage';
@@ -45,6 +46,7 @@ const AppRouter = () => (
         <PrivateRoute path="/manage/teams" component={TeamsPage} exact={true} />
         <PrivateRoute path="/manage/admins" component={AdminsPage} exact={true} />
         <PrivateRoute path="/manage/product/types" component={ProductTypesPage} exact={true} />
+        <PrivateRoute path="/manage/targets" component={TargetsPage} exact={true} />
         <PrivateRoute path="/manage/emails" component={EmailsPage} exact={true} />
         <PrivateRoute path="/manage/email/:uid" component={EmailPage} />
         <PrivateRoute path="/widget/posts" component={PostsPage} />

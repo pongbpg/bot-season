@@ -4,7 +4,8 @@ export default (state = {
     teams: [],
     coms: [{ comId: '1', salary: 9800 }, { comId: '2', salary: 12000 }],
     ads: {},
-    productTypes: []
+    productTypes: [],
+    targets: []
 }, action) => {
     switch (action.type) {
         case 'SET_MANAGE_ADMINS':
@@ -82,6 +83,19 @@ export default (state = {
                     ...state.ads,
                     fb: action.token
                 }
+            }
+        case 'SET_MANAGE_TARGETS':
+            return {
+                ...state,
+                targets: action.targets
+            }
+        case 'SET_MANAGE_TARGET':
+            return {
+                ...state,
+                targets: state.targets.map(target => {
+                    if (target.id !== action.target.id) return target
+                    return { ...target, ...action.target }
+                })
             }
         default:
             return state;
