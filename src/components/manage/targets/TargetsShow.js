@@ -111,118 +111,6 @@ export class TargetsPage extends React.Component {
         }
 
         return (
-            <section className="hero">
-                <div className="hero-body">
-                    <div className="columns is-centered">
-                        <div className="column is-full">
-                            <div className="container">
-                                <div className="columns">
-                                    <div className="column is-7">
-                                        <span className="title">จัดการเป้ายอดขาย</span>
-                                    </div>
-                                    <div className="column is-5">
-                                        {this.state.targets.filter(f => f.id == moment().year()).length == 0 &&
-                                            <button className="button is-info" onClick={() => {
-                                                if (confirm('เพิ่มปี ' + moment().year() + '?'))
-                                                    this.props.startAddYear(moment().year())
-                                                        .then(() => this.props.startGetTargets())
-                                            }}>
-                                                เพิ่มปี {moment().year()}
-                                            </button>}
-
-                                        <div className="control select">
-                                            <select value={this.state.year} onChange={this.onYearChange}>
-                                                <option value=''>ปี</option>
-                                                {this.state.targets.length > 0 && (
-                                                    this.state.targets.map(target => {
-                                                        return (<option key={target.id} value={target.id}>{target.id}</option>)
-                                                    })
-                                                )}
-                                            </select>
-                                        </div>
-                                        &nbsp;
-                                        <div className="control select">
-                                            <select value={this.state.month} onChange={this.onMonthChange}>
-                                                <option>เดือน</option>
-                                                {this.state.year != '' && pickerLang.months.map((month, i) => {
-                                                    return (<option key={i} value={i}>{month}</option>)
-                                                })}
-                                            </select>
-                                        </div>
-                                    </div>
-                                </div>
-                            </div>
-                        </div>
-                    </div>
-
-                    <div className="field is-horizontal">
-
-                        <div className="field-body">
-                            <div className="field">
-                                <div className="control select">
-                                    <select value={this.state.team} onChange={e => this.setState({ team: e.target.value })}>
-                                        <option value=''>ทีมทั้งหมด</option>
-                                        {this.state.teams.length > 0 &&
-                                            this.state.teams.map(team => {
-                                                return <option key={team} value={team}>{team}</option>
-                                            })
-                                        }
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="field">
-                                <div className="control select">
-                                    <select value={this.state.page} onChange={e => this.setState({ page: e.target.value })}>
-                                        <option value=''>เลือกเพจ</option>
-                                        {this.state.pages.filter(f => (_.pluck(this.state.lists, 'page').indexOf(f.id) == -1) && f.team == this.state.team)
-                                            .map(page => {
-                                                return (<option key={page.id} value={page.id}>{page.id}</option>)
-                                            })}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="field">
-                                <div className="control select">
-                                    <select value={this.state.admin} onChange={e => this.setState({ admin: e.target.value })}>
-                                        <option value=''>เลือกแอดมิน</option>
-                                        {this.state.admins
-                                            .map(admin => {
-                                                return (<option key={admin.userId} value={admin.userId}>{admin.name}</option>)
-                                            })}
-                                    </select>
-                                </div>
-                            </div>
-                            <div className="field">
-                                <NumberFormat className="input is-rounded is-link has-text-right" thousandSeparator={true}
-                                    value={this.state.target}
-                                    placeholder="เป้ายอดขาย"
-                                    onValueChange={(values) => {
-                                        const { formattedValue, value, floatValue } = values;
-                                        // formattedValue = $2,223
-                                        // value ie, 2223
-                                        // console.log(formattedValue)
-                                        this.setState({
-                                            target: floatValue
-                                        })
-                                    }}
-
-                                />
-                            </div>
-                            <div className="field">
-                                <button className="button is-info" disabled={this.state.page == '' || this.state.admin == ''}
-                                    onClick={() => {
-                                        this.props.startAddTargets(this.state.year, this.state.month, [{
-                                            team: this.state.team,
-                                            page: this.state.page,
-                                            target: this.state.target,
-                                            userId: this.state.admin,
-                                            name: this.state.admins.find(f => f.userId == this.state.admin).name,
-                                            comId: this.state.admins.find(f => f.userId == this.state.admin).comId || 0
-                                        }]).then(() => this.setState({ page: '', target: '', admin: '' }))
-                                    }}>เพิ่ม</button>
-                            </div>
-                        </div>
-                    </div>
 
                     <div className="columns is-centered">
                         <div className="column is-full">
@@ -287,12 +175,12 @@ export class TargetsPage extends React.Component {
                                                                 }}
                                                                 onKeyPress={e => {
                                                                     if (e.key === 'Enter') {
-                                                                        console.log(e.target.value, currentValue)
+                                                                        // console.log(e.target.value, currentValue)
                                                                         if (confirm(this.state.action.page + ' ต้องการบันทึกเป้ายอดขาย ' + e.target.value + '?')) {
                                                                             this.setState({
                                                                                 action: {}
                                                                             })
-                                                                            this.props.startUpdateTarget(this.state.year, this.state.month, { page: this.state.action.page, target: currentValue, targetPerDay: Number(currentValue / this.state.daysInMonth) })
+                                                                            this.props.startUpdateTarget(this.state.year, this.state.month, { page: this.state.action.page, target: currentValue ,targetPerDay:Number(currentValue/daysInMonth)})
 
                                                                         } else {
                                                                             this.setState({
@@ -305,7 +193,7 @@ export class TargetsPage extends React.Component {
                                                             : (<button className="button is-rounded" onClick={e => this.onTargetClick(list.page, 'TARGET')}>{Money(list.target, 0)}</button>)
                                                         }
                                                     </td>
-                                                    <td className="has-text-right">{Money(list.targetPerDay, 2)}</td>
+                                                    <td className="has-text-right">{Money(list.target / this.state.daysInMonth, 2)}</td>
                                                     <td className="has-text-centered"><button className="button is-text is-medium" onClick={e => {
                                                         if (confirm('ต้องการลบเป้ายอดขาย ' + list.page + '?')) {
                                                             this.props.startRemoveTarget(this.state.year, this.state.month, list)
@@ -353,8 +241,6 @@ export class TargetsPage extends React.Component {
                             </div>
                         </div>
                     </div>
-                </div>
-            </section >
         )
     }
 }
