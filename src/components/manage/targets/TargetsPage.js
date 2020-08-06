@@ -77,7 +77,8 @@ export class TargetsPage extends React.Component {
         const months = this.state.targets.filter(f => f.id == this.state.year)
         this.setState({
             month: e.target.value,
-            lists: this.initList(this.state.targets, this.state.year, e.target.value)
+            lists: this.initList(this.state.targets, this.state.year, e.target.value),
+            daysInMonth:moment().year(this.state.year).month(e.target.value).daysInMonth()
         })
     }
     onTargetClick = (page, type) => {
@@ -287,7 +288,7 @@ export class TargetsPage extends React.Component {
                                                                 }}
                                                                 onKeyPress={e => {
                                                                     if (e.key === 'Enter') {
-                                                                        console.log(e.target.value, currentValue)
+                                                                        // console.log(e.target.value, currentValue)
                                                                         if (confirm(this.state.action.page + ' ต้องการบันทึกเป้ายอดขาย ' + e.target.value + '?')) {
                                                                             this.setState({
                                                                                 action: {}
@@ -299,6 +300,20 @@ export class TargetsPage extends React.Component {
                                                                                 action: {}
                                                                             })
                                                                         }
+                                                                    }
+                                                                }}
+                                                                onBlur={e=>{
+                                                                    // console.log('onblur',e.target.value)
+                                                                    if (confirm(this.state.action.page + ' ต้องการบันทึกเป้ายอดขาย ' + e.target.value + '?')) {
+                                                                        this.setState({
+                                                                            action: {}
+                                                                        })
+                                                                        this.props.startUpdateTarget(this.state.year, this.state.month, { page: this.state.action.page, target: currentValue, targetPerDay: Number(currentValue / this.state.daysInMonth) })
+
+                                                                    } else {
+                                                                        this.setState({
+                                                                            action: {}
+                                                                        })
                                                                     }
                                                                 }}
                                                             />
