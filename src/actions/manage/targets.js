@@ -12,22 +12,35 @@ export const startGetTargets = () => {
             })
     }
 }
-export const startAddTarget = (year, month, target) => {
+export const startAddYear = (year) => {
+    const months = [0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11];
+    return (dispatch) => {
+        return firestore.collection('targets').doc(year.toString()).set({
+            id: year,
+            months: months.map(m => {
+                return { month: m, pages: [] }
+            })
+        })
+    }
+}
+export const startAddTargets = (year, month, targets) => {
     return (dispatch) => {
         return firestore.collection('targets').doc(year.toString()).get()
             .then(doc => {
                 const data = {
                     id: year,
-                    months: doc.data().months.map(m => {
-                        if (m.month == month) {
-                            return {
-                                ...m,
-                                pages: m.pages.concat(target)
+                    months: doc.data().months.find(f => f.month == month) ?
+                        doc.data().months.map(m => {
+                            if (m.month == month) {
+                                return {
+                                    ...m,
+                                    pages: m.pages.concat(targets)
+                                }
+                            } else {
+                                return m
                             }
-                        } else {
-                            return m
-                        }
-                    })
+                        })
+                        : doc.data().months.concat({ month, pages: targets })
                 }
                 firestore.collection('targets').doc(year.toString()).update({ ...data })
                     .then(() => {
@@ -79,7 +92,7 @@ export const startRemoveTarget = (year, month, target) => {
                         if (m.month == month) {
                             return {
                                 ...m,
-                                pages: m.pages.filter(f=>f.page!=target.page)
+                                pages: m.pages.filter(f => f.page != target.page)
                             }
                         } else {
                             return m

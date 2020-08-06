@@ -2,8 +2,8 @@ import React from 'react';
 import { connect } from 'react-redux';
 import { startGetEmails } from '../../../actions/manage/emails';
 import { startGetAdmins } from '../../../actions/manage/admins';
-import { startGetTargets, startAddTarget, startUpdateTarget, startRemoveTarget } from '../../../actions/manage/targets';
-import { MdDelete } from 'react-icons/md'
+import { startAddYear, startGetTargets, startAddTargets, startUpdateTarget, startRemoveTarget } from '../../../actions/manage/targets';
+import { MdDelete, MdSettingsBackupRestore } from 'react-icons/md'
 import NumberFormat from 'react-number-format';
 import Money from '../../../selectors/money';
 import moment from 'moment';
@@ -57,7 +57,6 @@ export class TargetsPage extends React.Component {
             this.setState({ admins: nextProps.admins })
         }
         if (nextProps.pages != this.state.pages) {
-            // console.log( )
             this.setState({ pages: nextProps.pages, teams: this.initTeams(nextProps.pages, this.state.lists) })
         }
         if (nextProps.emails != this.state.emails) {
@@ -66,11 +65,10 @@ export class TargetsPage extends React.Component {
         if (nextProps.targets != this.state.targets) {
             this.setState({
                 targets: nextProps.targets,
-                lists: this.initList(nextProps.targets, moment().year(), moment().month())
+                lists: this.initList(nextProps.targets, this.state.year, this.state.month)
             })
         }
     }
-
     onYearChange = (e) => {
         const year = e.target.value;
         this.setState({ year, month: '', lists: [] })
@@ -87,15 +85,30 @@ export class TargetsPage extends React.Component {
             action: { ...this.state.lists.find(f => f.page == page), type }
         })
     }
-
-
     render() {
         const pickerLang = {
             months: ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'],
             from: 'จาก', to: 'ถึง',
         }
-        const lastConfig = this.state.targets.filter(f => f.team == this.state.team)
-        console.log(lastConfig)
+        let lastConfig = [];
+        this.state.targets.map(year => {
+            year.months.map(month => {
+                month.pages.map(page => {
+                    lastConfig.push({
+                        ...page,
+                        year: year.id,
+                        month: month.month
+                    })
+                })
+            })
+        })
+        lastConfig = lastConfig.filter(f => f.team == this.state.team)
+        // let displayConfig = {month:'',year:''} 
+        if (lastConfig.length > 0) {
+            const lastYear = _.chain(lastConfig).groupBy('year').map(m => m).value();
+            const lastMonth = _.chain(_.last(lastYear)).groupBy('month').map(m => m).value();
+            lastConfig = _.last(lastMonth);
+        }
 
         return (
             <section className="hero">
@@ -104,16 +117,25 @@ export class TargetsPage extends React.Component {
                         <div className="column is-full">
                             <div className="container">
                                 <div className="columns">
-                                    <div className="column is-8">
+                                    <div className="column is-7">
                                         <span className="title">จัดการเป้ายอดขาย</span>
                                     </div>
-                                    <div className="column is-4">
+                                    <div className="column is-5">
+                                        {this.state.targets.filter(f => f.id == moment().year()).length == 0 &&
+                                            <button className="button is-info" onClick={() => {
+                                                if (confirm('เพิ่มปี ' + moment().year() + '?'))
+                                                    this.props.startAddYear(moment().year())
+                                                        .then(() => this.props.startGetTargets())
+                                            }}>
+                                                เพิ่มปี {moment().year()}
+                                            </button>}
+
                                         <div className="control select">
                                             <select value={this.state.year} onChange={this.onYearChange}>
                                                 <option value=''>ปี</option>
                                                 {this.state.targets.length > 0 && (
                                                     this.state.targets.map(target => {
-                                                        return (<option key={target.id} value={target.id}>{Number(target.id) + 543}</option>)
+                                                        return (<option key={target.id} value={target.id}>{target.id}</option>)
                                                     })
                                                 )}
                                             </select>
@@ -189,14 +211,14 @@ export class TargetsPage extends React.Component {
                             <div className="field">
                                 <button className="button is-info" disabled={this.state.page == '' || this.state.admin == ''}
                                     onClick={() => {
-                                        this.props.startAddTarget(this.state.year, this.state.month, {
+                                        this.props.startAddTargets(this.state.year, this.state.month, [{
                                             team: this.state.team,
                                             page: this.state.page,
                                             target: this.state.target,
                                             userId: this.state.admin,
                                             name: this.state.admins.find(f => f.userId == this.state.admin).name,
                                             comId: this.state.admins.find(f => f.userId == this.state.admin).comId || 0
-                                        }).then(() => this.setState({ page: '', target: '', admin: '' }))
+                                        }]).then(() => this.setState({ page: '', target: '', admin: '' }))
                                     }}>เพิ่ม</button>
                             </div>
                         </div>
@@ -212,9 +234,9 @@ export class TargetsPage extends React.Component {
                                             <th>ทีม</th>
                                             <th>เพจ</th>
                                             <th>แอดมิน</th>
-                                            <th>เป้าหมาย</th>
-                                            <th>เฉลี่ย/วัน</th>
-                                            <th>ลบ</th>
+                                            <th className="has-text-right">เป้าหมาย</th>
+                                            <th className="has-text-right">เฉลี่ย/วัน</th>
+                                            <th className="has-text-centered">ลบ</th>
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -252,7 +274,7 @@ export class TargetsPage extends React.Component {
                                                             : <button className="button is-rounded" onClick={e => this.onTargetClick(list.page, 'ADMIN')}>{list.name}</button>
                                                         }
                                                     </td>
-                                                    <td>
+                                                    <td className="has-text-right">
                                                         {(list.page == this.state.action.page && this.state.action.type == 'TARGET')
                                                             ? <NumberFormat className="input is-rounded is-link has-text-right" thousandSeparator={true}
                                                                 value={this.state.action.target}
@@ -283,8 +305,8 @@ export class TargetsPage extends React.Component {
                                                             : (<button className="button is-rounded" onClick={e => this.onTargetClick(list.page, 'TARGET')}>{Money(list.target, 0)}</button>)
                                                         }
                                                     </td>
-                                                    <td>{Money(list.target / this.state.daysInMonth, 2)}</td>
-                                                    <td><button className="button is-text is-medium" onClick={e => {
+                                                    <td className="has-text-right">{Money(list.target / this.state.daysInMonth, 2)}</td>
+                                                    <td className="has-text-centered"><button className="button is-text is-medium" onClick={e => {
                                                         if (confirm('ต้องการลบเป้ายอดขาย ' + list.page + '?')) {
                                                             this.props.startRemoveTarget(this.state.year, this.state.month, list)
                                                         }
@@ -295,18 +317,35 @@ export class TargetsPage extends React.Component {
                                         {(this.state.team != '' && this.state.lists.filter(f => f.team == this.state.team).length == 0) &&
                                             <tr>
                                                 <td colSpan={7} className="has-text-centered">
-                                                    <button className="button is-link is-large"
-                                                        disabled={lastConfig}>{lastConfig ? 'ไม่มีการตั้งค่าล่าสุด' : 'โหลดการตั้งค่าล่าสุด'}</button>
+                                                    <button className="button is-large" onClick={() => {
+                                                        if (confirm('ต้องการโหลดการตั้งค่า ' + moment().month(lastConfig[0].month).year(lastConfig[0].year).format('MMMM YYYY') + '?')) {
+                                                            const lists = lastConfig.filter(f => this.state.admins.filter(a => a.userId == f.userId && a.active == true).length > 0)
+                                                                .filter(f => this.state.pages.filter(p => p.id == f.page && p.active == true).length > 0)
+                                                                .map(m => {
+                                                                    return {
+                                                                        ...m,
+                                                                        month: this.state.month,
+                                                                        year: this.state.year
+                                                                    }
+                                                                })
+                                                            this.setState({ lists })
+                                                            this.props.startAddTargets(this.state.year, this.state.month, lists)
+                                                        }
+                                                    }}
+                                                        disabled={lastConfig.length == 0}>
+                                                        {lastConfig.length > 0 && <MdSettingsBackupRestore />}
+                                                        {lastConfig.length == 0 ? 'ไม่มีการตั้งค่าล่าสุด' : 'โหลดการตั้งค่า ' +
+                                                            moment().month(lastConfig[0].month).year(lastConfig[0].year).format('MMMM YYYY')}
+                                                    </button>
                                                 </td>
                                             </tr>
                                         }
-
                                     </tbody>
                                     <tfoot>
                                         <tr>
                                             <th colSpan={4}>รวม</th>
-                                            <th>{Money(this.state.lists.filter(f => f.team == this.state.team || this.state.team == '').reduce((le, ri) => le + ri.target, 0), 0)}</th>
-                                            <th>{Money((this.state.lists.filter(f => f.team == this.state.team || this.state.team == '').reduce((le, ri) => le + ri.target, 0) / this.state.daysInMonth), 2)}</th>
+                                            <th className="has-text-right">{Money(this.state.lists.filter(f => f.team == this.state.team || this.state.team == '').reduce((le, ri) => le + ri.target, 0), 0)}</th>
+                                            <th className="has-text-right">{Money((this.state.lists.filter(f => f.team == this.state.team || this.state.team == '').reduce((le, ri) => le + ri.target, 0) / this.state.daysInMonth), 2)}</th>
                                             <th></th>
                                         </tr>
                                     </tfoot>
@@ -327,10 +366,11 @@ const mapStateToProps = (state, props) => ({
     pages: state.pages.filter(f => f.active).sort((a, b) => a.team > b.team ? 1 : -1)
 });
 const mapDispatchToProps = (dispatch, props) => ({
+    startAddYear: (year) => dispatch(startAddYear(year)),
     startGetEmails: () => dispatch(startGetEmails()),
     startGetTargets: () => dispatch(startGetTargets()),
     startGetAdmins: () => dispatch(startGetAdmins()),
-    startAddTarget: (year, month, target) => dispatch(startAddTarget(year, month, target)),
+    startAddTargets: (year, month, targets) => dispatch(startAddTargets(year, month, targets)),
     startUpdateTarget: (year, month, target) => dispatch(startUpdateTarget(year, month, target)),
     startRemoveTarget: (year, month, target) => dispatch(startRemoveTarget(year, month, target))
 });
