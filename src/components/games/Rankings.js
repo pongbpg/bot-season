@@ -112,8 +112,8 @@ export class ShowTargets extends React.Component {
             moment(endDate).format('YYYYMMDD')
         )
     }
-    onRefresh=()=>{
-        this.setState({rankings:[]})
+    onRefresh = () => {
+        this.setState({ rankings: [] })
         this.props.startGetRankings(
             this.initList(this.state.targets, this.state.year, this.state.month),
             moment(this.state.startDate).format('YYYYMMDD'),
@@ -140,7 +140,7 @@ export class ShowTargets extends React.Component {
             } else if (percent <= 100) {
                 return 'has-background-primary'
             } else {
-                return 'has-background-info-dark has-text-white'
+                return 'has-background-info has-text-light'
             }
         }
         const MyDateRange = () => {
@@ -192,13 +192,16 @@ export class ShowTargets extends React.Component {
                                     </select>
                                 </div>
                                 <div className="control">
-                                    <div className="field is-grouped">
-                                        <MyDateRange className="control" />
-                                        <div className="control">
-                                     
-                                        </div>
-                                    </div>
+                                    <MyDateRange />
                                 </div>
+                            </div>
+                            <div class="tags are-medium">
+                                <span className={percentColor(0) + ' tag'}>0-30%</span>
+                                <span className={percentColor(31) + ' tag'}>31-50%</span>
+                                <span className={percentColor(51) + ' tag'}>51-70%</span>
+                                <span className={percentColor(71) + ' tag'}>71-90%</span>
+                                <span className={percentColor(100) + ' tag'}>90-100%</span>
+                                <span className={percentColor(101) + ' tag'}>100%+</span>
                             </div>
                         </div>
                     </div>
@@ -212,7 +215,7 @@ export class ShowTargets extends React.Component {
                                             <th className="is-size-4">เพจ</th>
                                             <th className="is-size-4">แอดมิน</th>
                                             <th className="is-size-4">เปอร์เซ็นต์</th>
-                                            
+
                                         </tr>
                                     </thead>
                                     <tbody>
@@ -235,7 +238,7 @@ export class ShowTargets extends React.Component {
                         </div>
                     </div>
                 </div>
-            </section>
+            </section >
         )
     }
 }
