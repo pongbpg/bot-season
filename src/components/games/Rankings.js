@@ -213,7 +213,7 @@ export class ShowTargets extends React.Component {
                                     <MyDateRange />
                                 </div>
                             </div>
-                            <div class="tags are-medium">
+                            <div className="tags are-medium">
                                 <span style={percentColor(0)} className='tag'>0-30%</span>
                                 <span style={percentColor(31)} className='tag'>31-50%</span>
                                 <span style={percentColor(51)} className='tag'>51-70%</span>
@@ -239,7 +239,7 @@ export class ShowTargets extends React.Component {
                                     <tbody>
                                         {this.state.rankings.length > 0 && (
                                             this.state.rankings.map((rank, i) => {
-                                                return (<tr key={rank.pageId} style={percentColor(rank.percent)}>
+                                                return (<tr key={rank.page} style={percentColor(rank.percent)}>
                                                     <td>{i + 1}</td>
                                                     <td>{rank.page}</td>
                                                     <td>{rank.name}</td>

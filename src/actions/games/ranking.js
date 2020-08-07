@@ -54,6 +54,12 @@ export const startGetRankings = (targets, startDate, endDate) => {
                         }
                     })
                     .value()
+
+                    targets.map(target=>{
+                        if(!rankings.find(f=>f.page==target.page)){
+                            rankings.push({...target,percent:0})
+                        }
+                    })
                 // console.log('data', data)
                 // console.log('groupOwner', groupOwner)
                 // console.log('rankings', rankings)
