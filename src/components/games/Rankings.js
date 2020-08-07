@@ -129,18 +129,36 @@ export class ShowTargets extends React.Component {
             ]
         }
         const percentColor = (percent) => {
-            if (percent <= 30) {
-                return 'has-background-black has-text-white'
-            } else if (percent <= 50) {
-                return 'has-background-danger has-text-white'
-            } else if (percent <= 70) {
-                return 'has-background-warning'
-            } else if (percent <= 90) {
-                return 'has-background-success'
-            } else if (percent <= 100) {
-                return 'has-background-primary'
+            if (percent < 31) {
+                return {
+                    backgroundColor:'black',
+                    color:'white'
+                }
+            } else if (percent < 51) {
+                return {
+                    backgroundColor:'red',
+                    color:'white'
+                }
+            } else if (percent < 71) {
+                return {
+                    backgroundColor:'#ff7800',
+                    color:'white'
+                }
+            } else if (percent < 91) {
+                return {
+                    backgroundColor:'#ffe71b',
+                    color:'black'
+                }
+            } else if (percent < 101) {
+                return {
+                    backgroundColor:'#3cbb04',
+                    color:'white'
+                }
             } else {
-                return 'has-background-info has-text-light'
+                return {
+                    backgroundColor:'#fd97c5',
+                    color:'white'
+                }
             }
         }
         const MyDateRange = () => {
@@ -196,12 +214,12 @@ export class ShowTargets extends React.Component {
                                 </div>
                             </div>
                             <div class="tags are-medium">
-                                <span className={percentColor(0) + ' tag'}>0-30%</span>
-                                <span className={percentColor(31) + ' tag'}>31-50%</span>
-                                <span className={percentColor(51) + ' tag'}>51-70%</span>
-                                <span className={percentColor(71) + ' tag'}>71-90%</span>
-                                <span className={percentColor(100) + ' tag'}>90-100%</span>
-                                <span className={percentColor(101) + ' tag'}>100%+</span>
+                                <span style={percentColor(0)} className='tag'>0-30%</span>
+                                <span style={percentColor(31)} className='tag'>31-50%</span>
+                                <span style={percentColor(51)} className='tag'>51-70%</span>
+                                <span style={percentColor(71)} className='tag'>71-90%</span>
+                                <span style={percentColor(91)} className='tag'>90-100%</span>
+                                <span style={percentColor(101)} className='tag'>100%+</span>
                             </div>
                         </div>
                     </div>
@@ -221,7 +239,7 @@ export class ShowTargets extends React.Component {
                                     <tbody>
                                         {this.state.rankings.length > 0 && (
                                             this.state.rankings.map((rank, i) => {
-                                                return (<tr key={rank.pageId} className={percentColor(rank.percent)}>
+                                                return (<tr key={rank.pageId} style={percentColor(rank.percent)}>
                                                     <td>{i + 1}</td>
                                                     <td>{rank.page}</td>
                                                     <td>{rank.name}</td>
