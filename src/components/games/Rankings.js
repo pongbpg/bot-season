@@ -129,27 +129,27 @@ export class ShowTargets extends React.Component {
             ]
         }
         const percentColor = (percent) => {
-            if (percent < 31) {
+            if (percent < 30) {
                 return {
                     backgroundColor:'black',
                     color:'white'
                 }
-            } else if (percent < 51) {
+            } else if (percent < 50) {
                 return {
                     backgroundColor:'red',
                     color:'white'
                 }
-            } else if (percent < 71) {
+            } else if (percent < 70) {
                 return {
                     backgroundColor:'#ff7800',
                     color:'white'
                 }
-            } else if (percent < 91) {
+            } else if (percent < 90) {
                 return {
                     backgroundColor:'#ffe71b',
                     color:'black'
                 }
-            } else if (percent < 101) {
+            } else if (percent < 100) {
                 return {
                     backgroundColor:'#3cbb04',
                     color:'white'
@@ -215,9 +215,9 @@ export class ShowTargets extends React.Component {
                             </div>
                             <div className="tags are-medium">
                                 <span style={percentColor(0)} className='tag'>0-30%</span>
-                                <span style={percentColor(31)} className='tag'>31-50%</span>
-                                <span style={percentColor(51)} className='tag'>51-70%</span>
-                                <span style={percentColor(71)} className='tag'>71-90%</span>
+                                <span style={percentColor(31)} className='tag'>30-50%</span>
+                                <span style={percentColor(51)} className='tag'>50-70%</span>
+                                <span style={percentColor(71)} className='tag'>70-90%</span>
                                 <span style={percentColor(91)} className='tag'>90-100%</span>
                                 <span style={percentColor(101)} className='tag'>100%+</span>
                             </div>
