@@ -131,33 +131,33 @@ export class ShowTargets extends React.Component {
         const percentColor = (percent) => {
             if (percent < 30) {
                 return {
-                    backgroundColor:'black',
-                    color:'white'
+                    backgroundColor: 'black',
+                    color: 'white',
                 }
             } else if (percent < 50) {
                 return {
-                    backgroundColor:'red',
-                    color:'white'
+                    backgroundColor: 'red',
+                    color: 'white'
                 }
             } else if (percent < 70) {
                 return {
-                    backgroundColor:'#ff7800',
-                    color:'white'
+                    backgroundColor: '#ff7800',
+                    color: 'white'
                 }
             } else if (percent < 90) {
                 return {
-                    backgroundColor:'#ffe71b',
-                    color:'black'
+                    backgroundColor: '#ffe71b',
+                    color: 'black'
                 }
             } else if (percent < 100) {
                 return {
-                    backgroundColor:'#3cbb04',
-                    color:'white'
+                    backgroundColor: '#3cbb04',
+                    color: 'white'
                 }
             } else {
                 return {
-                    backgroundColor:'#fd97c5',
-                    color:'white'
+                    backgroundColor: '#fd97c5',
+                    color: 'white'
                 }
             }
         }
@@ -187,66 +187,74 @@ export class ShowTargets extends React.Component {
                         <h2 className="title">Admin Rankings</h2>
                     </div>
                 </div>
-                <div className="hero-body">
-                    <div className="columns">
-                        <div className="column is-12">
-                            <div className="field is-grouped">
-                                <div className="control select">
-                                    <select value={this.state.year} onChange={this.onYearChange}>
-                                        <option value=''>ปี</option>
-                                        {this.state.targets.length > 0 && (
-                                            this.state.targets.map(target => {
-                                                return (<option key={target.id} value={target.id}>{target.id}</option>)
-                                            })
-                                        )}
-                                    </select>
-                                </div>
-                                <div className="control select">
-                                    <select value={this.state.month} onChange={this.onMonthChange}>
-                                        <option>เดือน</option>
-                                        {this.state.year != '' && pickerLang.months.map((month, i) => {
-                                            return (<option key={i} value={i}>{month}</option>)
-                                        })}
-                                    </select>
-                                </div>
-                                <div className="control">
-                                    <MyDateRange />
-                                </div>
+                <div className="hero-body" style={{ paddingTop: '20px' }}>
+                    <div className="column is-12">
+                        <div className="field is-grouped">
+                            <div className="control select">
+                                <select value={this.state.year} onChange={this.onYearChange}>
+                                    <option value=''>ปี</option>
+                                    {this.state.targets.length > 0 && (
+                                        this.state.targets.map(target => {
+                                            return (<option key={target.id} value={target.id}>{target.id}</option>)
+                                        })
+                                    )}
+                                </select>
                             </div>
-                            <div className="tags are-medium">
-                                <span style={percentColor(0)} className='tag'>0-30%</span>
-                                <span style={percentColor(31)} className='tag'>30-50%</span>
-                                <span style={percentColor(51)} className='tag'>50-70%</span>
-                                <span style={percentColor(71)} className='tag'>70-90%</span>
-                                <span style={percentColor(91)} className='tag'>90-100%</span>
-                                <span style={percentColor(101)} className='tag'>100%+</span>
+                            <div className="control select">
+                                <select value={this.state.month} onChange={this.onMonthChange}>
+                                    <option>เดือน</option>
+                                    {this.state.year != '' && pickerLang.months.map((month, i) => {
+                                        return (<option key={i} value={i}>{month}</option>)
+                                    })}
+                                </select>
                             </div>
+
+                        </div>
+                    </div>
+                    <div className="column is-12">
+                        <div className="field is-grouped">
+                            <MyDateRange />
+                            <button className='button is-text' onClick={this.onRefresh}>
+                                <span className="icon"><MdRefresh /></span>
+                            </button>
+                        </div>
+                    </div>
+                    <div className="column is-12">
+                        <div className="tags are-small">
+
+                            <span style={percentColor(0)} className='tag'>0-30%</span>
+                            <span style={percentColor(31)} className='tag'>30-50%</span>
+                            <span style={percentColor(51)} className='tag'>50-70%</span>
+                            <span style={percentColor(71)} className='tag'>70-90%</span>
+                            <span style={percentColor(91)} className='tag'>90-100%</span>
+                            <span style={percentColor(101)} className='tag'>100%+</span>
                         </div>
                     </div>
                     <div className="columns is-centered">
-                        <div className="column is-12">
+                        <div className="column">
                             <div className="table-container">
-                                <table className="table is-fullwidth">
+                                <table className="table is-fullwidth is-hoverable">
                                     <thead>
                                         <tr>
-                                            <th className="is-size-4">ลำดับ<button className="button" onClick={this.onRefresh}><MdRefresh /></button></th>
-                                            <th className="is-size-4">เพจ</th>
-                                            <th className="is-size-4">แอดมิน</th>
-                                            <th className="is-size-4">เปอร์เซ็นต์</th>
-
+                                            <th>ลำดับ</th>
+                                            <th>เพจ</th>
+                                            <th>แอดมิน</th>
+                                            <th>เปอร์เซ็นต์</th>
                                         </tr>
                                     </thead>
                                     <tbody>
                                         {this.state.rankings.length > 0 && (
                                             this.state.rankings.map((rank, i) => {
-                                                return (<tr key={rank.page} style={percentColor(rank.percent)}>
+                                                return (<tr key={rank.page} style={percentColor(rank.percent)}
+                                                    onClick={() => {
+                                                        const diff = rank.price - rank.target100;
+                                                        if (this.state.auth.role == 'owner')
+                                                            alert('ยอดขาย: ' + Money(rank.price, 0) + '\nเป้าหมาย: ' + Money(rank.target100, 0) + '\nส่วนต่าง: ' + (diff > 0 ? '+' : '') + Money(rank.price - rank.target100, 0))
+                                                    }}>
                                                     <td>{i + 1}</td>
                                                     <td>{rank.page}</td>
                                                     <td>{rank.name}</td>
                                                     <td>{Money(rank.percent, 2)}%</td>
-                                                    {/* <td>{rank.price}</td>
-                                                    <td>{rank.targetPerDay}</td>
-                                                    <td>{rank.target100}</td> */}
                                                 </tr>)
                                             })
                                         )}

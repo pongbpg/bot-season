@@ -57,7 +57,8 @@ export const startGetRankings = (targets, startDate, endDate) => {
 
                     targets.map(target=>{
                         if(!rankings.find(f=>f.page==target.page)){
-                            rankings.push({...target,percent:0})
+                            const target100 = (difdays + 1) * target.targetPerDay;
+                            rankings.push({...target,percent:0,target100})
                         }
                     })
                 // console.log('data', data)
