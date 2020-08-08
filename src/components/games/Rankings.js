@@ -249,7 +249,7 @@ export class ShowTargets extends React.Component {
                                                     onClick={() => {
                                                         const diff = rank.price - rank.target100;
                                                         if (this.state.auth.role == 'owner')
-                                                            alert('ยอดขาย: ' + Money(rank.price, 0) + '\nเป้าหมาย: ' + Money(rank.target100, 0) + '\nส่วนต่าง: ' + (diff > 0 ? '+' : '') + Money(rank.price - rank.target100, 0))
+                                                            alert('No.'+(i+1)+' '+rank.page+' ('+rank.name+')\nยอดขาย: ' + Money(rank.price, 0) + '\nเป้าหมาย: ' + Money(rank.target100, 0) + '\nส่วนต่าง: ' + (diff > 0 ? '+' : '') + Money(rank.price - rank.target100, 0))
                                                     }}>
                                                     <td>{i + 1}</td>
                                                     <td>{rank.page}</td>
