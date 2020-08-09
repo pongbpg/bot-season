@@ -6,6 +6,7 @@ import { startAddYear, startGetTargets, startAddTargets, startUpdateTarget, star
 import { MdDelete, MdSettingsBackupRestore } from 'react-icons/md'
 import NumberFormat from 'react-number-format';
 import Money from '../../../selectors/money';
+import Targets from '../../../selectors/targets';
 import moment from 'moment';
 import _ from 'underscore'
 moment.locale('th');
@@ -25,7 +26,7 @@ export class TargetsPage extends React.Component {
             month: moment().month(),
             lists: [],
             action: {},
-            teams: this.initTeams(props.pages, []),
+            teams: Targets(props.pages, []),
             team: '',
             daysInMonth: moment().daysInMonth()
         }
@@ -33,16 +34,16 @@ export class TargetsPage extends React.Component {
         this.props.startGetTargets();
         this.props.startGetAdmins();
     }
-    initList(targets, year, month) {
-        let lists = [];
-        if (targets.find(f => f.id == year)) {
-            const data = targets.find(f => f.id == year).months;
-            if (data.find(f => f.month == month)) {
-                lists = data.find(f => f.month == month).pages;
-            }
-        }
-        return lists.sort((a, b) => a.team + a.page > b.team + b.team ? 1 : -1);
-    }
+    // initList(targets, year, month) {
+    //     let lists = [];
+    //     if (targets.find(f => f.id == year)) {
+    //         const data = targets.find(f => f.id == year).months;
+    //         if (data.find(f => f.month == month)) {
+    //             lists = data.find(f => f.month == month).pages;
+    //         }
+    //     }
+    //     return lists.sort((a, b) => a.team + a.page > b.team + b.team ? 1 : -1);
+    // }
     initTeams(pages, lists) {
         return _.chain(pages.filter(f => _.pluck(lists, 'page').indexOf(f.id) == -1))
             .groupBy('team')
@@ -65,7 +66,7 @@ export class TargetsPage extends React.Component {
         if (nextProps.targets != this.state.targets) {
             this.setState({
                 targets: nextProps.targets,
-                lists: this.initList(nextProps.targets, this.state.year, this.state.month)
+                lists: Targets(nextProps.targets, this.state.year, this.state.month)
             })
         }
     }
@@ -77,7 +78,7 @@ export class TargetsPage extends React.Component {
         const months = this.state.targets.filter(f => f.id == this.state.year)
         this.setState({
             month: e.target.value,
-            lists: this.initList(this.state.targets, this.state.year, e.target.value),
+            lists: Targets(this.state.targets, this.state.year, e.target.value),
             daysInMonth:moment().year(this.state.year).month(e.target.value).daysInMonth()
         })
     }

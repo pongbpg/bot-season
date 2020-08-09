@@ -7,6 +7,7 @@ import { MdRefresh } from 'react-icons/md'
 import NumberFormat from 'react-number-format';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import Money from '../../selectors/money';
+import Targets from '../../selectors/targets';
 import moment from 'moment';
 import _ from 'underscore'
 import { format } from 'numeral';
@@ -35,16 +36,7 @@ export class ShowTargets extends React.Component {
         this.props.startGetTargets();
         // this.props.startGetRankings([], moment().format('YYYYMMDD'), moment().format('YYYYMMDD'))
     }
-    initList(targets, year, month) {
-        let lists = [];
-        if (targets.find(f => f.id == year)) {
-            const data = targets.find(f => f.id == year).months;
-            if (data.find(f => f.month == month)) {
-                lists = data.find(f => f.month == month).pages;
-            }
-        }
-        return lists.sort((a, b) => a.team + a.page > b.team + b.team ? 1 : -1);
-    }
+   
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -58,7 +50,7 @@ export class ShowTargets extends React.Component {
                 targets: nextProps.targets
             })
             this.props.startGetRankings(
-                this.initList(nextProps.targets, this.state.year, this.state.month),
+                Targets(nextProps.targets, this.state.year, this.state.month),
                 moment(this.state.startDate).format('YYYYMMDD'),
                 moment(this.state.endDate).format('YYYYMMDD')
             )
@@ -66,7 +58,7 @@ export class ShowTargets extends React.Component {
             // },this.onGetRankings())
         }
         if (nextProps.rankings != this.state.rankings) {
-            console.log('new props ranking', nextProps.rankings)
+            // console.log('new props ranking', nextProps.rankings)
             this.setState({
                 rankings: nextProps.rankings
             })
@@ -82,7 +74,7 @@ export class ShowTargets extends React.Component {
             endDate
         })
         this.props.startGetRankings(
-            this.initList(this.state.targets, year, this.state.month),
+            Targets(this.state.targets, year, this.state.month),
             moment(startDate).format('YYYYMMDD'),
             moment(endDate).format('YYYYMMDD')
         )
@@ -96,7 +88,7 @@ export class ShowTargets extends React.Component {
             endDate
         })
         this.props.startGetRankings(
-            this.initList(this.state.targets, this.state.year, e.target.value),
+            Targets(this.state.targets, this.state.year, e.target.value),
             moment(startDate).format('YYYYMMDD'),
             moment(endDate).format('YYYYMMDD')
         )
@@ -107,7 +99,7 @@ export class ShowTargets extends React.Component {
         const endDate = values[1];
         this.setState({ startDate, endDate })
         this.props.startGetRankings(
-            this.initList(this.state.targets, this.state.year, this.state.month),
+            Targets(this.state.targets, this.state.year, this.state.month),
             moment(startDate).format('YYYYMMDD'),
             moment(endDate).format('YYYYMMDD')
         )
@@ -115,7 +107,7 @@ export class ShowTargets extends React.Component {
     onRefresh = () => {
         this.setState({ rankings: [] })
         this.props.startGetRankings(
-            this.initList(this.state.targets, this.state.year, this.state.month),
+            Targets(this.state.targets, this.state.year, this.state.month),
             moment(this.state.startDate).format('YYYYMMDD'),
             moment(this.state.endDate).format('YYYYMMDD')
         )

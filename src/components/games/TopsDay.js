@@ -38,7 +38,7 @@ export class TopsDayPage extends React.Component {
     }
 
     render() {
-        let count = 4;
+        let count = 0;
         return (
             <section className="hero">
                 <div className="hero-head">
@@ -69,8 +69,8 @@ export class TopsDayPage extends React.Component {
                     <div className="level">
                         {this.state.tops.map((top, i) => {
                             const admin = this.state.emails.filter(f => f.adminId == top.adminId && f.role == 'admin')[0];
-                            if (admin && count > 0) {
-                                count--;
+                            if (admin && count <4) {
+                                count++;
                                 return (
                                     <div className="level-item" key={top.adminId}>
                                         <div className="card">
@@ -83,7 +83,7 @@ export class TopsDayPage extends React.Component {
                                                 <div className="media">
                                                     <div className="media-content">
                                                         <p className="title is-4 has-text-centered">
-                                                            {i + 1}. {admin.admin}
+                                                            {count}. {admin.admin}
                                                         </p>
                                                     </div>
                                                 </div>
