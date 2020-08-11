@@ -1053,6 +1053,7 @@ const initMsgOrder = (txt) => {
                             case 'd': key = 'delivery'; break;
                             case 'cutoffdate': key = 'cutoffDate'; break;
                             case 'c': key = 'channel'; break;
+                            case 'm' : key='comment'; break;
                             default: key;
                         }
                         let value = m.split(':')[1];
