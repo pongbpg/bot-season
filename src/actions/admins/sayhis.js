@@ -1,4 +1,4 @@
-import firestore from '../firebase/firebase';
+import firestore from '../../firebase/firebase';
 export const startListSayhis = (year, month, page) => {
     return (dispatch) => {
         return firestore.collection('sayhis')
@@ -36,7 +36,7 @@ export const startListSayhis = (year, month, page) => {
     }
 }
 export const setListSayhis = (sayhis) => ({
-    type: 'SET_LIST_SAYHIS',
+    type: 'SET_ADMINS_SAYHIS',
     sayhis
 });
 function twoDigit(n) { return (n < 10 ? '0' : '') + n; }

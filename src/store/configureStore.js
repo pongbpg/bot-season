@@ -6,7 +6,7 @@ import cutoffReducer from '../reducers/cutoff';
 import searchReducer from '../reducers/search';
 import stockReducer from '../reducers/stock';
 import pagesReducer from '../reducers/pages';
-import sayhisReducer from '../reducers/sayhis';
+import adminsReducer from '../reducers/admins';
 import costsReducer from '../reducers/finances/costs';
 import codReducer from '../reducers/finances/cod';
 import gamesReducer from '../reducers/games';
@@ -23,7 +23,7 @@ export default () => {
       search: searchReducer,
       stock: stockReducer,
       pages: pagesReducer,
-      sayhis: sayhisReducer,
+      admins: adminsReducer,
       costs: costsReducer,
       games: gamesReducer,
       types: typesReducer,

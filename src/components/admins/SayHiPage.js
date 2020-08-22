@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
-import Money from '../selectors/money';
-import { startListSayhis, startSaveSayhi } from '../actions/sayhis';
+import Money from '../../selectors/money';
+import { startListSayhis, startSaveSayhi } from '../../actions/admins/sayhis';
 import moment from 'moment';
 moment.locale('th');
 export class SayHiPage extends React.Component {
@@ -248,7 +248,7 @@ export class SayHiPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
-    sayhis: state.sayhis,
+    sayhis: state.admins.sayhis,
     pages: state.pages// selectPages(state.pages, state.auth)
 });
 const mapDispatchToProps = (dispatch, props) => ({
