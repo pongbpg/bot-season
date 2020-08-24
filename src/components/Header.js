@@ -5,6 +5,7 @@ import { startLogout } from '../actions/auth';
 import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople, MdExitToApp, MdAccountCircle } from 'react-icons/md';
 import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine, FaLayerGroup } from 'react-icons/fa';
 import {GrTarget} from 'react-icons/gr'
+import {BsGraphUp} from 'react-icons/bs'
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -79,7 +80,7 @@ export class Header extends React.Component {
                         <span className="icon"><MdPanTool /></span>ยอดทัก
                   </Link>
                   <Link className="navbar-item" to="/admins/sell/product">
-                        <span className="icon"><MdPanTool /></span>ยอดขายสินค้า
+                        <span className="icon"><BsGraphUp /></span>ยอดขายสินค้า
                   </Link>
                     </div>
                   </div>

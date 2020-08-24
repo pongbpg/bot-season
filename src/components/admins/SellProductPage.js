@@ -24,7 +24,8 @@ export class SellProductPage extends React.Component {
             endDate: new Date(),
             list: []
         }
-        this.props.startGetSellProducts(moment().format('YYYYMMDD'), moment().format('YYYYMMDD'), props.auth.adminId)
+        if (props.auth.role == 'owner' || props.auth.adminId)
+            this.props.startGetSellProducts(moment().format('YYYYMMDD'), moment().format('YYYYMMDD'), props.auth.adminId)
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -38,7 +39,8 @@ export class SellProductPage extends React.Component {
         // console.log('change', values)
         const startDate = values[0];
         const endDate = values[1];
-        this.props.startGetSellProducts(moment(startDate).format('YYYYMMDD'), moment(endDate).format('YYYYMMDD'), this.state.auth.adminId)
+        if (this.state.auth.role == 'owner' || this.state.auth.adminId)
+            this.props.startGetSellProducts(moment(startDate).format('YYYYMMDD'), moment(endDate).format('YYYYMMDD'), this.state.auth.adminId)
         this.setState({ startDate, endDate })
     }
 
@@ -66,7 +68,7 @@ export class SellProductPage extends React.Component {
                     <div className="column is-three-fifths">
                         <div className="level">
                             <div className="level-item has-text-centered">
-                              วันที่:  <MyDateRange />
+                                วันที่:  <MyDateRange />
                             </div>
                         </div>
                     </div>
