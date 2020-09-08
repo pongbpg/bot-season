@@ -10,7 +10,7 @@ import ReportPage from '../components/ReportPage';
 import TrackingPage from '../components/TrackingPage';
 import TrackEditPage from '../components/TrackEditPage';
 import SayHiPage from '../components/admins/SayHiPage';
-import SellProductPage from '../components/admins/SellProductPage';
+import PivotTbPage from '../components/admins/PivotTbPage';
 import CostPage from '../components/finances/CostPage';
 import CodPage from '../components/finances/CodPage';
 import VotesPage from '../components/games/Votes';
@@ -41,7 +41,7 @@ const AppRouter = () => (
         <PrivateRoute path="/cutoff" component={CutOffPage} exact={true} />
         <PrivateRoute path="/report" component={ReportPage} exact={true} />
         <PrivateRoute path="/admins/sayhi" component={SayHiPage} exact={true} />
-        <PrivateRoute path="/admins/sell/product" component={SellProductPage} exact={true} />
+        <PrivateRoute path="/admins/pivotTb" component={PivotTbPage} exact={true} />
         <PrivateRoute path="/finances/cost" component={CostPage} exact={true} />
         <PrivateRoute path="/finances/cod" component={CodPage} exact={true} />
         <PrivateRoute path="/votes" component={VotesPage} exact={true} />

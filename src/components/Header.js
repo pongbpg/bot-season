@@ -79,8 +79,8 @@ export class Header extends React.Component {
                       <Link className="navbar-item" to="/admins/sayhi">
                         <span className="icon"><MdPanTool /></span>ยอดทัก
                   </Link>
-                  <Link className="navbar-item" to="/admins/sell/product">
-                        <span className="icon"><BsGraphUp /></span>ยอดขายสินค้า
+                  <Link className="navbar-item" to="/admins/pivotTb">
+                        <span className="icon"><BsGraphUp /></span>Pivot Table
                   </Link>
                     </div>
                   </div>
