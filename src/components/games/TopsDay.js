@@ -3,6 +3,7 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { startGetTopsDay } from '../../actions/games/topdays';
 import { startGetEmails } from '../../actions/manage/emails';
+import { MdRefresh } from 'react-icons/md'
 import moment from 'moment';
 import _ from 'underscore'
 moment.locale('th');
@@ -37,6 +38,9 @@ export class TopsDayPage extends React.Component {
             date
         });
     }
+    onRefresh = () => {
+        this.props.startGetTopsDay(moment(this.state.date).format('YYYYMMDD'))
+    }
 
     render() {
         let count = 0;
@@ -59,6 +63,11 @@ export class TopsDayPage extends React.Component {
                                         return moment() > date;
                                     }}
                                 />
+                            </div>
+                            <div className="level-item">
+                                <button className='button is-text' onClick={this.onRefresh}>
+                                    <span className="icon"><MdRefresh /></span>
+                                </button>
                             </div>
                         </div>
                         <div className="level-right">
@@ -87,9 +96,9 @@ export class TopsDayPage extends React.Component {
                                                             top: '50%',
                                                             left: '50%',
                                                             transform: 'translate(-50%, -50%)',
-                                                            color:'red',
+                                                            color: 'red',
                                                             fontWeight: 'bold',
-                                                            fontSize:'140%'
+                                                            fontSize: '140%'
                                                         }}>อั้นไม่เนียน<br />ไปเรียน<br />มาใหม่!!</div>
                                                     </div>
                                                 }
