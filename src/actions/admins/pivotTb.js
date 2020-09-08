@@ -26,7 +26,7 @@ export const startGetPivotTb = (startDate, endDate, userId, typePv) => {
                             team: doc.data().team
                         })
                     })
-                else
+                if (typePv == 'price')
                     pivotTb.push({
                         admin: doc.data().admin,
                         channel: doc.data().page.indexOf('@') > -1 ? 'Line' : 'FB',
@@ -37,7 +37,6 @@ export const startGetPivotTb = (startDate, endDate, userId, typePv) => {
                         price: doc.data().country == 'TH' ? doc.data().price : doc.data().price * 30
                     })
             })
-            console.log(pivotTb)
             return dispatch(setAdminsPivotTb(pivotTb));
         })
 

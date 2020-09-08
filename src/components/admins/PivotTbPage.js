@@ -4,6 +4,7 @@ import { startGetPivotTb } from './../../actions/admins/pivotTb';
 import moment from 'moment';
 import DateRangePicker from '@wojtekmaj/react-daterange-picker';
 import PivotTableUI from 'react-pivottable/PivotTableUI';
+import { MdRefresh } from 'react-icons/md'
 import 'react-pivottable/pivottable.css';
 moment.locale('th')
 // import TableRenderers from 'react-pivottable/TableRenderers';
@@ -57,6 +58,14 @@ export class PivotTbPage extends React.Component {
 
         this.setState({ typePv })
     }
+    onRefresh=()=>{
+        if ((this.state.auth.role == 'owner' || typeof this.state.auth.adminId !== 'undefined') && this.state.typePv != '') {
+            this.props.startGetPivotTb(moment(this.state.startDate).format('YYYYMMDD'),
+                moment(this.state.endDate).format('YYYYMMDD'),
+                this.state.auth.adminId,
+                this.state.typePv)
+        }
+    }
 
     render() {
         // const months = ['ม.ค.', 'ก.พ.', 'มี.ค.', 'เม.ย.', 'พ.ค.', 'มิ.ย.', 'ก.ค.', 'ส.ค.', 'ก.ย.', 'ต.ค.', 'พ.ย.', 'ธ.ค.'];
@@ -79,6 +88,9 @@ export class PivotTbPage extends React.Component {
                         <div className="level">
                             <div className="level-item has-text-centered">
                                 <MyDateRange />
+                                <button className='button is-text' onClick={this.onRefresh}>
+                                    <span className="icon"><MdRefresh /></span>
+                                </button>
                             </div>
                             <div className="level-item has-text-centered">
                                 <div class="select">
