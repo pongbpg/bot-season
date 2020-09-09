@@ -114,7 +114,7 @@ export class CostPage extends React.Component {
                     tokens.map(t => {
                         const token = t.token;
                         t.acts.map(act => {
-                            const cors_api_url = `https://graph.facebook.com/v7.0/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                            const cors_api_url = `https://graph.facebook.com/v8.0/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
                             fetchs.push(fetch(cors_api_url).then(value => value.json()))
                             sumPage.push({ page: page.id, spend: 0, account_id: act.id })
                         })
