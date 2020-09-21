@@ -130,7 +130,7 @@ export class OrderPage extends React.Component {
                         colFreight = rows[0].findIndex(f => f == 'รวมค่าส่ง');
                         // colCodFee = rows[0].findIndex(f => f == 'COD fee');
                         // colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
-                        colCodAmt = rows[0].findIndex(f => f == 'COD');
+                        colCodAmt = rows[0].findIndex(f => f == 'จำนวนเงิน COD' || f == 'COD');
                     }
                     if (rows.length > 0) {
                         for (var row in rows) {
@@ -138,7 +138,7 @@ export class OrderPage extends React.Component {
                                 const id = rows[row][colId].split(' ')[0].replace(/\s/g, '');
                                 if (id.length == 18) {
                                     const freight = Number(rows[row][colFreight]);
-                                    const codAmount = Number(rows[row][colCodAmt]);
+                                    const codAmount = Number(rows[row][colCodAmt]) || 0;
                                     const codFee = codAmount > 0 ? codAmount * 0.03 : 0;
                                     const totalFreight = freight + codFee;
                                     tracks.push({
