@@ -63,7 +63,7 @@ export const startGetTopsDay = (date) => {
                             const findYtd = groupOwner[0].data.find(f => f.adminId == m.adminId && f.pageId == m.pageId);
                             return {
                                 ...m,
-                                ytdPercent: findYtd ? findYtd.percent : 50
+                                ytdPercent: findYtd ? findYtd.percent : 0
                             }
                         })
                     // console.log(dispatch())
