@@ -88,7 +88,7 @@ export class TopsDayPage extends React.Component {
                                             <div className="card-image">
                                                 {/* <figure className="image is-128x128"> */}
                                                 {top.ytdPercent >= 50
-                                                    ? <img style={{ maxWidth: 200, maxHeight: 200 }} src={admin.imgUrl} onClick={() => console.log(top.price)} />
+                                                    ? <img style={{ maxWidth: 200, maxHeight: 200 }} src={admin.imgUrl} onClick={() => console.log(top.pageId, top.price)} />
                                                     : <div>
                                                         <img style={{ maxWidth: 200, maxHeight: 200, opacity: '0.4' }} src={admin.imgUrl} onClick={() => console.log(top.price)} />
                                                         <div className="centered" style={{

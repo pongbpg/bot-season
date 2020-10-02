@@ -29,47 +29,64 @@ export const startGetTopsDay = (date) => {
                     })
                     const groupOwner = _.chain(data).flatten()
                         .groupBy('orderDate')
-                        .map((data, key) => {
+                        .map((data, orderDate) => {
                             return {
-                                orderDate: key,
+                                orderDate,
                                 data: _.chain(data).groupBy('userId')
-                                    .map((owner, key) => {
-                                        return {
-                                            adminId: key,
-                                            pages: _.chain(owner).flatten().groupBy('page')
-                                                .map((page, pageId) => {
-                                                    return { pageId, price: page.reduce((memo, num) => memo + num.price, 0) }
-                                                }).sortBy('price').reverse()
-                                                .value()
-                                        }
-                                    })
-                                    .map((owner, key) => {
-                                        const tgYtd = targetsYtd.find(f => f.page == owner.pages[0].pageId && f.userId == owner.adminId)
-                                        return {
+                                    .map((owner, adminId) => {
+                                        // return {
+                                        //     adminId,
+                                        //     pages:
+                                        return _.chain(owner).flatten().groupBy('page')
+                                            .map((page, pageId) => {
+
+                                                const x = { adminId, pageId, price: page.reduce((memo, num) => memo + num.price, 0) }
+                                                return x;
+                                            })
+                                            .sortBy('price')
+                                            .reverse()
+                                            .value()
+                                        // }
+                                    }).flatten()
+                                    .map((owner, key2) => {
+                                        const tgYtd = targetsYtd.find(f => f.page == owner.pageId && f.userId == owner.adminId)
+                                        const tgTd = targets.find(f => f.page == owner.pageId && f.userId == owner.adminId)
+                                        // console.log('row', owner)
+                                        const x = {
                                             adminId: owner.adminId,
-                                            pageId: owner.pages[0].pageId,
-                                            percent: tgYtd ? owner.pages[0].price / tgYtd.targetPerDay * 100 : 50,
-                                            price: owner.pages[0].price
+                                            pageId: owner.pageId,
+                                            percent: tgYtd ? owner.price / (orderDate == date ? tgTd.targetPerDay : tgYtd.targetPerDay) * 100 : 50,
+                                            price: owner.price
                                         }
+                                        // if (owner.pages[0].pageId == 'TS01')
+                                        // console.log('xxx', x)
+                                        return x;
                                     })
-                                    .sortBy('price').reverse().value()
+                                    .sortBy('price')
+                                    .reverse()
+                                    .value()
                             }
                         })
                         .value()
                     // console.log(groupOwner)
                     let datax = []
                     if (groupOwner.length == 2)
-                        datax = groupOwner[1].data.map(m => {
+                        datax = _.chain(groupOwner[1].data.map(m => {
                             const findYtd = groupOwner[0].data.find(f => f.adminId == m.adminId && f.pageId == m.pageId);
                             return {
                                 ...m,
                                 ytdPercent: findYtd ? findYtd.percent : (moment(date).isSame(yesterday, 'month') ? 0 : 50)
                             }
-                        })
-                    // console.log(dispatch())
-                    // const tops = _.first(groupOwner, 4);
-                    // console.log(tops)
-                    // console.log(groupOwner)
+                        })).groupBy('adminId')
+                            .sortBy('price')
+                            .reverse()
+                            .map((top, adminId) => {
+                                return top[0] //select top in pagesß
+                            })
+                            .sortBy('price')
+                            .reverse()
+                            .value()
+                    // console.log(datax)
                     return dispatch(setTops(datax))
                 })
         })
