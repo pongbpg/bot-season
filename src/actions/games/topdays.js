@@ -24,9 +24,19 @@ export const startGetTopsDay = (date) => {
                         const userId = doc.data().edit && target ? target.userId : doc.data().userId
                         const admin = doc.data().edit && target ? target.name : doc.data().admin
                         if (doc.data().page.indexOf('TO01') == -1) { //without page office
-                            data.push({ id: doc.id, ...doc.data(), page, userId, admin })
+                            let ok = true;
+                            if (doc.data().orderDate == date && doc.data().bank.indexOf('COD') == -1) {
+                                const banks = doc.data().banks;
+                                for (let i = 0; i < banks.length; i++) {
+                                    if (banks[i].date < date && Number(banks[i].time) <= 22) {
+                                        ok = false;
+                                    }
+                                }
+                            }
+                            if (ok || doc.data().orderDate <= '20201117') data.push({ id: doc.id, ...doc.data(), page, userId, admin })
                         }
                     })
+
                     const groupOwner = _.chain(data).flatten()
                         .groupBy('orderDate')
                         .map((data, orderDate) => {
@@ -81,7 +91,7 @@ export const startGetTopsDay = (date) => {
                             .sortBy('price')
                             .reverse()
                             .map((top, adminId) => {
-                                return top[0] //select top in pagesß
+                                return top[0] //select top in pages
                             })
                             .sortBy('price')
                             .reverse()
