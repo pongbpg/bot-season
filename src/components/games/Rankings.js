@@ -36,7 +36,7 @@ export class ShowTargets extends React.Component {
         this.props.startGetTargets();
         // this.props.startGetRankings([], moment().format('YYYYMMDD'), moment().format('YYYYMMDD'))
     }
-   
+
 
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -124,7 +124,7 @@ export class ShowTargets extends React.Component {
             if (percent < 30) {
                 return {
                     backgroundColor: 'black',
-                    color: 'white',
+                    color: 'white'
                 }
             } else if (percent < 50) {
                 return {
@@ -237,11 +237,14 @@ export class ShowTargets extends React.Component {
                                     <tbody>
                                         {this.state.rankings.length > 0 && (
                                             this.state.rankings.map((rank, i) => {
-                                                return (<tr key={rank.page} style={percentColor(rank.percent)}
+                                                const pageMe = this.state.auth.pages.indexOf(rank.page.toUpperCase()) > -1;
+                                                const cursor = pageMe ? 'pointer' : 'default';
+                                                return (<tr key={rank.page} style={{...percentColor(rank.percent), ...{ cursor }}}
                                                     onClick={() => {
                                                         const diff = rank.price - rank.target100;
-                                                        if (this.state.auth.role == 'owner')
-                                                            alert('No.'+(i+1)+' '+rank.page+' ('+rank.name+')\nยอดขาย: ' + Money(rank.price, 0) + '\nเป้าหมาย: ' + Money(rank.target100, 0) + '\nส่วนต่าง: ' + (diff > 0 ? '+' : '') + Money(rank.price - rank.target100, 0))
+                                                        if ((this.state.auth.role == 'owner') || pageMe) {
+                                                            alert('No.' + (i + 1) + ' ' + rank.page + ' (' + rank.name + ')\nยอดขาย: ' + Money(rank.price, 0) + '\nเป้าหมาย: ' + Money(rank.target100, 0) + '\nส่วนต่าง: ' + (diff > 0 ? '+' : '') + Money(rank.price - rank.target100, 0))
+                                                        }
                                                     }}>
                                                     <td>{i + 1}</td>
                                                     <td>{rank.page}</td>
