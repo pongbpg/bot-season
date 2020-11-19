@@ -104,8 +104,49 @@ export const startGetTopsDay = (date) => {
 
     }
 }
-
+export const startGetBanList = (date) => {
+    return (dispatch, getState) => {
+        return firestore.collection('bans').doc(date).get()
+            .then(doc => {
+                if (doc.exists) {
+                    return dispatch(setBans(doc.data().list || []))
+                } else {
+                    return dispatch(setBans([]))
+                }
+            })
+    }
+}
+export const startSetTopBan = (date, { adminId, status }) => {
+    return (dispatch, getState) => {
+        // console.log(date)
+        return firestore.collection('bans').doc(date).get()
+            .then(doc => {
+                let list = doc.get('list') || [];
+                const find = list.find(f => f.adminId == adminId)
+                if (find) {
+                    list = list.map(m => {
+                        if (m.adminId == adminId) {
+                            return {
+                                adminId,
+                                status
+                            }
+                        } else {
+                            return m
+                        }
+                    })
+                } else {
+                    list.push({ adminId, status })
+                }
+                firestore.collection('bans').doc(date).set({ date, list })
+                return dispatch(setBans(list))
+            })
+    }
+}
 export const setTops = (tops) => ({
     type: 'SET_GAME_TOPS',
     tops
+});
+export const setBans = (bans) => ({
+    type: 'SET_GAME_BANS',
+    bans
 });

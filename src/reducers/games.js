@@ -1,4 +1,4 @@
-export default (state = { votes: [], random: false, tops: [], rankings: [] }, action) => {
+export default (state = { votes: [], random: false, tops: [], rankings: [], bans: [] }, action) => {
     switch (action.type) {
         case 'SET_GAME_VOTES':
             return {
@@ -19,6 +19,11 @@ export default (state = { votes: [], random: false, tops: [], rankings: [] }, ac
             return {
                 ...state,
                 rankings: action.rankings
+            };
+        case 'SET_GAME_BANS':
+            return {
+                ...state,
+                bans: action.bans
             };
         default:
             return state;
