@@ -11,7 +11,7 @@ const { customAlphabet } = require('nanoid');
 const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
-const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 11);
+const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 9);
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config({ path: '.env.development' });
 }
