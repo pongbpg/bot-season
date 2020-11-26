@@ -136,7 +136,7 @@ export class OrderPage extends React.Component {
                         for (var row in rows) {
                             if (rows[row][colId] != '' && rows[row][colId] != null && rows[row][colTack] != null) {
                                 const id = rows[row][colId].split(' ')[0].replace(/\s/g, '');
-                                if (id.length == 18) {
+                                if (id.length == 18 || id.length == 20) {
                                     const freight = Number(rows[row][colFreight]);
                                     const codAmount = Number(rows[row][colCodAmt]) || 0;
                                     const codFee = codAmount > 0 ? codAmount * 0.03 : 0;

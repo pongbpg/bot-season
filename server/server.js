@@ -7,10 +7,11 @@ const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
 const moment = require('moment');
 const shortid = require('shortid');
+const { customAlphabet } = require('nanoid');
 const fs = require('fs');
 moment.locale('th');
 const admin = require('firebase-admin');
-
+const nanoid = customAlphabet('0123456789abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ', 11);
 if (process.env.NODE_ENV !== 'production') {
     require('dotenv').config({ path: '.env.development' });
 }
@@ -498,7 +499,8 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                 const countsData = counts.data();
                                                 let no = 1;
                                                 let cutoff = countsData.cutoff;
-                                                let orderId = yyyymmdd() + '-' + shortid.generate();
+                                                let orderId = yyyymmdd() + '-' + nanoid();
+                                                // shortid.generate();
                                                 // let orderId = yyyymmdd() + '-' + fourDigit(no);
                                                 let orderDate = yyyymmdd();
 
@@ -798,7 +800,8 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                 const countsData = counts.data();
                                                 let no = 1;
                                                 let cutoff = countsData.cutoff;
-                                                let orderId = yyyymmdd() + '-' + shortid.generate();
+                                                let orderId = yyyymmdd() + '-' + nanoid();
+                                                // shortid.generate();
                                                 // let orderId = yyyymmdd() + '-' + fourDigit(no);
                                                 let orderDate = yyyymmdd();
 
@@ -1053,7 +1056,7 @@ const initMsgOrder = (txt) => {
                             case 'd': key = 'delivery'; break;
                             case 'cutoffdate': key = 'cutoffDate'; break;
                             case 'c': key = 'channel'; break;
-                            case 'm' : key='comment'; break;
+                            case 'm': key = 'comment'; break;
                             default: key;
                         }
                         let value = m.split(':')[1];
