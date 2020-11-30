@@ -203,6 +203,13 @@ export class ReportPage extends React.Component {
                                                     J&T
                                         </a>
                                             </p>
+                                            <p className="control">
+                                                <a className="button is-success is-centered is-small"
+                                                    href={`${rptUri}/delivery?startDate=${moment(this.state.startDate).format('YYYYMMDD')}&file=ninja&country=TH&payment=${this.state.payment}`}
+                                                    target="_blank">
+                                                    NINJA
+                                        </a>
+                                            </p>
                                         </div>
                                     </td>
                                 </tr>
