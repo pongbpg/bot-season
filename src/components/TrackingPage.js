@@ -202,7 +202,7 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-centered">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</td>
                             <td className="has-text-centered">
                               <a className='is-link'
-                                href={(order.expressName == 'KERRY' ? order.expressLink + '=' + order.tracking :
+                                href={(order.expressName == 'KERRY' || order.expressName == 'NINJA' ? order.expressLink + '=' + order.tracking :
                                   (order.expressName == 'EMS' ? 'http://emsbot.com/#/?s=' + order.tracking : order.expressLink))} target="_blank">
                                 {!order.expressName ?
                                   (order.cutoff ? 'จัดส่งแล้ว' : 'ยังไม่ได้จัดส่ง')
@@ -236,7 +236,7 @@ export class TrackingPage extends React.Component {
                     <article className="post">
                       <h3>
                         <a className={`button is-link is-${color}`}
-                          href={(order.expressName == 'KERRY' ? order.expressLink + '=' + order.tracking :
+                          href={(order.expressName == 'KERRY' || order.expressName == 'NINJA' ? order.expressLink + '=' + order.tracking :
                             (order.expressName == 'EMS' ? 'http://emsbot.com/#/?s=' + order.tracking : order.expressLink))} target="_blank">
                           {!order.expressName ?
                             (order.cutoff ? 'จัดส่งแล้ว' : 'ยังไม่ได้จัดส่ง')

@@ -61,7 +61,8 @@ export const startGetTopsDay = (date) => {
                                     .map((owner, key2) => {
                                         const tgYtd = targetsYtd.find(f => f.page == owner.pageId && f.userId == owner.adminId)
                                         const tgTd = targets.find(f => f.page == owner.pageId && f.userId == owner.adminId)
-                                        // console.log('row', owner)
+                                        // console.log('tgTd', tgTd)
+                                        // console.log('tgYtd', tgYtd)
                                         const x = {
                                             adminId: owner.adminId,
                                             pageId: owner.pageId,
