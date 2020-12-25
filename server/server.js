@@ -87,6 +87,25 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     })
                     reply(obj, LINE_TH);
                 })
+    } else if (msg.indexOf('@@poom:') > -1 && msg.split(':').length == 2) {
+        const txt = msg.split(':')[1];
+        db.collection('stocks').doc('poom')
+            .get()
+            .then(doc => {
+                const bank = txt.split('=')[0];
+                let price = Number(txt.split('=')[1]) || 0;
+                let newtrac = doc.get(bank);
+                if (newtrac) {
+                    price += newtrac;
+                }
+                let data = { ...doc.data(), [bank]: price }
+                doc.ref.set(data)
+                obj.messages.push({
+                    type: 'text',
+                    text: `รายการเติมเงิน\n${Object.keys(data).map(k => k + ' = ' + dataformatMoney(data[k], 0) + ' บ.\n')}`
+                })
+                reply(obj, LINE_TH);
+            })
     } else if (msg.indexOf('@@notice:') > -1 && msg.split(':').length >= 2) {
         db.collection('groups').get()
             .then(snapShot => {
