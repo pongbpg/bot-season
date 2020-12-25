@@ -102,7 +102,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                 doc.ref.set(data)
                 obj.messages.push({
                     type: 'text',
-                    text: `รายการเติมเงิน\n${Object.keys(data).map(k => k + ' = ' + formatMoney(data[k], 0) + ' บ.\n')}`
+                    text: `รายการใช้บัตรเครดิต\n${Object.keys(data).map(k => k + ' = ' + formatMoney(data[k], 0) + ' บ.\n')}`
                 })
                 reply(obj, LINE_TH);
             })
