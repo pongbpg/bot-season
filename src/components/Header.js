@@ -4,6 +4,7 @@ import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople, MdExitToApp, MdAccountCircle } from 'react-icons/md';
 import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine, FaLayerGroup } from 'react-icons/fa';
+import {GiPriceTag} from 'react-icons/gi';
 import {GrTarget} from 'react-icons/gr'
 import {BsGraphUp} from 'react-icons/bs'
 export class Header extends React.Component {
@@ -85,7 +86,7 @@ export class Header extends React.Component {
                     </div>
                   </div>
                 )}
-                {['owner', 'stock'].indexOf(this.state.auth.role) > -1 && (
+                {['owner'].indexOf(this.state.auth.role) > -1 && (
                   <div className="navbar-item has-dropdown is-hoverable">
                     <a className="navbar-link">บัญชี</a>
                     <div className="navbar-dropdown">
@@ -97,6 +98,9 @@ export class Header extends React.Component {
                   </Link>
                       <Link className="navbar-item" to="/widget/posts">
                         <span className="icon"><FaFacebook /></span>ยอดโพสต์
+                  </Link>
+                  <Link className="navbar-item" to="/finances/promotion">
+                        <span className="icon"><GiPriceTag /></span>Promotion
                   </Link>
                     </div>
                   </div>
