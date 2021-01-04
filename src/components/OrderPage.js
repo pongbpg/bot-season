@@ -26,6 +26,7 @@ export class OrderPage extends React.Component {
                 { expressName: 'JT', expressLink: 'https://www.jtexpress.co.th/index/query/gzquery.html', upload: true },
                 { expressName: 'KERRY', expressLink: 'https://th.kerryexpress.com/th/track/?track', upload: false },
                 { expressName: 'NINJA', expressLink: 'https://www.ninjavan.co/th-th/tracking?id', upload: true },
+                { expressName: 'NIM', expressLink: 'https://www.nimexpress.com/web/p/home', upload: false },
             ]
         }
         this.props.startListOrders();
