@@ -72,7 +72,7 @@ export class PromotionPage extends React.Component {
                                 </tr>
                             </thead>
                             <tbody>
-                                {this.state.products.length == 0 ?
+                                {this.state.products == null ?
                                     <tr>
                                         <td className="has-text-centered" colSpan={6}>ยังไม่มีรายการสินค้า</td>
                                     </tr>
@@ -120,7 +120,7 @@ export class PromotionPage extends React.Component {
                                     </td>
                                     <td className=" has-text-right">{Money(this.state.quantity)}</td>
                                     <td className=" has-text-right">{Money(this.state.totalCost)} ({Money((this.state.totalCost / this.state.price) * 100, 2)}%)</td>
-                                    <td className=" has-text-right">{Money(this.state.totalSale)} ({Money((this.state.totalSale / this.state.price) * 100, 2)}%)</td>
+                                    <td className=" has-text-right">{Money(this.state.totalSale)}</td>
                                 </tr>
                                 <tr>
                                     <td>กำไร</td>
