@@ -46,7 +46,7 @@ export const startSaveTracking = (orders) => {
         let update = firestore.collection('orders');
         for (let x = 0; x < orders.length; x++) {
             update.doc(orders[x].id).update({
-                tracking: orders[x].tracking,
+                tracking: orders[x].tracking.toUpperCase(),
                 freight: Number(orders[x].freight) || 0,
                 codFee: Number(orders[x].codFee) || 0,
                 totalFreight: (Number(orders[x].freight) || 0) + (Number(orders[x].codFee) || 0),
@@ -68,7 +68,7 @@ export const startUploadTracks = (tracks) => {
         for (let x = 0; x < tracks.length; x++) {
             update.doc(tracks[x].id)
                 .update({
-                    tracking: tracks[x].tracking,
+                    tracking: tracks[x].tracking.toUpperCase(),
                     expressName: tracks[x].expressName,
                     expressLink: tracks[x].expressLink,
                     freight: tracks[x].freight,
