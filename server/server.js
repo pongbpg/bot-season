@@ -99,7 +99,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     price += newtrac;
                 }
                 let data = { ...doc.data(), [bank]: price }
-                const text = `รายการบันทึกยอด\n${Object.keys(data).map(k => k + ' = ' + formatMoney(data[k], 0))}\n`.replace(',', '')
+                const text = `รายการบันทึกยอด\n${Object.keys(data).map(k => k + ' = ' + formatMoney(data[k], 0)+'\n')}`
                 Object.keys(data).map(k => {
                     if (data[k] == 0) {
                         delete data[k]
