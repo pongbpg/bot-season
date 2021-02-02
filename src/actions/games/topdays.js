@@ -15,6 +15,7 @@ export const startGetTopsDay = (date) => {
                 .where('orderDate', '>=', yesterday)
                 .where('orderDate', '<=', date)
                 .where('return', '==', false)
+                .where('country','==','TH')
                 .get()
                 .then(snapShot => {
                     let data = [];
@@ -23,6 +24,7 @@ export const startGetTopsDay = (date) => {
                         const target = targets.find(f => f.page == page);
                         const userId = doc.data().edit && target ? target.userId : doc.data().userId
                         const admin = doc.data().edit && target ? target.name : doc.data().admin
+                        // const price = doc.data().country == 'TH' ? doc.data().price : doc.data().price * 30;
                         if (doc.data().page.indexOf('TO01') == -1) { //without page office
                             let ok = true;
                             if (doc.data().orderDate == date && doc.data().bank.indexOf('COD') == -1) {
@@ -67,12 +69,14 @@ export const startGetTopsDay = (date) => {
                                             adminId: owner.adminId,
                                             pageId: owner.pageId,
                                             percent: tgYtd ? owner.price / (orderDate == date ? tgTd.targetPerDay : tgYtd.targetPerDay) * 100 : 50,
-                                            price: owner.price
+                                            price: owner.price,
+                                            target: true
                                         }
                                         // if (owner.pages[0].pageId == 'TS01')
                                         // console.log('xxx', x)
-                                        return x;
+                                        return tgYtd ? x : { target: false };
                                     })
+                                    .filter(f => f.target)
                                     .sortBy('price')
                                     .reverse()
                                     .value()

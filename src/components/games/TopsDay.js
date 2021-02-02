@@ -3,9 +3,10 @@ import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import { startGetTopsDay, startSetTopBan, startGetBanList } from '../../actions/games/topdays';
 import { startGetEmails } from '../../actions/manage/emails';
-import { MdRefresh } from 'react-icons/md'
+import { MdRefresh, MdForward10 } from 'react-icons/md'
 import moment from 'moment';
 import _, { isNull } from 'underscore'
+import Money from '../../selectors/money'
 moment.locale('th');
 export class TopsDayPage extends React.Component {
     constructor(props) {
@@ -51,6 +52,11 @@ export class TopsDayPage extends React.Component {
 
     render() {
         let count = 0;
+        const top4Price = this.state.tops.filter(top => {
+            const ban = this.state.bans.find(ban => ban.adminId == top.adminId) || { status: null }
+            return top.ytdPercent >= 50 || ban.status == true || isNull(ban.status)
+        }).slice(0, 4).reduce((memo, num) => memo + num.price, 0);
+        const dateNo = moment(this.state.date).date();
         return (
             <section className="hero">
                 <div className="hero-head">
@@ -94,12 +100,12 @@ export class TopsDayPage extends React.Component {
                                         <div className="card">
                                             <div className="card-image">
                                                 {(top.ytdPercent >= 50 || ban.status == true)
-                                                    ? <img style={{ maxWidth: 200, maxHeight: 200 }} src={admin.imgUrl} onClick={() => console.log(top.pageId, top.price)} />
+                                                    ? <img style={{ maxWidth: 200, maxHeight: 200 }} src={admin.imgUrl} onClick={() => console.log(top.pageId, admin.admin, top.price)} />
                                                     : <div>
                                                         <img style={{
                                                             maxWidth: 200, maxHeight: 200,
                                                             opacity: (ban.status == true) ? '1' : '0.4'
-                                                        }} src={admin.imgUrl} onClick={() => console.log(top.price)} />
+                                                        }} src={admin.imgUrl} onClick={() => console.log(top.pageId, admin.admin, top.price)} />
                                                         <div className="has-text-centered" style={{
                                                             position: 'absolute',
                                                             top: '50%',
@@ -136,7 +142,9 @@ export class TopsDayPage extends React.Component {
                                                                 {((ban.status || isNull(ban.status)) ? count : count + 1) + '.'} {admin.admin} ({Math.round(top.ytdPercent)}%)
                                                             </p>
                                                         }
-
+                                                        {(ban.status || isNull(ban.status)) &&
+                                                            <p className="is-size-4 has-text-success has-text-centered">{dateNo <= 10 ? Money(top.price / top4Price * 350, 0) : count == 1 ? 100 : ''}</p>
+                                                        }
                                                     </div>
                                                 </div>
                                             </div>
