@@ -142,8 +142,8 @@ export class TopsDayPage extends React.Component {
                                                                 {((ban.status || isNull(ban.status)) ? count : count + 1) + '.'} {admin.admin} ({Math.round(top.ytdPercent)}%)
                                                             </p>
                                                         }
-                                                        {(ban.status || isNull(ban.status)) &&
-                                                            <p className="is-size-4 has-text-success has-text-centered">{dateNo <= 10 ? Money(top.price / top4Price * 350, 0) : count == 1 ? 100 : ''}</p>
+                                                        {((ban.status || isNull(ban.status)) && moment(this.state.date).isAfter('20210201')) &&
+                                                            <p className="is-size-4 has-text-success has-text-centered">{(dateNo <= 10) ? Money(top.price / top4Price * 350, 0) : count == 1 ? 100 : ''}</p>
                                                         }
                                                     </div>
                                                 </div>
