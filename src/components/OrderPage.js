@@ -137,11 +137,16 @@ export class OrderPage extends React.Component {
                     if (this.state.expressName == "NINJA") {
                         colId = rows[0].findIndex(f => f == 'comment');
                         colTack = rows[0].findIndex(f => f == 'order no');
-                        colFreight = rows[0].findIndex(f => f == 'deliverly fee');
+                        colFreight = rows[0].findIndex(f => f == 'delivery fee');
                         colCodFee = rows[0].findIndex(f => f == 'cod fee');
                         // colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
                         colCodAmt = rows[0].findIndex(f => f == 'cod');
                     }
+                    console.log('col id', colId)
+                    console.log('col tracking', colTack)
+                    console.log('col freight', colFreight)
+                    console.log('col codfee', colCodFee)
+                    console.log('col codamount', colCodAmt)
                     if (rows.length > 0) {
                         for (var row in rows) {
                             if (rows[row][colId] != '' && rows[row][colId] != null && rows[row][colTack] != null) {
@@ -151,7 +156,7 @@ export class OrderPage extends React.Component {
                                     const codAmount = Number(rows[row][colCodAmt]) || 0;
                                     const codFee = Number(rows[row][colCodFee]) || 0;
                                     const totalFreight = freight + codFee;
-                                    tracks.push({
+                                    const obj = {
                                         tracking: rows[row][colTack].replace(/\s/g, ''),
                                         id,
                                         expressName: this.state.expressName,
@@ -160,7 +165,9 @@ export class OrderPage extends React.Component {
                                         codFee,
                                         totalFreight,
                                         codAmount
-                                    })
+                                    }
+                                    console.log(obj)
+                                    tracks.push(obj)
                                 }
                             }
                         }
@@ -169,7 +176,7 @@ export class OrderPage extends React.Component {
                         alert('ไม่มีข้อมูล กรุณาตรวจสอบไฟล์ Excel')
                     }
                     this.setState({ tracks })
-                    console.log(tracks)
+                    // console.log(tracks)
                 })
                 .catch((errors) => {
                     console.log('upload file', errors)
