@@ -116,7 +116,7 @@ export class OrderPage extends React.Component {
                     let colTack = null;
                     let colFreight = null;
                     let colCodFee = null;
-                    let colTotalCharge = null;
+                    let colRemote = null;
                     let colCodAmt = null;
                     if (this.state.expressName == "FLASH") {
                         colId = rows[0].findIndex(f => f == 'Order No.');
@@ -136,11 +136,11 @@ export class OrderPage extends React.Component {
                     }
                     if (this.state.expressName == "NINJA") {
                         colId = rows[0].findIndex(f => f == 'comment');
-                        colTack = rows[0].findIndex(f => f == 'order no');
-                        colFreight = rows[0].findIndex(f => f == 'delivery fee');
-                        colCodFee = rows[0].findIndex(f => f == 'cod fee');
-                        // colTotalCharge = rows[0].findIndex(f => f == 'Total charge');
-                        colCodAmt = rows[0].findIndex(f => f == 'cod');
+                        colTack = rows[0].findIndex(f => f == 'Tracking ID');
+                        colFreight = rows[0].findIndex(f => f == '*Delivery Fee');
+                        colCodFee = rows[0].findIndex(f => f == '*COD Fee');
+                        colRemote = rows[0].findIndex(f => f == '*Remote Fee');
+                        colCodAmt = rows[0].findIndex(f => f == 'Order Milestones → Cod Value');
                     }
                     console.log('col id', colId)
                     console.log('col tracking', colTack)
@@ -154,8 +154,10 @@ export class OrderPage extends React.Component {
                                 if (id.length == 18 || id.length == 20) {
                                     const freight = Number(rows[row][colFreight]);
                                     const codAmount = Number(rows[row][colCodAmt]) || 0;
-                                    const codFee = Number(rows[row][colCodFee]) || 0;
-                                    const totalFreight = freight + codFee;
+                                    const remoteFee = Number(rows[row][colRemote]) || 0;
+                                    let codFee = Number(rows[row][colCodFee]) || 0;
+                                    codFee += codFee * 0.07;
+                                    const totalFreight = freight + codFee + remoteFee;
                                     const obj = {
                                         tracking: rows[row][colTack].replace(/\s/g, ''),
                                         id,
@@ -163,7 +165,8 @@ export class OrderPage extends React.Component {
                                         expressLink: this.state.expressLink,
                                         freight,
                                         codFee,
-                                        totalFreight,
+                                        remoteFee,
+                                        totalFreight: Number(totalFreight.toFixed(2)),
                                         codAmount
                                     }
                                     console.log(obj)
