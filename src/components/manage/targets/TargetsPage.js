@@ -218,6 +218,7 @@ export class TargetsPage extends React.Component {
                                             page: this.state.page,
                                             target: this.state.target,
                                             userId: this.state.admin,
+                                            targetPerDay: Number(this.state.target / this.state.daysInMonth),
                                             name: this.state.admins.find(f => f.userId == this.state.admin).name,
                                             comId: this.state.admins.find(f => f.userId == this.state.admin).comId || 0
                                         }]).then(() => this.setState({ page: '', target: '', admin: '' }))
