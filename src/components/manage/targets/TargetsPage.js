@@ -26,7 +26,7 @@ export class TargetsPage extends React.Component {
             month: moment().month(),
             lists: [],
             action: {},
-            teams: Targets(props.pages, []),
+            teams: [],//Targets(props.pages, []),
             team: '',
             daysInMonth: moment().daysInMonth()
         }
@@ -45,7 +45,7 @@ export class TargetsPage extends React.Component {
     //     return lists.sort((a, b) => a.team + a.page > b.team + b.team ? 1 : -1);
     // }
     initTeams(pages, lists) {
-        return _.chain(pages.filter(f => _.pluck(lists, 'page').indexOf(f.id) == -1))
+        return _.chain(pages.filter(f => _.pluck(lists, 'page').indexOf(f.id) >= -1))
             .groupBy('team')
             .map((t, i) => i)
             .value()
@@ -79,7 +79,7 @@ export class TargetsPage extends React.Component {
         this.setState({
             month: e.target.value,
             lists: Targets(this.state.targets, this.state.year, e.target.value),
-            daysInMonth:moment().year(this.state.year).month(e.target.value).daysInMonth()
+            daysInMonth: moment().year(this.state.year).month(e.target.value).daysInMonth()
         })
     }
     onTargetClick = (page, type) => {
@@ -304,7 +304,7 @@ export class TargetsPage extends React.Component {
                                                                         }
                                                                     }
                                                                 }}
-                                                                onBlur={e=>{
+                                                                onBlur={e => {
                                                                     // console.log('onblur',e.target.value)
                                                                     if (confirm(this.state.action.page + ' ต้องการบันทึกเป้ายอดขาย ' + e.target.value + '?')) {
                                                                         this.setState({

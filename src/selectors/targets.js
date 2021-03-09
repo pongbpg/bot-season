@@ -6,5 +6,5 @@ export default (targets, year, month) => {
             lists = data.find(f => f.month == month).pages;
         }
     }
-    return lists.sort((a, b) => a.team + a.page > b.team + b.team ? 1 : -1);
+    return lists.sort((a, b) => a.team + a.page > b.team + b.page ? 1 : -1);
 }
