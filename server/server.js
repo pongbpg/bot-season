@@ -99,7 +99,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                     price += newtrac;
                 }
                 let data = { ...doc.data(), [bank]: price }
-                const text = `รายการบันทึกยอด\n${Object.keys(data).map(k => k + ' = ' + formatMoney(data[k], 0)+'\n')}`
+                const text = `รายการบันทึกยอด\n${Object.keys(data).map(k => k + ' = ' + formatMoney(data[k], 0) + '\n')}`
                 Object.keys(data).map(k => {
                     if (data[k] == 0) {
                         delete data[k]
@@ -1056,9 +1056,11 @@ const initMsgOrder = (txt) => {
             let pages = [];
             let dataPages = [];
             snapShotPages.forEach(page => {
-                pages.push(page.id)
-                pages.push('@' + page.id)
-                dataPages.push({ id: page.id, ...page.data() })
+                if (page.active) {
+                    pages.push(page.id)
+                    pages.push('@' + page.id)
+                    dataPages.push({ id: page.id, ...page.data() })
+                }
             })
             let orders = [];
             let data = Object.assign(...txt.split('#').filter(f => f != "")
