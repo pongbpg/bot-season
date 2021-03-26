@@ -1056,7 +1056,7 @@ const initMsgOrder = (txt) => {
             let pages = [];
             let dataPages = [];
             snapShotPages.forEach(page => {
-                if (page.active) {
+                if (page.data().active) {
                     pages.push(page.id)
                     pages.push('@' + page.id)
                     dataPages.push({ id: page.id, ...page.data() })
@@ -1272,7 +1272,7 @@ const initMsgOrder = (txt) => {
                         return { [key]: value };
                     }
                 }));
-            console.log(dataPages)
+            // console.log(dataPages)
             data.team = dataPages.find(f => f.id == data.page.replace('@', '')).team;
             data.pageOwnerId = dataPages.find(f => f.id == data.page.replace('@', '')).adminId;
             data.price = data.banks ? data.banks.map(b => b.price).reduce((le, ri) => Number(le) + Number(ri)) || 0 : 0
