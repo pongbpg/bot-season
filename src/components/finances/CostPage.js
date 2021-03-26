@@ -105,81 +105,39 @@ export class CostPage extends React.Component {
         // console.log(this.state.pages)
         this.state.pages.filter(f => f.actId)
             .map(page => {
-                // if (page.actId) {
                 if (isJson(page.actId)) {
                     const tokens = JSON.parse(page.actId);
-                    // if (sumPage.indexOf(page.id) == -1) {
-                    //     sumPage[page.id] = 0;
-                    // }
                     tokens.map(t => {
                         const token = t.token;
                         t.acts.map(act => {
                             const cors_api_url = `https://graph.facebook.com/v9.0/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
-                            fetchs.push(fetch(cors_api_url).then(value => value.json()))
+                            fetchs.push(fetch(cors_api_url).then(value => value.json()).catch(err => console.log('xxx')))
                             sumPage.push({ page: page.id, spend: 0, account_id: act.id })
                         })
                     })
-                    // console.log(page.id, JSON.parse(page.actId))
                 }
-                // const acts = page.actId.split(',');
-                // if (sumPage.indexOf(page.id) == -1) {
-                //     sumPage[page.id] = 0;
-                // }
-                // count += acts.length;
-                // for (let i = 0; i < acts.length; i++) {
-                //     var cors_api_url = `https://graph.facebook.com/v5.0/act_${acts[i]}/insights?access_token=${this.state.token.fb}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
-                //     // console.log(cors_api_url)
-                //     fetch(cors_api_url)
-                //         .then(function (response) {
-                //             return response.json();
-                //         })
-                //         .then((jsonStr) => {
-                //             const insights = JSON.parse(JSON.stringify(jsonStr));
-                //             if (!insights.error)
-                //                 if (insights.data.length > 0) {
-                //                     sumPage[page.id] += Number(insights.data[0].spend)
-                //                 }
-                //             if (count > 0) {
-                //                 count--;
-                //             }
-                //             if (count == 0) {
-                //                 for (var item in sumPage) {
-                //                     let cost = this.state.costs.find(f => f.page == item);
-                //                     // console.log(cost)
-                //                     this.props.startSaveCost({
-                //                         date: moment(date).format('YYYYMMDD'),
-                //                         page: item,
-                //                         id: moment(date).format('YYYYMMDD') + item,
-                //                         fb: sumPage[item],
-                //                         team: cost.team,
-                //                         admin: cost.admin,
-                //                         year: moment(date).format('YYYYMMDD').substr(0, 4),
-                //                         month: moment(date).format('YYYYMMDD').substr(4, 2),
-                //                         day: moment(date).format('YYYYMMDD').substr(6, 2)
-                //                     })
-                //                 }
-                //                 // console.log(sumPage)
-                //             }
-                //         })
-                // }
-                // }
             })
-        // console.log(fetchs)
         Promise.all(fetchs)
             .then((res) => {
+                // console.log(res.length)
+                let errPages = [];
                 res.map((r, i) => {
                     const insights = JSON.parse(JSON.stringify(r));
-                    if (!insights.error)
+                    if (insights.error)
+                        errPages.push(sumPage[i])
+                    if (!insights.error) {
                         if (insights.data.length > 0) {
                             sumPage[i] = { ...sumPage[i], spend: Number(insights.data[0].spend) }
                         }
+                    }
                 })
+                console.log('err',errPages)
                 const result = _.chain(sumPage).groupBy('page')
                     .map((values, pageId) => {
-                        console.log(values, pageId)
+                        // console.log(values, pageId)
                         const costPage = _.reduce(_.pluck(values, 'spend'), (t, n) => t + n, 0);
                         let cost = costs.find(f => f.page == pageId);
-                        // console.log(cost)
+                        const errActs = errPages.filter(f => f.page == pageId);
                         this.props.startSaveCost({
                             date: moment(date).format('YYYYMMDD'),
                             page: pageId,
@@ -189,12 +147,15 @@ export class CostPage extends React.Component {
                             admin: cost.admin,
                             year: moment(date).format('YYYYMMDD').substr(0, 4),
                             month: moment(date).format('YYYYMMDD').substr(4, 2),
-                            day: moment(date).format('YYYYMMDD').substr(6, 2)
+                            day: moment(date).format('YYYYMMDD').substr(6, 2),
+                            expire: errActs.length > 0,
+                            expireActId: errActs.length > 0 ? errActs.map(m => m.account_id) : ''
                         })
                         return { pageId, costPage }
                     }).value();
                 console.log(result)
             })
+
     }
 
     render() {
@@ -254,7 +215,10 @@ export class CostPage extends React.Component {
                                             <tr key={cost.page}>
                                                 <td className="has-text-centered">{++i}</td>
                                                 <td className="has-text-left">{`${cost.team}`}</td>
-                                                <td className="has-text-left">{`${cost.page} ${cost.admin}`}</td>
+                                                <td className={`has-text-left ${cost.expire && 'has-text-danger'}`}>
+                                                    {`${cost.page} ${cost.admin}`}
+                                                    <p className="has-text-danger">{cost.expireActId}</p>
+                                                </td>
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.fb, 0)}</td>)}
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.line, 0)}</td>)}
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.other, 0)}</td>)}
