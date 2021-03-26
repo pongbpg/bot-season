@@ -131,7 +131,7 @@ export class CostPage extends React.Component {
                         }
                     }
                 })
-                console.log('err',errPages)
+                console.log('err page token',errPages)
                 const result = _.chain(sumPage).groupBy('page')
                     .map((values, pageId) => {
                         // console.log(values, pageId)
