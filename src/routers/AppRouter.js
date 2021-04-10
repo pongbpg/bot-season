@@ -14,6 +14,7 @@ import PivotTbPage from '../components/admins/PivotTbPage';
 import CostPage from '../components/finances/CostPage';
 import CodPage from '../components/finances/CodPage';
 import PromotionPage from '../components/finances/PromotionPage';
+import TopdayPage from '../components/finances/TopdayPage';
 import VotesPage from '../components/games/Votes';
 import AdminsPage from '../components/manage/AdminsPage';
 import ProductTypesPage from '../components/manage/ProductTypesPage';
@@ -46,6 +47,7 @@ const AppRouter = () => (
         <PrivateRoute path="/finances/cost" component={CostPage} exact={true} />
         <PrivateRoute path="/finances/cod" component={CodPage} exact={true} />
         <PrivateRoute path="/finances/promotion" component={PromotionPage} exact={true} />
+        <PrivateRoute path="/finances/topdays" component={TopdayPage} exact={true} />
         <PrivateRoute path="/votes" component={VotesPage} exact={true} />
         <PrivateRoute path="/manage/teams" component={TeamsPage} exact={true} />
         <PrivateRoute path="/manage/admins" component={AdminsPage} exact={true} />

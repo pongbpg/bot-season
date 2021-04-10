@@ -102,6 +102,9 @@ export class Header extends React.Component {
                   <Link className="navbar-item" to="/finances/promotion">
                         <span className="icon"><GiPriceTag /></span>Promotion
                   </Link>
+                  <Link className="navbar-item" to="/finances/topdays">
+                        <span className="icon"><GiPriceTag /></span>Topdays
+                  </Link>
                     </div>
                   </div>
                 )}
