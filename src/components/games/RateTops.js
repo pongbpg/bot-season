@@ -80,7 +80,33 @@ export class TopsDayPage extends React.Component {
                     </div>
                 </div>
                 <div className="hero-body">
-                    <div className="level">
+                    <div className="table-container">
+                        <table className="table  is-fullwidth is-hoverable">
+                            <thead>
+                                <tr>
+                                    <th>ลำดับ</th>
+                                    <th className="has-text-centered">โบนัส</th>
+                                    <th className="has-text-centered">แอดมิน</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {this.state.rates.map((top, i) => {
+                                    const admin = this.state.emails.filter(f => f.adminId == top.userId && f.role == 'admin')[0];
+                                    if (admin && count < 4) {
+                                        count++;
+                                        return (
+                                            <tr key={top.userId} onClick={() => console.log(admin.admin, top)}>
+                                                <td className="has-text-weight-bold">{count}</td>
+                                                <td className="has-text-success has-text-weight-bold has-text-centered">{bonus[count - 1]}</td>
+                                                <td className="has-text-centered">{admin.admin}</td>
+                                            </tr>
+                                        )
+                                    }
+                                })}
+                            </tbody>
+                        </table>
+                    </div>
+                    {/*}   <div className="level">
                         {this.state.rates.map((top, i) => {
                             const admin = this.state.emails.filter(f => f.adminId == top.userId && f.role == 'admin')[0];
                             if (admin && count < 4) {
@@ -90,7 +116,7 @@ export class TopsDayPage extends React.Component {
                                         <div className="card">
                                             <div className="card-image">
                                                 <img style={{ maxWidth: 200, maxHeight: 200 }} src={admin.imgUrl} onClick={() => console.log(admin.admin, top)} />
-                                            </div>
+                                            </div> 
                                             <div className="card-content">
                                                 <div className="media">
                                                     <div className="media-content">
@@ -106,7 +132,7 @@ export class TopsDayPage extends React.Component {
                                 )
                             }
                         })}
-                    </div>
+                    </div>*/}
                 </div>
             </section >
         )
