@@ -45,15 +45,17 @@ export const startGetRateTopsDay = (date) => {
                                 const page = i.split('#')[0];
                                 const channel = i.split('#')[1];
                                 const ads = costs.find(f => f.page == page);
+                                if (channel == 'line')
+                                    console.log('ads', ads ? (typeof ads[channel] === 'undefined' ? 0 : ads[channel]) : 0)
                                 return {
                                     page,
                                     channel,
                                     price: _.reduce(_.pluck(m, 'price'), (t, n) => t + n, 0),
-                                    ads: ads ? ads[channel] : 0
+                                    ads: ads ? (typeof ads[channel] === 'undefined' ? 0 : ads[channel]) : 0
                                 }
                             })
                             .value()
-                        console.log('costs', sumPricePageChannel)
+                        // console.log('costs', sumPricePageChannel)
                         let sumProfit = 0;
                         let sumPercent = 0;
                         const groupAdmin = _.chain(data)
@@ -80,7 +82,10 @@ export const startGetRateTopsDay = (date) => {
                                     profit: _.reduce(_.pluck(m, 'profit'), (t, n) => t + n, 0),
                                 }
                             })
-                            .filter(f => f.profit > 0&&f.price>=10000)
+                            .filter(f => {
+                                // console.log(f)
+                                return f.profit > 0 && f.price >= 10000
+                            })
                             .map((m, i) => {
                                 sumProfit += m.profit;
                                 sumPercent += (m.costTotal / m.price) * 100;
