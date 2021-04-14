@@ -328,7 +328,7 @@ export class CostPage extends React.Component {
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
     costs: state.costs,
-    pages: state.pages,
+    pages: state.pages.filter(f=>f.active),
     ads: state.manage.ads
 });
 const mapDispatchToProps = (dispatch, props) => ({
