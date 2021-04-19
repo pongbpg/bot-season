@@ -11,7 +11,7 @@ moment.locale('th');
 export class TopsDayPage extends React.Component {
     constructor(props) {
         super(props);
-        const date = moment().date() < 13 ? moment('20210413') : moment()
+        const date = moment().date() > 18 ? moment('20210418') : moment()
         this.state = {
             auth: props.auth,
             rates: props.rates || [],
