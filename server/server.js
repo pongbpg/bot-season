@@ -544,7 +544,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                         cutoffOk = false;
                                                     }
                                                 } else {
-                                                    console.log('today:', yyyymmdd())
+                                                    // console.log('today:', yyyymmdd())
                                                     if (countsData.date == yyyymmdd()) {
                                                         no = countsData.no + 1;
                                                         cutoff = false;
