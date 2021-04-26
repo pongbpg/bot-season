@@ -111,7 +111,7 @@ export class CostPage extends React.Component {
                         const token = t.token;
                         t.acts.map(act => {
                             const cors_api_url = `https://graph.facebook.com/v9.0/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
-                            fetchs.push(fetch(cors_api_url).then(value => value.json()).catch(err => console.log('xxx')))
+                            fetchs.push(fetch(cors_api_url).then(value => value.json()).catch(err => console.log('xxx', err)))
                             sumPage.push({ page: page.id, spend: 0, account_id: act.id })
                         })
                     })
@@ -131,7 +131,7 @@ export class CostPage extends React.Component {
                         }
                     }
                 })
-                console.log('err page token',errPages)
+                console.log('err page token', errPages)
                 const result = _.chain(sumPage).groupBy('page')
                     .map((values, pageId) => {
                         // console.log(values, pageId)
@@ -149,7 +149,7 @@ export class CostPage extends React.Component {
                             month: moment(date).format('YYYYMMDD').substr(4, 2),
                             day: moment(date).format('YYYYMMDD').substr(6, 2),
                             expire: errActs.length > 0,
-                            expireActId: errActs.length > 0 ? errActs.map(m => m.account_id) : ''
+                            expireActId: errActs
                         })
                         return { pageId, costPage }
                     }).value();
@@ -217,7 +217,10 @@ export class CostPage extends React.Component {
                                                 <td className="has-text-left">{`${cost.team}`}</td>
                                                 <td className={`has-text-left ${cost.expire && 'has-text-danger'}`}>
                                                     {`${cost.page} ${cost.admin}`}
-                                                    <p className="has-text-danger">{cost.expireActId}</p>
+                                                    {cost.expireActId.map((m,ii) => {
+                                                        return <p key={ii} className="has-text-danger">{m.account_id}</p>
+                                                    })}
+                                                    {/* <p className="has-text-danger">{cost.expireActId}</p> */}
                                                 </td>
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.fb, 0)}</td>)}
                                                 {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.line, 0)}</td>)}
@@ -328,7 +331,7 @@ export class CostPage extends React.Component {
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
     costs: state.costs,
-    pages: state.pages.filter(f=>f.active),
+    pages: state.pages.filter(f => f.active),
     ads: state.manage.ads
 });
 const mapDispatchToProps = (dispatch, props) => ({

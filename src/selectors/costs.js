@@ -18,7 +18,9 @@ export default (costs, pages, date) => {
                     date,
                     year: date.substr(0, 4),
                     month: date.substr(4, 2),
-                    day: date.substr(6, 2)
+                    day: date.substr(6, 2),
+                    expire:false,
+                    expireActId:[]
                 })
             } else {
                 costs[index]['team'] = pages[p].team
