@@ -377,7 +377,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                             obj.messages.push({
                                                                                                 type: 'text',
                                                                                                 text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
-รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} Admin:${doc.data().admin}
+รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} Admin:${doc.get('admin') || 'ไม่มีข้อมูล'}
 รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
                                                                                             })
                                                                                         })
@@ -385,7 +385,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                             orderId,
                                                                                             ...resultOrder.data.banks[b],
                                                                                             page: resultOrder.data.page,
-                                                                                            admin: resultOrder.data.admin,
+                                                                                            admin: user.data().name,
                                                                                         })
                                                                                     })
                                                                             }
@@ -612,7 +612,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                                 obj.messages.push({
                                                                                                     type: 'text',
                                                                                                     text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
-                                                                    รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} Admin:${doc.data().admin}
+                                                                    รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} Admin:${doc.get('admin') || 'ไม่มีข้อมูล'}
                                                                     รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
                                                                                                 })
                                                                                             })
@@ -620,7 +620,7 @@ app.post('/api/linebot', jsonParser, (req, res) => {
                                                                                                 orderId,
                                                                                                 ...resultOrder.data.banks[b],
                                                                                                 page: resultOrder.data.page,
-                                                                                                admin: resultOrder.data.admin,
+                                                                                                admin: user.data().name,
                                                                                             })
                                                                                         })
                                                                                 }
@@ -928,7 +928,7 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                                                                 obj.messages.push({
                                                                                                     type: 'text',
                                                                                                     text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
-                                                                                                รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} Admin:${doc.data().admin}
+                                                                                                รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} 
                                                                                                 รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
                                                                                                 })
                                                                                             })
@@ -936,7 +936,6 @@ app.post('/api/bot/kh', jsonParser, (req, res) => {
                                                                                                 orderId,
                                                                                                 ...resultOrder.data.banks[b],
                                                                                                 page: resultOrder.data.page,
-                                                                                                admin: resultOrder.data.admin,
                                                                                             })
                                                                                         })
                                                                                 }
@@ -1724,7 +1723,7 @@ const callbackUpdateProductsAndPayments = async (orderId, resultOrder) => {
                         obj.messages.push({
                             type: 'text',
                             text: `⚠กรุณาตรวจสอบรายการโอนนี้มีซ้ำ⚠
-รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} Admin:${doc.data().admin}
+รหัสสั่งซื้อ:${doc.data().orderId} เพจ:${doc.data().page} 
 รายการที่ซ้ำ: ${doc.data().name} ${moment(doc.data().date, 'YYYYMMDD').format('DD/MM/YY')} ${doc.data().time} จำนวน ${formatMoney(doc.data().price, 0)} บาท`
                         })
                     })
@@ -1732,7 +1731,6 @@ const callbackUpdateProductsAndPayments = async (orderId, resultOrder) => {
                         orderId,
                         ...resultOrder.data.banks[b],
                         page: resultOrder.data.page,
-                        admin: resultOrder.data.admin
                     })
                 })
         }
