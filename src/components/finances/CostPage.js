@@ -217,7 +217,7 @@ export class CostPage extends React.Component {
                                                 <td className="has-text-left">{`${cost.team}`}</td>
                                                 <td className={`has-text-left ${cost.expire && 'has-text-danger'}`}>
                                                     {`${cost.page} ${cost.admin}`}
-                                                    {cost.expireActId.map((m,ii) => {
+                                                    {cost.expireActId.length > 0 && cost.expireActId.map((m, ii) => {
                                                         return <p key={ii} className="has-text-danger">{m.account_id}</p>
                                                     })}
                                                     {/* <p className="has-text-danger">{cost.expireActId}</p> */}
