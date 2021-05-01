@@ -60,7 +60,7 @@ export class AdminsPage extends React.Component {
                                                 // console.log(admin.comId)
                                                 return (<tr key={admin.userId}>
                                                     <td className="has-text-centered">{index + 1}</td>
-                                                    <td>{admin.name}</td>
+                                                    <td onClick={()=>console.log(admin)}>{admin.name}</td>
                                                     <td className="has-text-centered">{admin.role}</td>
                                                     <td className="has-text-centered">
                                                         <div className="control select">
