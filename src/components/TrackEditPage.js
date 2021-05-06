@@ -26,7 +26,9 @@ export class TrackEditPage extends React.Component {
         { expressName: 'EMS', expressLink: 'http://track.thailandpost.co.th/tracking/default.aspx' },
         { expressName: 'FLASH', expressLink: 'https://www.flashexpress.co.th/tracking/' },
         { expressName: 'JT', expressLink: 'https://www.jtexpress.co.th/index/query/gzquery.html' },
-        { expressName: 'KERRY', expressLink: 'https://th.kerryexpress.com/th/track/?track' }
+        { expressName: 'KERRY', expressLink: 'https://th.kerryexpress.com/th/track/?track' },
+        { expressName: 'NINJA', expressLink: 'https://www.ninjavan.co/th-th/tracking?id' },
+        { expressName: 'NIM', expressLink: 'https://www.nimexpress.com/web/p/home' },
       ]
     };
   }
@@ -213,12 +215,15 @@ export class TrackEditPage extends React.Component {
                             disabled={this.state.isSave}
                             name={order.id}
                             onChange={this.onExpressChange} value={order.expressName}>
-                            <option value="">เลือกขนส่ง</option>
+                            {/* <option value="">เลือกขนส่ง</option>
                             <option value="ALPHA FAST">ALPHA</option>
                             <option value="EMS">EMS</option>
                             <option value="FLASH">FLASH</option>
                             <option value="JT">J&T</option>
-                            <option value="KERRY">KERRY</option>
+                            <option value="KERRY">KERRY</option> */}
+                            {this.state.expresses.map(e => {
+                              return (<option key={e.expressName} value={e.expressName}>{e.expressName}</option>)
+                            })}
                           </select>
                         </div>
                       </td>
