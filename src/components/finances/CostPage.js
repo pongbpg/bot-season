@@ -15,7 +15,7 @@ export class CostPage extends React.Component {
     constructor(props) {
         super(props);
         this.state = {
-            costs: ListCosts(props.costs || [], props.pages || [], moment().format('YYYYMMDD')),
+            costs: ListCosts(props.costs, props.pages, moment().format('YYYYMMDD')),
             auth: props.auth,
             id: '',
             fb: 0,
@@ -159,7 +159,7 @@ export class CostPage extends React.Component {
     }
 
     render() {
-        // console.log(this.state.costs)
+        // console.log('render', this.state.costs)
         // console.log(this.state.date)
         return (
             <section className="hero">
@@ -210,115 +210,116 @@ export class CostPage extends React.Component {
                                     </tr>
                                 </thead>
                                 <tbody>
-                                    {this.state.costs.map((cost, i) => {
-                                        return (
-                                            <tr key={cost.page}>
-                                                <td className="has-text-centered">{++i}</td>
-                                                <td className="has-text-left">{`${cost.team}`}</td>
-                                                <td className={`has-text-left ${cost.expire && 'has-text-danger'}`}>
-                                                    {`${cost.page} ${cost.admin}`}
-                                                    {cost.expireActId.length > 0 && cost.expireActId.map((m, ii) => {
-                                                        return <p key={ii} className="has-text-danger">{m.account_id}</p>
-                                                    })}
-                                                    {/* <p className="has-text-danger">{cost.expireActId}</p> */}
-                                                </td>
-                                                {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.fb, 0)}</td>)}
-                                                {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.line, 0)}</td>)}
-                                                {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.other, 0)}</td>)}
-                                                {(this.state.id !== cost.page) && (
-                                                    <td className="has-text-centered">
-                                                        <button
-                                                            className="button"
-                                                            onClick={() => { this.onActionClick(true, cost.page) }}>
-                                                            แก้ไข</button>
+                                    {this.state.costs.filter(f => f.date == moment(this.state.date).format('YYYYMMDD'))
+                                        .map((cost, i) => {
+                                            return (
+                                                <tr key={cost.page}>
+                                                    <td className="has-text-centered">{++i}</td>
+                                                    <td className="has-text-left">{`${cost.team}`}</td>
+                                                    <td className={`has-text-left ${cost.expire && 'has-text-danger'}`}>
+                                                        {`${cost.page} ${cost.admin}`}
+                                                        {cost.expireActId.length > 0 && cost.expireActId.map((m, ii) => {
+                                                            return <p key={ii} className="has-text-danger">{m.account_id}</p>
+                                                        })}
+                                                        {/* <p className="has-text-danger">{cost.expireActId}</p> */}
                                                     </td>
-                                                )}
-                                                {(this.state.id === cost.page) && (
-                                                    <td className="has-text-right">
-                                                        <div className="field has-addons has-addons-right">
-                                                            <div className="control">
-                                                                {/* <input type="text" name={this.state.id}
+                                                    {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.fb, 0)}</td>)}
+                                                    {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.line, 0)}</td>)}
+                                                    {(this.state.id !== cost.page) && (<td className="has-text-right">{Money(cost.other, 0)}</td>)}
+                                                    {(this.state.id !== cost.page) && (
+                                                        <td className="has-text-centered">
+                                                            <button
+                                                                className="button"
+                                                                onClick={() => { this.onActionClick(true, cost.page) }}>
+                                                                แก้ไข</button>
+                                                        </td>
+                                                    )}
+                                                    {(this.state.id === cost.page) && (
+                                                        <td className="has-text-right">
+                                                            <div className="field has-addons has-addons-right">
+                                                                <div className="control">
+                                                                    {/* <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
                                                                     value={Money(this.state.fb, 0)}
                                                                     onChange={this.onFbChange}
                                                                 /> */}
-                                                                <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
-                                                                    value={this.state.fb}
-                                                                    onFocus={this.handleSelectAll}
-                                                                    onValueChange={(values) => {
-                                                                        const { formattedValue, value, floatValue } = values;
-                                                                        // formattedValue = $2,223
-                                                                        // value ie, 2223
-                                                                        this.setState({ fb: floatValue })
-                                                                    }} />
+                                                                    <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                                        value={this.state.fb}
+                                                                        onFocus={this.handleSelectAll}
+                                                                        onValueChange={(values) => {
+                                                                            const { formattedValue, value, floatValue } = values;
+                                                                            // formattedValue = $2,223
+                                                                            // value ie, 2223
+                                                                            this.setState({ fb: floatValue })
+                                                                        }} />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                )}
-                                                {(this.state.id === cost.page) && (
-                                                    <td className="has-text-right">
-                                                        <div className="field has-addons has-addons-right">
-                                                            <div className="control">
-                                                                {/* <input type="text" name={this.state.id}
+                                                        </td>
+                                                    )}
+                                                    {(this.state.id === cost.page) && (
+                                                        <td className="has-text-right">
+                                                            <div className="field has-addons has-addons-right">
+                                                                <div className="control">
+                                                                    {/* <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
                                                                     value={Money(this.state.line, 0)}
                                                                     onChange={this.onLineChange}
                                                                 /> */}
-                                                                <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
-                                                                    value={this.state.line}
-                                                                    onFocus={this.handleSelectAll}
-                                                                    onValueChange={(values) => {
-                                                                        const { formattedValue, value, floatValue } = values;
-                                                                        // formattedValue = $2,223
-                                                                        // value ie, 2223
-                                                                        this.setState({ line: floatValue })
-                                                                    }} />
+                                                                    <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                                        value={this.state.line}
+                                                                        onFocus={this.handleSelectAll}
+                                                                        onValueChange={(values) => {
+                                                                            const { formattedValue, value, floatValue } = values;
+                                                                            // formattedValue = $2,223
+                                                                            // value ie, 2223
+                                                                            this.setState({ line: floatValue })
+                                                                        }} />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                )}
-                                                {(this.state.id === cost.page) && (
-                                                    <td className="has-text-right">
-                                                        <div className="field has-addons has-addons-right">
-                                                            <div className="control">
-                                                                {/* <input type="text" name={this.state.id}
+                                                        </td>
+                                                    )}
+                                                    {(this.state.id === cost.page) && (
+                                                        <td className="has-text-right">
+                                                            <div className="field has-addons has-addons-right">
+                                                                <div className="control">
+                                                                    {/* <input type="text" name={this.state.id}
                                                                     className="input is-rounded has-text-right"
                                                                     onFocus={this.handleSelectAll}
                                                                     value={Money(this.state.other, 0)}
                                                                     onChange={this.onOtherChange}
                                                                 /> */}
-                                                                <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
-                                                                    value={this.state.other}
-                                                                    onFocus={this.handleSelectAll}
-                                                                    onValueChange={(values) => {
-                                                                        const { formattedValue, value, floatValue } = values;
-                                                                        // formattedValue = $2,223
-                                                                        // value ie, 2223
-                                                                        this.setState({ other: floatValue })
-                                                                    }} />
+                                                                    <NumberFormat className="input is-rounded has-text-right" thousandSeparator={true}
+                                                                        value={this.state.other}
+                                                                        onFocus={this.handleSelectAll}
+                                                                        onValueChange={(values) => {
+                                                                            const { formattedValue, value, floatValue } = values;
+                                                                            // formattedValue = $2,223
+                                                                            // value ie, 2223
+                                                                            this.setState({ other: floatValue })
+                                                                        }} />
+                                                                </div>
                                                             </div>
-                                                        </div>
-                                                    </td>
-                                                )}
-                                                {(this.state.id === cost.page) && (
-                                                    <td className="has-text-centered">
-                                                        <div className="field is-grouped">
-                                                            <div className="control">
-                                                                <button className={`button is-success ${this.state.isLoading}`}
-                                                                    onClick={this.onAmountSave}>บันทึก</button>
+                                                        </td>
+                                                    )}
+                                                    {(this.state.id === cost.page) && (
+                                                        <td className="has-text-centered">
+                                                            <div className="field is-grouped">
+                                                                <div className="control">
+                                                                    <button className={`button is-success ${this.state.isLoading}`}
+                                                                        onClick={this.onAmountSave}>บันทึก</button>
+                                                                </div>
+                                                                <div className="control">
+                                                                    <button className={`button is-default ${this.state.isLoading}`}
+                                                                        onClick={() => { this.onActionClick(false, '') }}>ปิด</button>
+                                                                </div>
                                                             </div>
-                                                            <div className="control">
-                                                                <button className={`button is-default ${this.state.isLoading}`}
-                                                                    onClick={() => { this.onActionClick(false, '') }}>ปิด</button>
-                                                            </div>
-                                                        </div>
-                                                    </td>
-                                                )}
-                                            </tr>
-                                        )
-                                    })}
+                                                        </td>
+                                                    )}
+                                                </tr>
+                                            )
+                                        })}
                                 </tbody>
                             </table>
                         </div>

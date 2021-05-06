@@ -19,11 +19,19 @@ export default (costs, pages, date) => {
                     year: date.substr(0, 4),
                     month: date.substr(4, 2),
                     day: date.substr(6, 2),
-                    expire:false,
-                    expireActId:[]
+                    expire: false,
+                    expireActId: []
                 })
             } else {
                 costs[index]['team'] = pages[p].team
+                if (typeof costs[index]['expireActId'] === 'string' || typeof costs[index]['expireActId'] === 'undefined') {
+                    if (costs[index]['expireActId']) {
+                        // console.log(costs[index],costs[index]['expireActId'])
+                        costs[index]['expireActId'] = costs[index]['expireActId'].split(',')
+                    }
+                    else
+                        costs[index]['expireActId'] = []
+                }
             }
         }
     }
