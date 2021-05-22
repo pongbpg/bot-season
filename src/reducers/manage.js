@@ -76,12 +76,12 @@ export default (state = {
                 ...state,
                 teams: state.teams.filter(team => team.id != action.team.id)
             }
-        case 'SET_ADS_FB_TOKEN':
+        case 'SET_ADS_FB_VERSION':
             return {
                 ...state,
                 ads: {
                     ...state.ads,
-                    fb: action.token
+                    version: action.version
                 }
             }
         case 'SET_MANAGE_TARGETS':

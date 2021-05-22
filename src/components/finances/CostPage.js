@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 import Money from '../../selectors/money';
-import { startListCosts, startSaveCost, startGetAdsFBToken } from '../../actions/finances/costs';
+import { startListCosts, startSaveCost, startGetAdsFB } from '../../actions/finances/costs';
 import { FaFacebook } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
@@ -25,10 +25,10 @@ export class CostPage extends React.Component {
             date: moment(),
             isLoading: '',
             pages: props.pages || [],
-            token: props.ads || {}
+            ads: props.ads || {}
         }
         this.props.startListCosts(moment().format('YYYYMMDD'));
-        this.props.startGetAdsFBToken();
+        this.props.startGetAdsFB();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -37,8 +37,8 @@ export class CostPage extends React.Component {
         if (nextProps.costs != this.state.costs) {
             this.setState({ costs: ListCosts(nextProps.costs, this.state.pages, moment(this.state.date).format('YYYYMMDD')) });
         }
-        if (nextProps.ads != this.state.token) {
-            this.setState({ token: nextProps.ads });
+        if (nextProps.ads != this.state.ads) {
+            this.setState({ ads: nextProps.ads });
         }
     }
     onFbChange = (e) => {
@@ -110,8 +110,8 @@ export class CostPage extends React.Component {
                     tokens.map(t => {
                         const token = t.token;
                         t.acts.map(act => {
-                            const cors_api_url = `https://graph.facebook.com/v9.0/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
-                            fetchs.push(fetch(cors_api_url).then(value => value.json()).catch(err => console.log('xxx', err)))
+                            const cors_api_url = `https://graph.facebook.com/v${this.state.ads.version}/act_${act.id}/insights?access_token=${token}&filtering=[{"field":"campaign.name","operator":"CONTAIN","value":"*${page.id}*"}]&time_range={"since":"${moment(date).format('YYYY-MM-DD')}","until":"${moment(date).format('YYYY-MM-DD')}"}&time_increment=1`;
+                            fetchs.push(fetch(cors_api_url).then(value => value.json()).catch(err => console.log('err api fb', err)))
                             sumPage.push({ page: page.id, spend: 0, account_id: act.id })
                         })
                     })
@@ -199,9 +199,9 @@ export class CostPage extends React.Component {
                                         <th className="has-text-left">เพจ</th>
                                         <th className="has-text-right">
                                             <a className="button has-text-info"
-                                                disabled={!this.state.token.fb}
+                                                disabled={!this.state.ads.version}
                                                 onClick={this.onFbAdsClick}>
-                                                <span className="icon"><MdRefresh /></span>&nbsp;Facebook
+                                                <span className="icon"><MdRefresh /></span>&nbsp;Facebook v{this.state.ads.version}
                                             </a>
                                         </th>
                                         <th className="has-text-right has-text-success">Line</th>
@@ -338,6 +338,6 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch, props) => ({
     startListCosts: (date) => dispatch(startListCosts(date)),
     startSaveCost: (cost) => dispatch(startSaveCost(cost)),
-    startGetAdsFBToken: () => dispatch(startGetAdsFBToken())
+    startGetAdsFB: () => dispatch(startGetAdsFB())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(CostPage);
