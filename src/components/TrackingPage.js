@@ -184,7 +184,7 @@ export class TrackingPage extends React.Component {
                           <th className="has-text-centered">เพจ</th>
                           <th className="has-text-centered">สินค้า</th>
                           <th className="has-text-centered">วันที่ส่งสินค้า</th>
-                          <th className="has-text-right">ยอดโอน</th>
+                          <th className="has-text-right">ยอดเงิน</th>
                           <th className="has-text-centered">เลขพัสดุ</th>
                           <th className="has-text-centered">ส่งโดย</th>
                         </tr>
@@ -198,7 +198,7 @@ export class TrackingPage extends React.Component {
                             <td className="has-text-centered">{order.page}</td>
                             <td className="has-text-centered">{order.product.map(p => p.code + '=' + p.amount).reduce((a, b) => a + ',' + b)}</td>
                             <td className="has-text-centered">{moment(d).format('ll')}</td>
-                            <td className="has-text-right">{Money(order.price)}</td>
+                            <td className="has-text-right">{order.banks[0].name + ' ' + Money(order.price)}</td>
                             <td className="has-text-centered">{order.tracking == '' ? (order.cutoff ? 'กำลังนำเลขพัสดุเข้าสู่ระบบ' : 'กำลังจัดเตรียมสินค้า') : order.tracking}</td>
                             <td className="has-text-centered">
                               <a className='is-link'
@@ -266,7 +266,7 @@ export class TrackingPage extends React.Component {
                           </div>
                         </div>
                         <div className="level-right">
-                          <span className="has-text-weight-bold">{moment(d).format('Do MMM YY') + ' ฿' + Money(order.price, 0)}</span>
+                          <span className="has-text-weight-bold">{moment(d).format('Do MMM YY') + ' ' + order.banks[0].name + ' ฿' + Money(order.price, 0)}</span>
                         </div>
                       </div>
                     </article>
