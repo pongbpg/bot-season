@@ -1,9 +1,9 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import DatePicker from 'react-datepicker';
+// import DatePicker from 'react-datepicker';
 import { startSearchTracking } from '../actions/search';
-import { FaSearch } from 'react-icons/fa';
+// import { FaSearch } from 'react-icons/fa';
 import Money from '../selectors/money';
 import moment from 'moment';
 import ReactPixel from 'react-facebook-pixel';
@@ -88,7 +88,8 @@ export class TrackingPage extends React.Component {
     // console.log(this.state.searchList)
     const style = {
       // alignItems: 'center',
-      backgroundImage: 'url("/images/tracking.jpg")',
+      // backgroundImage: 'url("/images/tracking.jpg")',
+      backgroundColor: '#1E90FF',
       // backgroundSize: 'cover',
       // display: 'flex',
       // justifyContent: 'center',
@@ -126,13 +127,11 @@ export class TrackingPage extends React.Component {
                 <h1 className="title has-text-white">ค้นหาเลขพัสดุ</h1>
                 {/* <div className="columns"> */}
                 <div className="column is-12">
-                  <p className="control has-icons-left is-expanded">
-                    <input className="input is-large" type="text" placeholder="เบอร์โทรศัพท์"
+                  <p className="control">
+                    <input className="input is-large" type="text" placeholder="ใส่เบอร์โทรศัพท์"
                       value={this.state.search}
                       onChange={this.onSearchChange} />
-                    <span className="icon is-small is-left">
-                      <FaSearch />
-                    </span>
+
                   </p>
                 </div>
                 {/* </div> */}

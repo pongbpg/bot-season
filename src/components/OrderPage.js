@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { Link } from 'react-router-dom';
 import { startListOrders, startSaveTracking, startUploadTracks } from '../actions/orders';
 import filterOrders from '../selectors/orders';
-import { FaSearch } from 'react-icons/fa';
+// import { FaSearch } from 'react-icons/fa';
 import { MdEdit } from 'react-icons/md';
 import Money from '../selectors/money';
 import NumberFormat from 'react-number-format';
@@ -269,7 +269,7 @@ export class OrderPage extends React.Component {
                                     onChange={this.onSearchChange}
                                 />
                                 <span className="icon is-small is-right">
-                                    <FaSearch />
+                                    {/* <FaSearch /> */}
                                 </span>
                             </div>
                         </div>

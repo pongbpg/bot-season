@@ -33,7 +33,7 @@ module.exports = (env) => {
         output: {
             path: path.resolve(__dirname, 'public', 'dist'),
             filename: '[name].[hash].js',
-            chunkFilename: '[contenthash].[hash]-bundle.js',
+            chunkFilename: '[name][contenthash].[hash]-bundle.js',
             publicPath: '/dist'
         },
         module: {
@@ -118,7 +118,7 @@ module.exports = (env) => {
                 'process.env.CLIENT_EMAIL': JSON.stringify(process.env.CLIENT_EMAIL)
             })
         ],
-        devtool: isProduction ? false : 'cheap-module-eval-source-map',
+        devtool: isProduction ? false : 'eval-cheap-module-source-map',
         devServer: {
             contentBase: path.join(__dirname, 'public'),
             historyApiFallback: true,

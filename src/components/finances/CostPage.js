@@ -3,7 +3,7 @@ import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 import Money from '../../selectors/money';
 import { startListCosts, startSaveCost, startGetAdsFB } from '../../actions/finances/costs';
-import { FaFacebook } from 'react-icons/fa';
+// import { FaFacebook } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
 import NumberFormat from 'react-number-format';
@@ -201,7 +201,7 @@ export class CostPage extends React.Component {
                                             <a className="button has-text-info"
                                                 disabled={!this.state.ads.version}
                                                 onClick={this.onFbAdsClick}>
-                                                <span className="icon"><MdRefresh /></span>&nbsp;Facebook v{this.state.ads.version}
+                                                <span className="icon"></span>&nbsp;Facebook v{this.state.ads.version}
                                             </a>
                                         </th>
                                         <th className="has-text-right has-text-success">Line</th>

@@ -3,7 +3,7 @@ import { connect } from 'react-redux';
 import { startGetCods, startUpdateCod, startAddCods, startClearCods } from '../../actions/finances/cod';
 import DatePicker from 'react-datepicker';
 import Money from '../../selectors/money';
-import { FaSearch } from 'react-icons/fa';
+// import { FaSearch } from 'react-icons/fa';
 import readXlsxFile from 'read-excel-file'
 import moment from 'moment';
 moment.locale('th');

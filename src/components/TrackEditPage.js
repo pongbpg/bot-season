@@ -1,9 +1,9 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startSearchTracking } from '../actions/search';
 import { startSaveTracking } from '../actions/orders';
-import { FaSearch } from 'react-icons/fa';
+// import { FaSearch } from 'react-icons/fa';
 import Money from '../selectors/money';
 import NumberFormat from 'react-number-format';
 import moment from 'moment';
@@ -171,7 +171,7 @@ export class TrackEditPage extends React.Component {
                   value={this.state.search}
                   onChange={this.onSearchChange} />
                 <span className="icon is-small is-left">
-                  <FaSearch />
+                  {/* <FaSearch /> */}
                 </span>
               </p>
               <p className="control">

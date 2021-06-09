@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { FaFileImage, FaUpload } from 'react-icons/fa'
+// import { FaFileImage, FaUpload } from 'react-icons/fa'
 import { startUploadAvatar } from '../actions/profile'
 export class ProfilePage extends React.Component {
   constructor(props) {
@@ -102,7 +102,7 @@ export class ProfilePage extends React.Component {
                           <input type="file" className="file-input" onChange={this.fileChangedHandler} />
                           <span className="file-cta">
                             <span className="file-icon">
-                              <FaFileImage />
+                              {/* <FaFileImage /> */}
                             </span>
                             <span className="file-label">เลือกรูปภาพ</span>
                           </span>
@@ -126,7 +126,7 @@ export class ProfilePage extends React.Component {
                       <button className={`button is-link ${this.state.loading && 'is-loading'}`} type="button"
                         disabled={!this.state.imageFile} onClick={this.onUploadImage} >
                         <span className="icon is-medium">
-                          <FaUpload />
+                          {/* <FaUpload /> */}
                         </span>
                         <span>อัพโหลด</span>
                       </button>

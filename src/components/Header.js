@@ -3,10 +3,10 @@ import { Link } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { startLogout } from '../actions/auth';
 import { MdMailOutline, MdAlarmOn, MdPanTool, MdPayment, MdEmail, MdPeople, MdExitToApp, MdAccountCircle } from 'react-icons/md';
-import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine, FaLayerGroup } from 'react-icons/fa';
-import {GiPriceTag} from 'react-icons/gi';
-import {GrTarget} from 'react-icons/gr'
-import {BsGraphUp} from 'react-icons/bs'
+// import { FaSearch, FaFileAlt, FaFacebook, FaShippingFast, FaLine, FaLayerGroup } from 'react-icons/fa';
+// import {GiPriceTag} from 'react-icons/gi';
+// import {GrTarget} from 'react-icons/gr'
+// import {BsGraphUp} from 'react-icons/bs'
 export class Header extends React.Component {
   constructor(props) {
     super(props);
@@ -58,7 +58,7 @@ export class Header extends React.Component {
             <div id="navMenu" className={this.state.isBurger === true ? "navbar-menu is-active" : "navbar-menu"}>
               <div className="navbar-start">
                 <Link className="navbar-item" to="/">
-                  <span className="icon"><FaSearch /></span>ค้นหาพัสดุ
+                  <span className="icon"></span>ค้นหาพัสดุ
                 </Link>
                 {['stock', 'owner'].indexOf(this.state.auth.role) > -1 && (
                   <div className="navbar-item has-dropdown is-hoverable">
@@ -81,7 +81,7 @@ export class Header extends React.Component {
                         <span className="icon"><MdPanTool /></span>ยอดทัก
                   </Link>
                   <Link className="navbar-item" to="/admins/pivotTb">
-                        <span className="icon"><BsGraphUp /></span>Pivot Table
+                        <span className="icon"></span>Pivot Table
                   </Link>
                     </div>
                   </div>
@@ -94,16 +94,16 @@ export class Header extends React.Component {
                         <span className="icon"><MdPayment /></span>ค่าใช้จ่าย
                   </Link>
                       <Link className="navbar-item" to="/finances/cod">
-                        <span className="icon"><FaShippingFast /></span>COD
+                        <span className="icon"></span>COD
                   </Link>
                       <Link className="navbar-item" to="/widget/posts">
-                        <span className="icon"><FaFacebook /></span>ยอดโพสต์
+                        <span className="icon"></span>ยอดโพสต์
                   </Link>
                   <Link className="navbar-item" to="/finances/promotion">
-                        <span className="icon"><GiPriceTag /></span>Promotion
+                        <span className="icon"></span>Promotion
                   </Link>
                   <Link className="navbar-item" to="/finances/topdays">
-                        <span className="icon"><GiPriceTag /></span>Topdays
+                        <span className="icon"></span>Topdays
                   </Link>
                     </div>
                   </div>
@@ -116,22 +116,22 @@ export class Header extends React.Component {
                         <span className="icon"><MdPeople /></span>Team
                       </Link>
                       <Link className="navbar-item" to="/manage/admins">
-                        <span className="icon"><FaLine /></span>Line
+                        <span className="icon"></span>Line
                       </Link>
                       <Link className="navbar-item" to="/manage/emails">
                         <span className="icon"><MdEmail /></span>Email
                       </Link>
                       <Link className="navbar-item" to="/manage/product/types">
-                        <span className="icon"><FaLayerGroup /></span>Types
+                        <span className="icon"></span>Types
                       </Link>
                        <Link className="navbar-item" to="/manage/targets">
-                        <span className="icon"><GrTarget /></span>Targets
+                        <span className="icon"></span>Targets
                       </Link>
                     </div>
                   </div>
                 )}
                 <Link className="navbar-item" to="/report">
-                  <span className="icon"><FaFileAlt /></span>รายงาน
+                  <span className="icon"></span>รายงาน
                   </Link>
                 {/*  */}
                 {/* <div className="navbar-item has-dropdown is-hoverable">
