@@ -1,8 +1,10 @@
 const path = require('path');
 const webpack = require('webpack');
-const ExtractTextPlugin = require("extract-text-webpack-plugin");
+// const ExtractTextPlugin = require("extract-text-webpack-plugin");
+const MiniCssExtractPlugin = require('mini-css-extract-plugin')
 const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
+const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
@@ -18,15 +20,21 @@ module.exports = (env) => {
     const isProduction = env === 'production';
 
     // console.log('env', env, isProduction)
-    const CSSExtract = new ExtractTextPlugin('styles.css');
+    // const CSSExtract = new ExtractTextPlugin('styles.css');
     return {
         entry: ['babel-polyfill', './src/app.js'],
+        // output: {
+        //     path: path.resolve(__dirname, 'public', 'dist'),
+        //     // publicPath: 'dist/',
+        //     filename: '[name].bundle.js',
+        //     chunkFilename: '[name].bundle.js',
+        //     // path: path.resolve(process.cwd(), 'public', 'dist'),
+        // },
         output: {
             path: path.resolve(__dirname, 'public', 'dist'),
-            // publicPath: 'dist/',
-            filename: '[name].bundle.js',
-            chunkFilename: '[name].bundle.js',
-            // path: path.resolve(process.cwd(), 'public', 'dist'),
+            filename: '[name].[hash].js',
+            chunkFilename: '[contenthash].[hash]-bundle.js',
+            publicPath: '/dist'
         },
         module: {
             rules: [
@@ -39,24 +47,31 @@ module.exports = (env) => {
                     test: /\.js$/,
                     exclude: /node_modules/
                 },
+                // {
+                //     test: /\.s?css$/,
+                //     use: CSSExtract.extract({
+                //         use: [
+                //             {
+                //                 loader: 'css-loader',
+                //                 options: {
+                //                     sourceMap: true
+                //                 }
+                //             },
+                //             {
+                //                 loader: 'sass-loader',
+                //                 options: {
+                //                     sourceMap: true
+                //                 }
+                //             }
+                //         ]
+                //     })
+                // },
                 {
-                    test: /\.s?css$/,
-                    use: CSSExtract.extract({
-                        use: [
-                            {
-                                loader: 'css-loader',
-                                options: {
-                                    sourceMap: true
-                                }
-                            },
-                            {
-                                loader: 'sass-loader',
-                                options: {
-                                    sourceMap: true
-                                }
-                            }
-                        ]
-                    })
+                    test: /\.css$/,
+                    use: [
+                        MiniCssExtractPlugin.loader,
+                        'css-loader'
+                    ]
                 },
                 {
                     test: /\.svg$/,
@@ -73,6 +88,16 @@ module.exports = (env) => {
         },
         plugins: [
             new webpack.ProgressPlugin(),
+            new CleanWebpackPlugin(),
+            new HtmlWebpackPlugin({
+                template: './public/template.html',
+                filename: '../index.html'
+            }),
+            // CSSExtract,
+            new MiniCssExtractPlugin({
+                filename: "[contenthash].css",
+            }),
+            new webpack.HashedModuleIdsPlugin(),
             new CompressionPlugin({
                 filename: '[path].gz[query]',
                 algorithm: 'gzip',
@@ -80,8 +105,6 @@ module.exports = (env) => {
                 threshold: 10240,
                 minRatio: 0.8
             }),
-            CSSExtract,
-            new CleanWebpackPlugin(),
             new webpack.DefinePlugin({
                 'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
                 'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),
@@ -104,13 +127,22 @@ module.exports = (env) => {
                 '/api': 'http://127.0.0.1:3000'
             },
             port: 8080,
-            compress: true
+            compress: true,
+            writeToDisk: true
         },
         optimization: {
             minimizer: [new TerserPlugin()],
+            minimize: true,
             splitChunks: {
                 chunks: 'all',
+                minSize: 10000,
+                maxSize: 25000,
             }
+        },
+        performance: {
+            hints: false,
+            maxEntrypointSize: 512000,
+            maxAssetSize: 512000
         }
     }
 };
