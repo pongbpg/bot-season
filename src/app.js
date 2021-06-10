@@ -29,7 +29,7 @@ const renderApp = () => {
   }
 };
 
-// ReactDOM.render(<LoadingPage />, document.getElementById('app')); loading
+ReactDOM.render(<LoadingPage />, document.getElementById('app')); 
 
 const logOut = () => {
   store.dispatch(logout());
