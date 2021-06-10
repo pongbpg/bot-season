@@ -1,5 +1,7 @@
 node_modules/
 public/dist/
+public/index.html
+public/index.html.gz
 .env.test
 .env.development
 server/admin.json

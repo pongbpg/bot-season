@@ -6,6 +6,7 @@ const CompressionPlugin = require('compression-webpack-plugin');
 const TerserPlugin = require('terser-webpack-plugin');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const { CleanWebpackPlugin } = require('clean-webpack-plugin');
+// const HtmlWebpackChangeAssetsExtensionPlugin = require('html-webpack-change-assets-extension-plugin')
 
 process.env.NODE_ENV = process.env.NODE_ENV || 'development';
 
@@ -32,15 +33,15 @@ module.exports = (env) => {
         // },
         output: {
             path: path.resolve(__dirname, 'public', 'dist'),
-            filename: '[name].[hash].js',
-            chunkFilename: '[name][contenthash].[hash]-bundle.js',
+            filename:  (isProduction ? 'main-[contenthash:8]' : '[name]') + '.js',
+            chunkFilename: (isProduction ? '[contenthash:8]' : '[name]') + '.bundle.js',
             publicPath: '/dist'
         },
         module: {
             rules: [
                 {
                     loader: 'json-loader',
-                    test: /\.json$/
+                    test: /\.json$/,
                 },
                 {
                     loader: 'babel-loader',
@@ -89,22 +90,25 @@ module.exports = (env) => {
         plugins: [
             new webpack.ProgressPlugin(),
             new CleanWebpackPlugin(),
+            new MiniCssExtractPlugin({
+                filename: "[contenthash:8].css",
+            }),
             new HtmlWebpackPlugin({
                 template: './public/template.html',
-                filename: '../index.html'
+                filename: '../index.html',
+                // jsExtension: ".gz",
+                // excludeChunks: ['bulma', 'react-datepicker']
             }),
-            // CSSExtract,
-            new MiniCssExtractPlugin({
-                filename: "[contenthash].css",
-            }),
-            new webpack.HashedModuleIdsPlugin(),
             new CompressionPlugin({
                 filename: '[path].gz[query]',
-                algorithm: 'gzip',
-                test: /\.js$|\.css$|\.html$|\.eot?.+$|\.ttf?.+$|\.woff?.+$|\.svg?.+$/,
-                threshold: 10240,
+                // deleteOriginalAssets: true,
+                algorithm: "gzip",
+                test: /\.js$/,
+                threshold: 8192,
                 minRatio: 0.8
             }),
+            // new HtmlWebpackChangeAssetsExtensionPlugin(),
+            new webpack.HashedModuleIdsPlugin(),
             new webpack.DefinePlugin({
                 'process.env.FIREBASE_API_KEY': JSON.stringify(process.env.FIREBASE_API_KEY),
                 'process.env.FIREBASE_AUTH_DOMAIN': JSON.stringify(process.env.FIREBASE_AUTH_DOMAIN),

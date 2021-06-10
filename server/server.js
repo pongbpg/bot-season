@@ -6,7 +6,8 @@ const publicPath = path.join(__dirname, '..', 'public');
 const port = process.env.PORT || 3000;
 const bodyParser = require('body-parser')
 const moment = require('moment');
-const shortid = require('shortid');
+const compression = require('compression');
+// const shortid = require('shortid');
 const { customAlphabet } = require('nanoid');
 const fs = require('fs');
 moment.locale('th');
@@ -1020,6 +1021,7 @@ app.post('/api/auth/create', jsonParser, (req, res) => {
         // console.log("Error updating user:", error);
     });
 })
+app.use(compression());
 app.use(express.static(publicPath));
 app.get('*', (req, res) => {
     res.sendFile(path.join(publicPath, 'index.html'))
