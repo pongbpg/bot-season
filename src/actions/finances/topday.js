@@ -16,6 +16,7 @@ export const startGetTopsDay = (year, month) => {
                 .where('orderDate', '<=', year + month + daysOfMonth)
                 .where('return', '==', false)
                 .where('country', '==', 'TH')
+                // .limit(10)
                 .get()
                 .then(snapShot => {
                     let data = [];
@@ -63,10 +64,11 @@ export const startGetTopsDay = (year, month) => {
                                     .map((owner, key2) => {
                                         const tgYtd = targetsYtd.find(f => f.page == owner.pageId && f.userId == owner.adminId)
                                         const tgTd = targets.find(f => f.page == owner.pageId && f.userId == owner.adminId)
+                                        // console.log(owner, tgYtd, tgTd)
                                         const x = {
                                             adminId: owner.adminId,
                                             pageId: owner.pageId,
-                                            percent: tgYtd ? (owner.price / (yesterday == orderDate ? tgYtd.targetPerDay : tgTd.targetPerDay)) * 100 : 50,
+                                            percent: (tgYtd && tgTd) ? (owner.price / (yesterday == orderDate ? tgYtd.targetPerDay : tgTd.targetPerDay)) * 100 : 50,
                                             price: owner.price,
                                             target: true
                                         }
@@ -118,7 +120,7 @@ export const startGetTopsDay = (year, month) => {
     }
 }
 export const startGetBanList = (year, month) => {
-    console.log('ban',year, month)
+    console.log('ban', year, month)
     return (dispatch, getState) => {
         return firestore.collection('bans')
             .where('year', '==', year.toString())
