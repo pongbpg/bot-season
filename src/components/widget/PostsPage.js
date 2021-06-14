@@ -1,7 +1,7 @@
 import React from 'react';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
-import { startGetAdsFBToken } from '../../actions/finances/costs';
+// import { startGetAdsFBVersion } from '../../actions/finances/costs';
 import Money from '../../selectors/money';
 import moment from 'moment';
 moment.locale('th');
@@ -18,7 +18,7 @@ export class PostsPage extends React.Component {
             error: '',
             token: props.ads || {}
         }
-        this.props.startGetAdsFBToken();
+        // this.props.startGetAdsFBVersion();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -204,6 +204,6 @@ const mapStateToProps = (state, props) => ({
     ads: state.manage.ads
 });
 const mapDispatchToProps = (dispatch, props) => ({
-    startGetAdsFBToken: () => dispatch(startGetAdsFBToken())
+    // startGetAdsFBToken: () => dispatch(startGetAdsFBToken())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(PostsPage);

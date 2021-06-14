@@ -31,7 +31,7 @@ export const startSaveCost = (cost) => {
             })
     }
 }
-export const startGetAdsFB = () => {
+export const startGetAdsFBVersion = () => {
     return (dispatch) => {
         return firestore.collection('settings').doc('ads')
             .get()
