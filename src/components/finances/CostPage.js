@@ -2,7 +2,7 @@ import React from 'react';
 import DatePicker from 'react-datepicker';
 import { connect } from 'react-redux';
 import Money from '../../selectors/money';
-import { startListCosts, startSaveCost, startGetAdsFB } from '../../actions/finances/costs';
+import { startListCosts, startSaveCost, startGetAdsFBVersion } from '../../actions/finances/costs';
 // import { FaFacebook } from 'react-icons/fa';
 import { MdRefresh } from 'react-icons/md';
 import ListCosts from '../../selectors/costs';
@@ -28,7 +28,7 @@ export class CostPage extends React.Component {
             ads: props.ads || {}
         }
         this.props.startListCosts(moment().format('YYYYMMDD'));
-        this.props.startGetAdsFB();
+        this.props.startGetAdsFBVersion();
     }
     componentWillReceiveProps(nextProps) {
         if (nextProps.auth != this.state.auth) {
@@ -338,6 +338,6 @@ const mapStateToProps = (state, props) => ({
 const mapDispatchToProps = (dispatch, props) => ({
     startListCosts: (date) => dispatch(startListCosts(date)),
     startSaveCost: (cost) => dispatch(startSaveCost(cost)),
-    startGetAdsFB: () => dispatch(startGetAdsFB())
+    startGetAdsFBVersion: () => dispatch(startGetAdsFBVersion())
 });
 export default connect(mapStateToProps, mapDispatchToProps)(CostPage);
