@@ -477,7 +477,7 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
-                                <tr>
+                                {['owner'].indexOf(this.state.auth.role) > -1 && (<tr>
                                     <td className="has-text-centered">12</td>
                                     <td className="has-text-centered">
                                         ข้อมูลลูกค้าที่สั่งซื้อ (วันที่เริ่ม-ถึงวันที่)&nbsp;
@@ -489,14 +489,14 @@ export class ReportPage extends React.Component {
                                                 return (<option key={m.userId} value={m.userId}>{m.name}</option>)
                                             })}
 
-                                            {(this.state.auth.role != 'owner' && myEmail)
-                                                && (<option value={myEmail.adminId}>{myEmail.admin}</option>)}
+                                            {/* {(this.state.auth.role != 'owner' && myEmail)
+                                                && (<option value={myEmail.adminId}>{myEmail.admin}</option>)} */}
                                         </select>
                                     </td>
                                     <td className="has-text-centered">
                                         <div className="field is-grouped is-grouped-centered">
                                             <p className="control">
-                                                <a className="button is-success is-centered is-small" disabled={this.state.crmAdmin==""}
+                                                <a className="button is-success is-centered is-small" disabled={this.state.crmAdmin == ""}
                                                     href={`${rptUri}/crm/admin?adminId=${this.state.crmAdmin}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
                                                     target="_blank">
                                                     EXCEL
@@ -504,7 +504,7 @@ export class ReportPage extends React.Component {
                                             </p>
                                         </div>
                                     </td>
-                                </tr>
+                                </tr>)}
                             </tbody>
                         </table>
 
