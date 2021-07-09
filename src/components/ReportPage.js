@@ -2,6 +2,9 @@ import React from 'react';
 import { connect } from 'react-redux';
 import DatePicker from 'react-datepicker';
 import selectPages from '../selectors/pages';
+import { startGetAdmins } from '../actions/manage/admins';
+import { startGetEmails } from '../actions/manage/emails';
+
 import moment from 'moment';
 moment.locale('th');
 export class ReportPage extends React.Component {
@@ -14,6 +17,9 @@ export class ReportPage extends React.Component {
             sum: 'daily',
             auth: props.auth,
             pages: props.pages,
+            emails: props.emails,
+            admins: props.admins,
+            crmAdmin: '',
             payment: 'ALL',
             cost: 'admin',
             groupBy: 'cutoff',
@@ -22,6 +28,16 @@ export class ReportPage extends React.Component {
         }
         this.handleStartChange = this.handleStartChange.bind(this);
         this.handleEndChange = this.handleEndChange.bind(this);
+        this.props.startGetAdmins();
+        this.props.startGetEmails();
+    }
+    componentWillReceiveProps(nextProps) {
+        if (nextProps.admins != this.state.admins) {
+            this.setState({ admins: nextProps.admins });
+        }
+        if (nextProps.emails != this.state.emails) {
+            this.setState({ emails: nextProps.emails });
+        }
     }
     handleStartChange(date) {
         this.setState({
@@ -40,13 +56,11 @@ export class ReportPage extends React.Component {
         this.setState({
             page: e.target.value
         })
-        // console.log(e.target.value)
     }
     handleCostChange = (e) => {
         this.setState({
             cost: e.target.value
         })
-        // console.log(e.target.value)
     }
     handlePaymentChange = (e) => {
         this.setState({ payment: e.target.value })
@@ -84,9 +98,15 @@ export class ReportPage extends React.Component {
         }, this.handleStartChange(starDate)
             , this.handleEndChange(endDate))
     }
+    handleCrmChange = (e) => {
+        // console.log(e.target.value)
+        this.setState({ crmAdmin: e.target.value })
+    }
     render() {
         // console.log('pages', this.state.pages)
         const rptUri = 'http://rpt.topslimstore.com';
+        const myEmail = this.state.emails.find(f => f.uid == this.state.auth.uid)
+        // console.log(myEmail)
         return (
             <section className="hero">
                 <div className="hero-body">
@@ -457,6 +477,34 @@ export class ReportPage extends React.Component {
                                     </td>
                                 </tr>
                                 )}
+                                <tr>
+                                    <td className="has-text-centered">12</td>
+                                    <td className="has-text-centered">
+                                        ข้อมูลลูกค้าที่สั่งซื้อ (วันที่เริ่ม-ถึงวันที่)&nbsp;
+                                        <select className="select is-info"
+                                            onChange={this.handleCrmChange}
+                                            value={this.state.crmAdmin}>
+                                            <option value="">เลือกแอดมิน</option>
+                                            {this.state.auth.role == 'owner' && this.state.admins.map(m => {
+                                                return (<option key={m.userId} value={m.userId}>{m.name}</option>)
+                                            })}
+
+                                            {(this.state.auth.role != 'owner' && myEmail)
+                                                && (<option value={myEmail.adminId}>{myEmail.admin}</option>)}
+                                        </select>
+                                    </td>
+                                    <td className="has-text-centered">
+                                        <div className="field is-grouped is-grouped-centered">
+                                            <p className="control">
+                                                <a className="button is-success is-centered is-small" disabled={this.state.crmAdmin==""}
+                                                    href={`${rptUri}/crm/admin?adminId=${this.state.crmAdmin}&startDate=${moment(this.state.startDate).format('YYYY-MM-DD')}&endDate=${moment(this.state.endDate).format('YYYY-MM-DD')}&file=excel`}
+                                                    target="_blank">
+                                                    EXCEL
+                                                </a>
+                                            </p>
+                                        </div>
+                                    </td>
+                                </tr>
                             </tbody>
                         </table>
 
@@ -468,8 +516,12 @@ export class ReportPage extends React.Component {
 }
 const mapStateToProps = (state, props) => ({
     auth: state.auth,
+    admins: state.manage.admins.filter(f => f.active),
+    emails: state.manage.emails.filter(f => !f.disabled),
     pages: state.pages//selectPages(state.pages, state.auth)
 });
 const mapDispatchToProps = (dispatch, props) => ({
+    startGetAdmins: () => dispatch(startGetAdmins()),
+    startGetEmails: () => dispatch(startGetEmails()),
 });
 export default connect(mapStateToProps, mapDispatchToProps)(ReportPage);
