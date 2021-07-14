@@ -68,7 +68,8 @@ export const startGetTopsDay = (date) => {
                                         const x = {
                                             adminId: owner.adminId,
                                             pageId: owner.pageId,
-                                            percent: tgYtd ? owner.price / (orderDate == date ? tgTd.targetPerDay : tgYtd.targetPerDay) * 100 : 50,
+                                            // percent: tgYtd ? owner.price / (orderDate == date ? tgTd.targetPerDay : tgYtd.targetPerDay) * 100 : 50,
+                                            percent: (tgYtd && tgTd) ? (owner.price / (yesterday == orderDate ? tgYtd.targetPerDay : tgTd.targetPerDay)) * 100 : 50,
                                             price: owner.price,
                                             target: true
                                         }
